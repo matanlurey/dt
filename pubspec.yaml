@@ -1,0 +1,11 @@
+name: dt
+publish_to: none
+
+environment:
+  sdk: ^3.4.0
+
+dependencies:
+  meta: ^1.15.0
+
+dev_dependencies:
+  oath: ^0.1.1
