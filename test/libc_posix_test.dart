@@ -43,6 +43,9 @@ void main() {
     'write writes to a file descriptor',
     () {
       final path = p.join(tempDir.path, 'test.txt');
+      // Workaround: Create the file to avoid `open` failing on Linux.
+      io.File(path).createSync();
+
       final fd = path.toUtf8Bytes((pathPointer) {
         return _libc$open(pathPointer, 0x201, 0x1B6);
       });
