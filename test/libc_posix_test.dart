@@ -44,6 +44,7 @@ void main() {
 
     // TODO: Remove workaround when open(...) is fixed on Linux.
     if (io.Platform.isLinux) {
+      print('Creating file: $path');
       io.File(path).createSync();
     }
 
