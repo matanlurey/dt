@@ -1,1 +1,1 @@
-export 'src/writer.dart' show Writer;
+export 'src/core/writer.dart' show Writer;

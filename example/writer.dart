@@ -1,7 +1,6 @@
 #!/usr/bin/env dart
 
 import 'package:dt/dt.dart';
-import 'package:dt/src/writer.dart';
 
 void main() {
   // Use an in-memory string buffer.
