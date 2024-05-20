@@ -7,7 +7,7 @@ import 'package:dt/src/ffi/libc.dart';
 
 /// Whether the current platform supports the C standard library.
 final isSupported = const [
-  'fflush',
+  // 'fflush',
   'free',
   'malloc',
   'write',
