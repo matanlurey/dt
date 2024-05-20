@@ -16,13 +16,6 @@ void main() {
   late final LibC libc;
 
   setUpAll(() {
-    libc = LibC();
-  });
-
-  // Create temporary directory to use for testing per test and clean up after.
-  late io.Directory tempDir;
-
-  setUp(() {
     // Sanity test: Make sure LibC is supported on this platform.
     if (!LibC.isSupported) {
       fail(
@@ -32,6 +25,13 @@ void main() {
       );
     }
 
+    libc = LibC();
+  });
+
+  // Create temporary directory to use for testing per test and clean up after.
+  late io.Directory tempDir;
+
+  setUp(() {
     tempDir = io.Directory.systemTemp.createTempSync('libc_posix_test');
   });
 

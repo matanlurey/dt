@@ -13,7 +13,9 @@ final isSupported = const [
 ].every(_stdLib.providesSymbol);
 
 /// Returns a POSIX-specific implementation of the C standard library.
-LibC libc() => const _PosixLibC();
+LibC libc() => isSupported
+    ? const _PosixLibC()
+    : throw UnsupportedError('This platform is not supported');
 
 /// Symbols that are available in global scope.
 final _stdLib = DynamicLibrary.process();
