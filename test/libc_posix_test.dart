@@ -49,7 +49,7 @@ void main() {
       expect(
         fd,
         isNonNegative,
-        reason: 'Failed to open file: ${_libc$errno()}',
+        reason: 'Failed to open file: ${_libc$errno().value}',
       );
 
       final message = 'Hello World';
