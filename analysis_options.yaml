@@ -1,1 +1,6 @@
 include: package:oath/library.yaml
+
+analyzer:
+  errors:
+    # Until my fix goes in.
+    noop_primitive_operations: ignore

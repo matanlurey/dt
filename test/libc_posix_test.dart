@@ -16,6 +16,15 @@ void main() {
   late final LibC libc;
 
   setUpAll(() {
+    // Sanity test: Make sure LibC is supported on this platform.
+    if (!LibC.isSupported) {
+      fail(
+        ''
+        'LibC is not supported on this platform. Either the test should be '
+        'skipped or the platform should be supported.',
+      );
+    }
+
     libc = LibC();
   });
 
@@ -30,33 +39,34 @@ void main() {
     tempDir.deleteSync(recursive: true);
   });
 
-  test(
-    'write writes to a file descriptor',
-    () {
-      final path = p.join(tempDir.path, 'test.txt');
-      final fd = path.toUtf8Bytes((pathPointer) {
-        return _libc$open(pathPointer, 0x201, 0x1B6);
-      });
-      expect(fd, isNonNegative, reason: 'Failed to open file');
+  test('write writes to a file descriptor', () {
+    final path = p.join(tempDir.path, 'test.txt');
 
-      final message = 'Hello World';
-      libc.write(FileDescriptor(fd), utf8.encode(message));
+    // TODO: Remove workaround when open(...) is fixed on Linux.
+    if (io.Platform.isLinux) {
+      io.File(path).createSync();
+    }
 
-      // Set permissions.
-      var done = _libc$fchmod(fd, 0x1B6);
-      expect(done, isZero, reason: 'Failed to set permissions');
+    final fd = path.toUtf8Bytes((pathPointer) {
+      return _libc$open(pathPointer, 0x201, 0x1B6);
+    });
+    expect(fd, isNonNegative);
 
-      // Close the file.
-      done = _libc$close(fd);
-      expect(done, isZero, reason: 'Failed to close file');
+    final message = 'Hello World';
+    libc.write(FileDescriptor(fd), utf8.encode(message));
 
-      // Now read the file to verify the content.
-      final file = io.File(path).readAsStringSync();
-      expect(file, message);
-    },
-    // TODO: open(...) fails on Linux.
-    skip: io.Platform.isLinux,
-  );
+    // Set permissions.
+    var done = _libc$fchmod(fd, 0x1B6);
+    expect(done, isZero, reason: 'Failed to set permissions');
+
+    // Close the file.
+    done = _libc$close(fd);
+    expect(done, isZero, reason: 'Failed to close file');
+
+    // Now read the file to verify the content.
+    final file = io.File(path).readAsStringSync();
+    expect(file, message);
+  });
 }
 
 extension on String {
@@ -65,10 +75,12 @@ extension on String {
     final bytes = utf8.encode(this);
 
     // Allocate memory for the bytes.
-    final pointer = _libc$malloc<Int8>(bytes.length);
+    final pointer = _libc$malloc<Int8>(bytes.length + 1);
 
-    // Copy the bytes to the memory.
-    pointer.asTypedList(bytes.length).setAll(0, bytes);
+    // Copy the bytes to the memory and null-terminate it.
+    pointer.asTypedList(bytes.length + 1)
+      ..setAll(0, bytes)
+      ..last = 0;
 
     // Call the function with the pointer.
     try {
@@ -102,7 +114,12 @@ typedef _DFchmod = int Function(
 );
 typedef _CClose = Int32 Function(Int32 fd);
 typedef _DClose = int Function(int fd);
+typedef _CErrno = Pointer<Int32> Function();
+typedef _DErrno = Pointer<Int32> Function();
 
+final _libc$errno = _stdLib.lookupFunction<_CErrno, _DErrno>(
+  '__errno_location',
+);
 final _libc$open = _stdLib.lookupFunction<_COpen, _DOpen>('open');
 final _libc$fchmod = _stdLib.lookupFunction<_CFchmod, _DFchmod>('fchmod');
 final _libc$close = _stdLib.lookupFunction<_CClose, _DClose>('close');
