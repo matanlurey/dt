@@ -87,7 +87,7 @@ extension on String {
     final pointer = _libc$malloc<Int8>(bytes.length + 1);
 
     // Copy the bytes to the memory and null-terminate it.
-    pointer.asTypedList(bytes.length)
+    pointer.asTypedList(bytes.length + 1)
       ..setAll(0, bytes)
       ..last = 0;
 
