@@ -46,17 +46,13 @@ void main() {
 
       // TODO: Remove workaround when open(...) is fixed on Linux.
       if (io.Platform.isLinux) {
-        io.File(path).createSync();
+        // io.File(path).createSync();
       }
 
       final fd = path.toUtf8Bytes((pathPointer) {
         return _libc$open(pathPointer, 0x201, 0x1B6);
       });
-      expect(
-        fd,
-        isNonNegative,
-        reason: 'Failed to open file: ${_libc$errno().value}',
-      );
+      expect(fd, isNonNegative);
 
       final message = 'Hello World';
       libc.write(FileDescriptor(fd), utf8.encode(message));
