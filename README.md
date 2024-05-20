@@ -3,7 +3,7 @@
 A _fun_ and _minimalist_ experiment in crafting terminal UIs with Dart.
 
 [![Linux Build](https://github.com/matanlurey/dt/actions/workflows/linux.yaml/badge.svg)](https://github.com/matanlurey/dt/actions/workflows/linux.yaml)
-[![Mac Build](https://github.com/matanlurey/dt/actions/workflows/linux.yaml/macos.svg)](https://github.com/matanlurey/dt/actions/workflows/macos.yaml)
+[![Mac Build](https://github.com/matanlurey/dt/actions/workflows/macos.yaml/badge.svg)](https://github.com/matanlurey/dt/actions/workflows/macos.yaml)
 [![Coverage Status](https://coveralls.io/repos/github/matanlurey/dt/badge.svg?branch=main)](https://coveralls.io/github/matanlurey/dt?branch=main)
 
 Inspiration:
