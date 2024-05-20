@@ -46,7 +46,7 @@ void main() {
 
       // TODO: Remove workaround when open(...) is fixed on Linux.
       if (io.Platform.isLinux) {
-        // io.File(path).createSync();
+        io.File(path).createSync();
       }
 
       final fd = path.toUtf8Bytes((pathPointer) {
