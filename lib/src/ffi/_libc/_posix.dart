@@ -1,6 +1,7 @@
 // ignore_for_file: avoid_private_typedef_functions
 
 import 'dart:ffi';
+import 'dart:io' as io show Platform;
 
 import 'package:dt/src/ffi/libc.dart';
 
@@ -18,7 +19,9 @@ LibC libc() => isSupported
     : throw UnsupportedError('This platform is not supported');
 
 /// Symbols that are available in global scope.
-final _stdLib = DynamicLibrary.process();
+final _stdLib = io.Platform.isMacOS
+    ? DynamicLibrary.process()
+    : DynamicLibrary.open('libc.so.6');
 
 typedef _CMalloc = Pointer Function(IntPtr);
 typedef _DMalloc = Pointer Function(int);

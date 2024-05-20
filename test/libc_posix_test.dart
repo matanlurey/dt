@@ -20,8 +20,8 @@ void main() {
     if (!LibC.isSupported) {
       fail(
         ''
-        'LibC is not supported on this platform. Either test test should '
-        'be skipped or the platform should be supported.',
+        'LibC is not supported on this platform. Either the test should be '
+        'skipped or the platform should be supported.',
       );
     }
 
@@ -89,7 +89,9 @@ extension on String {
   }
 }
 
-final _stdLib = DynamicLibrary.process();
+final _stdLib = io.Platform.isMacOS
+    ? DynamicLibrary.process()
+    : DynamicLibrary.open('libc.so.6');
 
 typedef _COpen = Int32 Function(
   Pointer<Int8> path,
