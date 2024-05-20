@@ -23,6 +23,16 @@ void main() {
   late io.Directory tempDir;
 
   setUp(() {
+    // Sanity test: Make sure LibC is supported on this platform.
+    print('Test');
+    expect(
+      LibC.isSupported,
+      isTrue,
+      reason: ''
+          'LibC is not supported on this platform. Either test test should '
+          'be skipped or the platform should be supported.',
+    );
+
     tempDir = io.Directory.systemTemp.createTempSync('libc_posix_test');
   });
 
