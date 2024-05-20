@@ -39,39 +39,34 @@ void main() {
     tempDir.deleteSync(recursive: true);
   });
 
-  test(
-    'write writes to a file descriptor',
-    () {
-      final path = p.join(tempDir.path, 'test.txt');
+  test('write writes to a file descriptor', () {
+    final path = p.join(tempDir.path, 'test.txt');
 
-      // TODO: Remove workaround when open(...) is fixed on Linux.
-      if (io.Platform.isLinux) {
-        io.File(path).createSync();
-      }
+    // TODO: Remove workaround when open(...) is fixed on Linux.
+    if (io.Platform.isLinux) {
+      io.File(path).createSync();
+    }
 
-      final fd = path.toUtf8Bytes((pathPointer) {
-        return _libc$open(pathPointer, 0x201, 0x1B6);
-      });
-      expect(fd, isNonNegative);
+    final fd = path.toUtf8Bytes((pathPointer) {
+      return _libc$open(pathPointer, 0x201, 0x1B6);
+    });
+    expect(fd, isNonNegative);
 
-      final message = 'Hello World';
-      libc.write(FileDescriptor(fd), utf8.encode(message));
+    final message = 'Hello World';
+    libc.write(FileDescriptor(fd), utf8.encode(message));
 
-      // Set permissions.
-      var done = _libc$fchmod(fd, 0x1B6);
-      expect(done, isZero, reason: 'Failed to set permissions');
+    // Set permissions.
+    var done = _libc$fchmod(fd, 0x1B6);
+    expect(done, isZero, reason: 'Failed to set permissions');
 
-      // Close the file.
-      done = _libc$close(fd);
-      expect(done, isZero, reason: 'Failed to close file');
+    // Close the file.
+    done = _libc$close(fd);
+    expect(done, isZero, reason: 'Failed to close file');
 
-      // Now read the file to verify the content.
-      final file = io.File(path).readAsStringSync();
-      expect(file, message);
-    },
-    // TODO: open(...) fails on Linux.
-    skip: io.Platform.isLinux,
-  );
+    // Now read the file to verify the content.
+    final file = io.File(path).readAsStringSync();
+    expect(file, message);
+  });
 }
 
 extension on String {
