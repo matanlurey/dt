@@ -1,8 +1,8 @@
 // ignore_for_file: always_use_package_imports
 
 import 'package:dt/dt.dart';
-import 'package:dt/src/ffi/libc.dart';
 import 'package:dt/src/core/writer.dart';
+import 'package:dt/src/ffi/libc.dart';
 
 import '_writer/_null.dart' if (dart.library.io) '_writer/_posix.dart' as impl;
 
