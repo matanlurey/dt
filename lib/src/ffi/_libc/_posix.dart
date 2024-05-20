@@ -7,6 +7,7 @@ import 'package:dt/src/ffi/libc.dart';
 
 /// Whether the current platform supports the C standard library.
 final isSupported = const [
+  // TODO: Investigate why this is not found on Linux.
   // 'fflush',
   'free',
   'malloc',
@@ -93,7 +94,7 @@ final class _PosixLibC implements LibC {
     try {
       return _write(fd, pointer, bytes.length);
     } finally {
-      // _allocate.free(pointer);
+      _allocate.free(pointer);
     }
   }
 
