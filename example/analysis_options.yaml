@@ -4,3 +4,6 @@ analyzer:
   errors:
     # Obfuscates sample code where consistency is less important.
     cascade_invocations: ignore
+
+    # Used to make the examples clearer.
+    prefer_asserts_with_message: ignore

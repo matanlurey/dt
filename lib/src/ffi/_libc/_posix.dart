@@ -6,6 +6,7 @@ import 'package:dt/src/ffi/libc.dart';
 
 /// Whether the current platform supports the C standard library.
 final isSupported = const [
+  'flush',
   'free',
   'malloc',
   'write',
@@ -58,6 +59,9 @@ typedef _DWrite = int Function(
   int count,
 );
 
+typedef _CFlush = Int32 Function(Int32 fd);
+typedef _DFlush = int Function(int fd);
+
 /// A POSIX-specific interface to the C standard library.
 final class _PosixLibC implements LibC {
   const _PosixLibC();
@@ -72,6 +76,11 @@ final class _PosixLibC implements LibC {
   FileDescriptor get stderrFd => const FileDescriptor(2);
 
   @override
+  int flush(FileDescriptor fd) => _flush(fd);
+
+  static final _flush = _libc.lookupFunction<_CFlush, _DFlush>('fflush');
+
+  @override
   int write(FileDescriptor fd, List<int> bytes) {
     final pointer = _allocate<Uint8>(bytes.length);
     pointer.asTypedList(bytes.length).setAll(0, bytes);
@@ -79,7 +88,7 @@ final class _PosixLibC implements LibC {
     try {
       return _write(fd, pointer, bytes.length);
     } finally {
-      _allocate.free(pointer);
+      // _allocate.free(pointer);
     }
   }
 

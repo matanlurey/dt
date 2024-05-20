@@ -2,13 +2,13 @@ import 'package:dt/dt.dart';
 import 'package:test/test.dart';
 
 void main() {
-  group('$Buffer.fromStringSink', () {
+  group('$Writer.fromStringSink', () {
     late StringBuffer capture;
-    late Buffer buffer;
+    late Writer buffer;
 
     setUp(() {
       capture = StringBuffer();
-      buffer = Buffer.fromStringSink(capture);
+      buffer = Writer.fromStringSink(capture);
     });
 
     test('write does not write to sink until flushed', () async {

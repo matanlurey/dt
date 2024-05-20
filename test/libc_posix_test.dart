@@ -30,7 +30,7 @@ void main() {
     tempDir.deleteSync(recursive: true);
   });
 
-  test('write', () {
+  test('write writes to a file descriptor', () {
     final path = p.join(tempDir.path, 'test.txt');
     final fd = path.toUtf8Bytes((pathPointer) {
       return _libc$open(pathPointer, 0x201, 0);

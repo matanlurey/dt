@@ -1,8 +1,5 @@
 // ignore_for_file: always_use_package_imports
 
-/// Provides a subset of the C standard library, for use with FFI.
-library;
-
 import '_libc/_null.dart' if (dart.library.io) '_libc/_posix.dart' as impl;
 
 /// Represents a file descriptor.
@@ -27,6 +24,11 @@ abstract interface class LibC {
 
   /// Standard error file descriptor.
   FileDescriptor get stderrFd;
+
+  /// Flushes the given [fd].
+  ///
+  /// Returns `0` on success, or `-1` if an error occurred.
+  int flush(FileDescriptor fd);
 
   /// Writes the specified [bytes] to the given [fd].
   ///
