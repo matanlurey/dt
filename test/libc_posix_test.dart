@@ -33,7 +33,7 @@ void main() {
   test('write writes to a file descriptor', () {
     final path = p.join(tempDir.path, 'test.txt');
     final fd = path.toUtf8Bytes((pathPointer) {
-      return _libc$open(pathPointer, 0x201, 0);
+      return _libc$open(pathPointer, 0x201, 0x1B6);
     });
     expect(fd, isNonNegative, reason: 'Failed to open file');
 
