@@ -46,7 +46,11 @@ void main() {
       final fd = path.toUtf8Bytes((pathPointer) {
         return _libc$open(pathPointer, 0x201, 0x1B6);
       });
-      expect(fd, isNonNegative, reason: 'Failed to open file');
+      expect(
+        fd,
+        isNonNegative,
+        reason: 'Failed to open file: ${_libc$errno()}',
+      );
 
       final message = 'Hello World';
       libc.write(FileDescriptor(fd), utf8.encode(message));
@@ -112,6 +116,9 @@ typedef _DFchmod = int Function(
 typedef _CClose = Int32 Function(Int32 fd);
 typedef _DClose = int Function(int fd);
 
+final _libc$errno = _stdLib.lookupFunction<Int32 Function(), int Function()>(
+  'errno',
+);
 final _libc$open = _stdLib.lookupFunction<_COpen, _DOpen>('open');
 final _libc$fchmod = _stdLib.lookupFunction<_CFchmod, _DFchmod>('fchmod');
 final _libc$close = _stdLib.lookupFunction<_CClose, _DClose>('close');
