@@ -6,11 +6,11 @@ import 'package:dt/src/ffi/writer.dart';
 /// interface is designed to be as minimal as possible to allow for the most
 /// flexibility in implementation.
 abstract interface class Writer {
-  /// Creates a new writer that writes to `stdout`.
-  factory Writer.stdout() => stdoutWriter();
+  /// A writer that writes to `stdout`.
+  static final stdout = stderrWriter();
 
-  /// Creates a new writer that writes to `stderr`.
-  factory Writer.stderr() => stderrWriter();
+  /// A writer that writes to `stderr`.
+  static final stderr = stderrWriter();
 
   /// Creates a new writer that writes to the given string [sink].
   ///
@@ -53,6 +53,14 @@ abstract interface class Writer {
   /// await writer.close();
   /// ```
   Future<void> close();
+}
+
+/// Extension methods for [Writer].
+extension WriterExtension on Writer {
+  /// Writes the given [text] to the writer.
+  ///
+  /// A convenience method that otherwise is equivalent to calling [write].
+  void call(String text) => write(text);
 }
 
 final class _StringSinkWriter implements Writer {

@@ -2,6 +2,9 @@
 
 A _fun_ and _minimalist_ experiment in crafting terminal UIs with Dart.
 
+[![Github Actions](https://github.com/matanlurey/dt/actions/workflows/check.yaml/badge.svg)](https://github.com/matanlurey/dt/actions/workflows/check.yaml)
+[![Coverage Status](https://coveralls.io/repos/github/matanlurey/dt/badge.svg?branch=main)](https://coveralls.io/github/matanlurey/dt?branch=main)
+
 Inspiration:
 
 - <https://github.com/crossterm-rs/crossterm>
@@ -31,3 +34,26 @@ dart run benchmark/stdout_write.dart 2> /dev/null
 
 > [!TIP]
 > In my tests, an AOT-compiled binary had no noticeable performance impact.
+
+## Contributing
+
+### CI
+
+This package is:
+
+- Formatted with `dart format`.
+- Checked with `dart analyze`.
+- Tested with `dart test`, including with code coverage.
+
+See [`github/workflows/check.yaml`](./.github/workflows/check.yaml) for details.
+
+### Coverage
+
+To view the coverage report locally (MacOS):
+
+```shell
+brew install lcov
+dart run coverage:test_with_coverage
+genhtml coverage/lcov.info -o coverage/html
+open coverage/html/index.html
+```
