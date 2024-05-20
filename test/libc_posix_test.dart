@@ -84,10 +84,12 @@ extension on String {
     final bytes = utf8.encode(this);
 
     // Allocate memory for the bytes.
-    final pointer = _libc$malloc<Int8>(bytes.length);
+    final pointer = _libc$malloc<Int8>(bytes.length + 1);
 
-    // Copy the bytes to the memory.
-    pointer.asTypedList(bytes.length).setAll(0, bytes);
+    // Copy the bytes to the memory and null-terminate it.
+    pointer.asTypedList(bytes.length)
+      ..setAll(0, bytes)
+      ..last = 0;
 
     // Call the function with the pointer.
     try {
