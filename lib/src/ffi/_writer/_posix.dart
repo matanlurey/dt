@@ -2,6 +2,7 @@ import 'dart:convert' show utf8;
 
 import 'package:dt/dt.dart';
 import 'package:dt/src/ffi/libc.dart';
+import 'package:dt/src/writer.dart';
 
 /// Returns a writer that writes to the given file descriptor using `libc`.
 Writer writer(FileDescriptor fd, {required LibC libc}) {

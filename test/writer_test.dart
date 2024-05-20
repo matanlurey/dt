@@ -1,4 +1,5 @@
 import 'package:dt/dt.dart';
+import 'package:dt/src/writer.dart';
 import 'package:test/test.dart';
 
 void main() {

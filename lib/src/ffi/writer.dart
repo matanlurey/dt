@@ -2,6 +2,7 @@
 
 import 'package:dt/dt.dart';
 import 'package:dt/src/ffi/libc.dart';
+import 'package:dt/src/writer.dart';
 
 import '_writer/_null.dart' if (dart.library.io) '_writer/_posix.dart' as impl;
 
