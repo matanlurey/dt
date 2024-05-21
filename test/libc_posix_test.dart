@@ -114,12 +114,7 @@ typedef _DFchmod = int Function(
 );
 typedef _CClose = Int32 Function(Int32 fd);
 typedef _DClose = int Function(int fd);
-typedef _CErrno = Pointer<Int32> Function();
-typedef _DErrno = Pointer<Int32> Function();
 
-final _libc$errno = _stdLib.lookupFunction<_CErrno, _DErrno>(
-  '__errno_location',
-);
 final _libc$open = _stdLib.lookupFunction<_COpen, _DOpen>('open');
 final _libc$fchmod = _stdLib.lookupFunction<_CFchmod, _DFchmod>('fchmod');
 final _libc$close = _stdLib.lookupFunction<_CClose, _DClose>('close');

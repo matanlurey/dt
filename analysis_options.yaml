@@ -2,5 +2,7 @@ include: package:oath/library.yaml
 
 analyzer:
   errors:
+    # Allow relative imports.
+    always_use_package_imports: ignore
     # Until my fix goes in.
     noop_primitive_operations: ignore
