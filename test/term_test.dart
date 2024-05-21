@@ -7,21 +7,7 @@ void main() {
   group('$StringTerminal', () {
     _terminalTests(
       empty: StringTerminal.new,
-      helloWorld: () => StringTerminal.fromLines(['Hello', 'World!']),
-    );
-  });
-  group('$Terminal', () {
-    _terminalTests(
-      empty: () => Terminal.of(
-        [],
-        width: (s) => s.length,
-        emptyLine: () => '',
-      ),
-      helloWorld: () => Terminal.of(
-        ['Hello', 'World!'],
-        width: (s) => s.length,
-        emptyLine: () => '',
-      ),
+      helloWorld: () => StringTerminal('Hello\nWorld!'),
     );
   });
   group('$TerminalSnapshot', _terminalSnapshotTests);
@@ -98,7 +84,7 @@ void _terminalTests({
 
 void _terminalSnapshotTests() {
   test('takes a snapshot of an existing terminal', () {
-    final terminal = StringTerminal.fromLines(['Hello', 'World!']);
+    final terminal = StringTerminal('Hello\nWorld!');
     final snapshot = TerminalSnapshot.from(terminal);
 
     // Cursor.
@@ -120,9 +106,9 @@ void _terminalSnapshotTests() {
   });
 
   test('== and hashCode', () {
-    final a = TerminalSnapshot.from(StringTerminal.fromLines(['Hello']));
-    final b = TerminalSnapshot.from(StringTerminal.fromLines(['Hello']));
-    final c = TerminalSnapshot.from(StringTerminal.fromLines(['World']));
+    final a = TerminalSnapshot.from(StringTerminal('Hello'));
+    final b = TerminalSnapshot.from(StringTerminal('Hello'));
+    final c = TerminalSnapshot.from(StringTerminal('World'));
 
     expect(a, b);
     expect(a.hashCode, b.hashCode);
@@ -132,7 +118,7 @@ void _terminalSnapshotTests() {
 
 void _terminalViewTests() {
   test('creates a read-only view of an existing terminal', () {
-    final terminal = StringTerminal.fromLines(['Hello', 'World!']);
+    final terminal = StringTerminal('Hello\nWorld!');
     final view = TerminalView.from(terminal);
 
     // Cursor.
