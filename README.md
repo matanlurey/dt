@@ -65,10 +65,36 @@ classDiagram
 
   class TerminalBuffer~T~
   <<abstract>> TerminalBuffer
-  
+
   TerminalView~T~ <|-- TerminalBuffer~T~ : Extends
   TerminalSink~T~ <|-- TerminalBuffer~T~ : Mixes-in
   TerminalBuffer~T~ <|-- StringTerminalBuffer : Extends, T=String
+
+  class LineEditor~T~
+  <<abstract>> LineEditor
+    LineEditor~T~ : +LineCursor get cursor
+    LineEditor~T~ : +void backspace()
+    LineEditor~T~ : +void delete()
+
+  class Terminal~T~
+  <<abstract>> Terminal
+
+  LineEditor~T~ <|-- Terminal~T~ : Mixes-in
+  TerminalSink~T~ <|-- Terminal~T~ : Mixes-in
+  TerminalView~T~ <|-- Terminal~T~ : Extends
+  Terminal~T~ <|-- StringTerminal : Extends, T=String
+
+  class TerminalController~T~
+  <<abstract>> TerminalController
+    TerminalController~T~ : +void clear()
+    TerminalController~T~ : +ScreenCursor get cursor
+
+  class RawTerminal~T~
+  <<abstract>> RawTerminal
+
+  Terminal~T~ <|-- RawTerminal~T~ : Extends
+  TerminalController~T~ <|-- RawTerminal~T~ : Mixes-in
+  RawTerminal~T~ <|-- RawStringTerminal : Extends, T=String
 ```
 
 ## Benchmarks
