@@ -1,9 +1,17 @@
+import 'terminal.dart';
+
 /// A sink that builds text-like lines of spans [T].
 ///
 /// This type provides a way to _append_ spans in a unidirectional manner, but
 /// does not provide input capabilities or the ability to interact with a TTY
-/// device; in other words, a [LineSink] can be considered an append-only
+/// device; in other words, a [TerminalSink] can be considered an append-only
 /// terminal.
+///
+/// Each write operation appends spans and lines to the cursor position, where
+/// the behavior of the cursor is determined by the implementation. For example,
+/// a [Terminal] implicitly has _no_ cursor, and each write operation appends
+/// to the end of the feed, while a [RawTerminal] has an explicit cursor that
+/// can be moved.
 ///
 /// It is recommended to _extend_ or _mixin_ this class if able.
 ///
@@ -35,11 +43,11 @@
 ///
 /// ## Example
 ///
-/// A sample implementation of a [LineSink] that writes lines to a list:
+/// A sample implementation of a [TerminalSink] that writes lines to a list:
 ///
 /// ```dart
 /// // Uses a string for brevity, but could be any type that conforms.
-/// class ExampleSink extends LineSink<String> {
+/// class ExampleSink extends TerminalSink<String> {
 ///   final List<String> lines = [];
 ///
 ///   @override
@@ -59,7 +67,7 @@
 ///   }
 /// }
 /// ```
-abstract mixin class LineSink<T> {
+abstract mixin class TerminalSink<T> {
   /// Writes a [span] to the _current_ line.
   ///
   /// If no line exists, a new line is created and the span is written to it.

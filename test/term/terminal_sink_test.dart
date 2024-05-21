@@ -1,11 +1,11 @@
-import 'package:dt/src/line/sink.dart';
+import 'package:dt/src/term.dart';
 import 'package:test/test.dart';
 
 // We use a List<int> to avoid the degenerate case of a span with a '\n'.
 typedef _Span = List<int>;
 
 void main() {
-  (List<_Span> lines, LineSink<_Span> sink) fixture() {
+  (List<_Span> lines, TerminalSink<_Span> sink) fixture() {
     final lines = <_Span>[];
     final sink = _TestSink(lines);
     return (lines, sink);
@@ -95,8 +95,8 @@ void main() {
   });
 }
 
-/// An example of a class that implements [LineSink].
-final class _TestSink extends LineSink<_Span> {
+/// An example of a class that implements [TerminalSink].
+final class _TestSink extends TerminalSink<_Span> {
   _TestSink(this.lines);
 
   final List<List<int>> lines;
@@ -123,19 +123,19 @@ final class _TestSink extends LineSink<_Span> {
 // -----------------------------------------------------------------------------
 
 // ignore: unused_element
-final class _CanBeImplemented implements LineSink<void> {
+final class _CanBeImplemented implements TerminalSink<void> {
   @override
   noSuchMethod(Invocation invocation) => super.noSuchMethod(invocation);
 }
 
 // ignore: unused_element
-final class _CanBeExtended extends LineSink<void> {
+final class _CanBeExtended extends TerminalSink<void> {
   @override
   noSuchMethod(Invocation invocation) => super.noSuchMethod(invocation);
 }
 
 // ignore: unused_element
-final class _CanBeMixedIn with LineSink<void> {
+final class _CanBeMixedIn with TerminalSink<void> {
   @override
   noSuchMethod(Invocation invocation) => super.noSuchMethod(invocation);
 }

@@ -17,7 +17,7 @@ Inspiration:
 Work-in-progress:
 
 - [x] Support a non-interactive ("cooked"), output-only string-based terminal
-  (`StringTerminalBuffer`).
+  (`StringLineFeed`).
 - [ ] Support a non-interactive ("cooked") string-based terminal with input
   support (`StringTerminal`).
 - [ ] Support an interactive ("raw") string-based terminal with input and output
@@ -36,21 +36,28 @@ emulating, and interacting with terminal applications in Dart. It's designed to
 be a low-level building block for more complex terminal applications, such as
 text editors, games, and interactive command-line interfaces.
 
-### API Design
-
-A _subset_ of the API provided by this package includes:
-
-- `TerminalView`: a read-only, but potentially changing, view of a terminal.
-- `TerminalSink`: a write-only interface for writing to a terminal.
-- `TerminalBuffer`: a mutable append-only buffer for writing to a terminal.
-  
-  Sometimes referred to as a "cooked" terminal, this buffer does allow
-  user-defined support cursor positioning or other advanced terminal features,
-  intending to represent a non-TTY output stream. In other words, `.cursor`
-  is always the same as `.lastPosition`.
-
 See the diagram below for a high-level overview of the API design:
 
+```mermaid
+classDiagram
+  class LineSink~T~
+  <<abstract>> LineSink
+    LineSink~T~ : +void write(T span)
+    LineSink~T~ : +void writeLine(T span)
+
+  class LineFeedView~T~
+  <<abstract>> LineFeedView
+    LineFeedView~T~ : +Iterable~T~ get lines
+
+  class LineFeed~T~
+  <<abstract>> LineFeed
+  
+  LineSink~T~ <|-- LineFeed~T~ : Mixes-in
+  LineFeedView~T~ <|-- LineFeed~T~ : Mixes-in
+  LineFeed~T~ <|-- StringLineFeed : Extends, T=String
+```
+
+<!--
 ```mermaid
 classDiagram
   class TerminalView~T~
@@ -96,6 +103,7 @@ classDiagram
   TerminalController~T~ <|-- RawTerminal~T~ : Mixes-in
   RawTerminal~T~ <|-- RawStringTerminal : Extends, T=String
 ```
+-->
 
 ## Benchmarks
 

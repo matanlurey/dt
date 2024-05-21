@@ -1,17 +1,19 @@
-import 'package:dt/src/line/feed.dart';
+import 'package:dt/src/core.dart';
+import 'package:dt/src/term.dart';
 import 'package:test/test.dart';
 
 void main() {
   group('StringLineFeed', () {
     _tests(
-      constructor: StringLineFeed.from,
+      constructor: StringTerminal.from,
     );
   });
   group('LineFeed<String>.using', () {
     _tests(
-      constructor: ([lines = const []]) => LineFeed.using(
+      constructor: ({lines = const [], cursor}) => Terminal.using(
         defaultSpan: () => '',
         mergeSpan: (a, b) => '$a$b',
+        widthSpan: (span) => span.length,
         lines: lines,
       ),
     );
@@ -19,7 +21,10 @@ void main() {
 }
 
 void _tests({
-  required LineFeed<String> Function([Iterable<String>]) constructor,
+  required Terminal<String> Function({
+    Iterable<String> lines,
+    Offset? cursor,
+  }) constructor,
 }) {
   test('starts empty', () {
     final feed = constructor();
@@ -27,32 +32,32 @@ void _tests({
     // Contents.
     expect(feed.isEmpty, isTrue);
     expect(feed.isNotEmpty, isFalse);
-    expect(feed.length, 0);
+    expect(feed.lineCount, 0);
 
     // Accessors.
     expect(() => feed.line(0), throwsRangeError);
   });
 
   test('starts with an empty line', () {
-    final feed = constructor(['']);
+    final feed = constructor(lines: ['']);
 
     // Contents.
     expect(feed.isEmpty, isFalse);
     expect(feed.isNotEmpty, isTrue);
-    expect(feed.length, 1);
+    expect(feed.lineCount, 1);
 
     // Accessors.
     expect(feed.line(0), '');
   });
 
   test('starts with a single line', () {
-    final feed = constructor(['Hello World!']);
+    final feed = constructor(lines: ['Hello World!']);
 
     expect(feed.lines, ['Hello World!']);
   });
 
   test('starts with multiple lines', () {
-    final feed = constructor([
+    final feed = constructor(lines: [
       'Hello World!',
       'Goodbye World!',
     ]);
@@ -140,14 +145,14 @@ void _tests({
 // -----------------------------------------------------------------------------
 
 // ignore: unused_element
-final class _CanBeImplemented implements LineFeed<void> {
+final class _CanBeImplemented implements Terminal<void> {
   @override
   noSuchMethod(Invocation invocation) => super.noSuchMethod(invocation);
 }
 
 // ignore: unused_element
-final class _CanBeExtended extends LineFeed<void> {
-  _CanBeExtended() : super.from([]);
+final class _CanBeExtended extends Terminal<void> {
+  _CanBeExtended() : super.from();
 
   @override
   noSuchMethod(Invocation invocation) => super.noSuchMethod(invocation);
