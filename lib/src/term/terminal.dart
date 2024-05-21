@@ -2,9 +2,10 @@ import 'package:dt/src/core.dart';
 import 'package:meta/meta.dart';
 
 import 'cursor.dart';
+import 'sink.dart';
 import 'view.dart';
 
-/// A display of lines of content [T].
+/// A display of lines of content span [T].
 ///
 /// This class provides the foundation for a virtual terminal, handling the
 /// presentation, cursor position, and other user interface elements that might
@@ -15,8 +16,7 @@ import 'view.dart';
 /// To implement a terminal, either:
 /// - `implements Terminal` to define a custom terminal.
 /// - `extends Terminal`, and define [lineCount] and [lastPosition].
-/// - or use [Terminal.of] for a generic terminal with a custom [T].
-abstract class Terminal<T> extends TerminalView<T> {
+abstract class Terminal<T> extends TerminalView<T> with TerminalSink<T> {
   /// Creates a new terminal from [lines] and an optional [cursor].
   ///
   /// If [cursor] is not provided, the cursor is placed at the end of the last
@@ -30,29 +30,6 @@ abstract class Terminal<T> extends TerminalView<T> {
       _cursor = lastPosition;
       return;
     }
-  }
-
-  /// Creates a new terminal from [lines] and an optional [cursor].
-  ///
-  /// The [width] and [emptyLine] functions are used to determine the width
-  /// of a line and create an empty line, respectively.
-  ///
-  /// If [cursor] is not provided, the cursor is placed at the end of the last
-  /// line in the terminal, otherwise it is clamped to the terminal's bounds.
-  ///
-  /// **TIP**: Prefer using [StringTerminal] for a terminal of strings.
-  factory Terminal.of(
-    Iterable<T> lines, {
-    required int Function(T) width,
-    required T Function() emptyLine,
-    Cursor? cursor,
-  }) {
-    return _Terminal(
-      lines,
-      width: width,
-      emptyLine: emptyLine,
-      cursor: cursor,
-    );
   }
 
   @override
@@ -98,47 +75,6 @@ abstract class Terminal<T> extends TerminalView<T> {
   }
 }
 
-final class _Terminal<T> extends Terminal<T> {
-  _Terminal(
-    super.lines, {
-    required int Function(T) width,
-    required T Function() emptyLine,
-    super.cursor,
-  })  : _width = width,
-        _emptyLine = emptyLine;
-
-  final int Function(T) _width;
-  final T Function() _emptyLine;
-
-  @override
-  Cursor get lastPosition {
-    return isEmpty ? Offset.zero : Offset(_width(currentLine), lineCount - 1);
-  }
-
-  @override
-  set lineCount(int length) {
-    RangeError.checkNotNegative(length, 'length');
-    if (length == _lines.length) {
-      return;
-    }
-    if (length < lineCount) {
-      // If the y-position is beyond the new length, move the cursor.
-      if (cursor.y >= length) {
-        cursor = Offset(cursor.x, length - 1);
-      }
-      _lines.removeRange(length, lineCount);
-      // Clamp if necessary.
-      if (cursor >= lastPosition) {
-        cursor = lastPosition;
-      }
-    } else {
-      _lines.addAll([
-        for (var i = lineCount; i < length; i++) _emptyLine(),
-      ]);
-    }
-  }
-}
-
 /// A terminal of lines of text.
 ///
 /// This class provides a concrete implementation of a terminal of strings,
@@ -154,15 +90,7 @@ base class StringTerminal extends Terminal<String> {
   /// The cursor is placed at the end of the last line, or at `(0, 0)` if empty.
   StringTerminal([
     String? text,
-  ]) : this.fromLines(text?.split('\n') ?? const []);
-
-  /// Creates a new terminal from [lines] of text.
-  ///
-  /// The cursor is placed at the end of last line, or at `(0, 0)` if empty.
-  StringTerminal.fromLines(
-    super.lines, {
-    super.cursor,
-  });
+  ]) : super(text?.split('\n') ?? const []);
 
   @override
   @nonVirtual
@@ -190,5 +118,21 @@ base class StringTerminal extends Terminal<String> {
     } else {
       _lines.addAll(List.filled(length - _lines.length, ''));
     }
+  }
+
+  @override
+  @nonVirtual
+  void write(String span) {
+    final current = currentLine;
+    final prefix = current.substring(0, cursor.x);
+    final suffix = current.substring(cursor.x);
+    _lines[cursor.y] = '$prefix$span$suffix';
+    cursor = cursor.translate(span.length, 0);
+  }
+
+  @override
+  @nonVirtual
+  void writeLine([String? span]) {
+    write(span ?? '');
   }
 }
