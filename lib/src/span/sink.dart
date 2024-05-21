@@ -4,6 +4,8 @@
 /// input capabilities or the ability to interact with a TTY device; in other
 /// words, a [SpanSink] is an append-only terminal.
 ///
+/// It is recommended to _extend_ or _mixin_ this class if able.
+///
 /// ## Span
 ///
 /// The type [T] is referred to as a _span_ and represents a _unit_ of text that
@@ -25,7 +27,8 @@
 /// A sample implementation of a [SpanSink] that writes spans to a list:
 ///
 /// ```dart
-/// class ExampleStringSink extends SpanSink<String> {
+/// // Uses a string for brevity, but could be any type that conforms.
+/// class ExampleSink extends SpanSink<String> {
 ///   final List<String> lines = [];
 ///
 ///   @override
@@ -46,6 +49,9 @@
 /// }
 /// ```
 abstract mixin class SpanSink<T> {
+  // ignore: public_member_api_docs
+  const SpanSink();
+
   /// Writes a span to the current line.
   ///
   /// It is assumed that the [span] does not indicate additional lines, that is,
