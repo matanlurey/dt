@@ -13,10 +13,10 @@ abstract mixin class TerminalSink<T> {
   ///
   /// If [separator] is provided, it is written between each span.
   void writeAll(Iterable<T> spans, {T? separator}) {
-    if (spans.isEmpty) {
+    final iterator = spans.iterator;
+    if (!iterator.moveNext()) {
       return;
     }
-    final iterator = spans.iterator;
     while (true) {
       write(iterator.current);
       if (!iterator.moveNext()) {
@@ -32,16 +32,20 @@ abstract mixin class TerminalSink<T> {
   ///
   /// If [separator] is provided, it is written between each line.
   void writeLines(Iterable<T> lines, {T? separator}) {
-    if (lines.isEmpty) {
+    final iterator = lines.iterator;
+    if (!iterator.moveNext()) {
       return;
     }
-    final iterator = lines.iterator;
     while (true) {
       write(iterator.current);
-      if (!iterator.moveNext()) {
+      final hasNext = iterator.moveNext();
+      if (separator != null && hasNext) {
+        write(separator);
+      }
+      writeLine();
+      if (!hasNext) {
         break;
       }
-      writeLine(separator);
     }
   }
 }

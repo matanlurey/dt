@@ -14,6 +14,63 @@ Inspiration:
 - <https://sr.ht/~rockorager/vaxis/>
 - <https://github.com/timsneath/dart_console>
 
+Work-in-progress:
+
+- [x] Support a non-interactive ("cooked"), output-only string-based terminal
+  (`StringTerminalBuffer`).
+- [ ] Support a non-interactive ("cooked") string-based terminal with input
+  support (`StringTerminal`).
+- [ ] Support an interactive ("raw") string-based terminal with input and output
+  support (`RawStringTerminal`).
+- [ ] Add a new span-type for terminal formatting and styling (`TextSpan`), and
+  support it (i.e. `*SpanTerminal*`).
+
+## Overview
+
+> [!NOTE]
+> This project is a work-in-progress and everything is subject to change.
+> Feedback and contributions are welcome!
+
+This project aims to provide an intuitive and ergonomic API for building,
+emulating, and interacting with terminal applications in Dart. It's designed to
+be a low-level building block for more complex terminal applications, such as
+text editors, games, and interactive command-line interfaces.
+
+### API Design
+
+A _subset_ of the API provided by this package includes:
+
+- `TerminalView`: a read-only, but potentially changing, view of a terminal.
+- `TerminalSink`: a write-only interface for writing to a terminal.
+- `TerminalBuffer`: a mutable append-only buffer for writing to a terminal.
+  
+  Sometimes referred to as a "cooked" terminal, this buffer does allow
+  user-defined support cursor positioning or other advanced terminal features,
+  intending to represent a non-TTY output stream. In other words, `.cursor`
+  is always the same as `.lastPosition`.
+
+See the diagram below for a high-level overview of the API design:
+
+```mermaid
+classDiagram
+  class TerminalView~T~
+  <<abstract>> TerminalView
+    TerminalView~T~ : +Cursor get cursor
+    TerminalView~T~ : +Iterable~T~ get lines
+  
+  class TerminalSink~T~
+  <<abstract>> TerminalSink
+    TerminalSink~T~ : +void write(T span)
+    TerminalSink~T~ : +void writeLine(T span)
+
+  class TerminalBuffer~T~
+  <<abstract>> TerminalBuffer
+  
+  TerminalView~T~ <|-- TerminalBuffer~T~ : Extends
+  TerminalSink~T~ <|-- TerminalBuffer~T~ : Mixes-in
+  TerminalBuffer~T~ <|-- StringTerminalBuffer : Extends, T=String
+```
+
 ## Benchmarks
 
 While not the primary goal of this project, it's interesting to see how the
