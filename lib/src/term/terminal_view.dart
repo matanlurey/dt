@@ -6,6 +6,15 @@ import 'package:meta/meta.dart';
 import 'terminal_sink.dart';
 
 /// A position in a terminal represented by a [column] and [line].
+///
+/// **NOTE**: Cursors by nature are _not_ immutable, and their properties may
+/// change in some implementations. As a result, they do not implement [==] or
+/// [hashCode]; instead, use [offset] to compare cursor positions:
+/// ```dart
+/// final cursor = Cursor(column: 1, line: 2);
+/// final other = Cursor(column: 1, line: 2);
+/// assert(cursor.offset == other.offset);
+/// ```
 interface class Cursor {
   /// Creates a new cursor at the given [column] and [line].
   ///
@@ -116,8 +125,10 @@ abstract mixin class InteractiveCursor implements Cursor {
 ///
 /// See [TerminalSink] for definitions of _line_ and _span_.
 abstract mixin class TerminalView<T> {
+  // coverage:ignore-start
   // ignore: public_member_api_docs
   const TerminalView();
+  // coverage:ignore-end
 
   /// Returns a read-only view of an existing terminal.
   ///
@@ -159,6 +170,88 @@ abstract mixin class TerminalView<T> {
   ///
   /// A typical terminal is vertically ordered from top to bottom.
   Iterable<T> get lines => Iterable.generate(lineCount, line);
+
+  /// Returns a string representation of the terminal suitable for debugging.
+  ///
+  /// ```txt
+  /// Hello World!
+  /// ```
+  ///
+  /// If [drawBorder] is `true`, the bounds of the terminal are drawn:
+  ///
+  /// ```txt
+  /// ┌────────────┐
+  /// │Hello World!│
+  /// └────────────┘
+  /// ```
+  ///
+  /// If [includeCursor] is `true`, the cursor is drawn as `█`:
+  ///
+  /// ```txt
+  /// ┌─────────────┐
+  /// │Hello World!█│
+  /// └─────────────┘
+  /// ```
+  ///
+  /// If `T.toString` is not suitable, provide a [format] function to convert.
+  static String visualize<T>(
+    TerminalView<T> view, {
+    bool drawBorder = false,
+    bool includeCursor = false,
+    String Function(T span)? format,
+  }) {
+    // Default to the identity function.
+    format ??= (span) => span.toString();
+
+    // Convert the spans to strings.
+    final lines = view.lines.map(format).toList();
+
+    // Calculate the width of the terminal.
+    var width = lines.fold<int>(0, (max, line) => math.max(max, line.length));
+
+    // If the cursor is included, add one to the width.
+    if (includeCursor) {
+      width++;
+    }
+
+    // Now render with the given options.
+    final buffer = StringBuffer();
+    if (drawBorder) {
+      buffer.writeln('┌${'─' * width}┐');
+    }
+    for (var i = 0; i < lines.length; i++) {
+      final line = lines[i];
+      if (drawBorder) {
+        buffer.write('│');
+      }
+      buffer.write(line);
+      if (includeCursor && i == view.cursor.line) {
+        buffer.write('█');
+      }
+      if (drawBorder) {
+        buffer.write('│');
+      }
+      buffer.writeln();
+    }
+    if (drawBorder) {
+      buffer.writeln('└${'─' * width}┘');
+    }
+    return buffer.toString();
+  }
+
+  /// Returns a string representation of the terminal suitable for debugging.
+  ///
+  /// This method is equivalent to calling [visualize].
+  String toDebugString({
+    bool drawBorder = false,
+    bool includeCursor = false,
+  }) {
+    return visualize(
+      this,
+      drawBorder: drawBorder,
+      includeCursor: includeCursor,
+    );
+  }
 }
 
 final class _DelegatingTerminalView<T> implements TerminalView<T> {
@@ -188,4 +281,15 @@ final class _DelegatingTerminalView<T> implements TerminalView<T> {
 
   @override
   Iterable<T> get lines => _delegate.lines;
+
+  @override
+  String toDebugString({
+    bool drawBorder = false,
+    bool includeCursor = false,
+  }) {
+    return _delegate.toDebugString(
+      drawBorder: drawBorder,
+      includeCursor: includeCursor,
+    );
+  }
 }

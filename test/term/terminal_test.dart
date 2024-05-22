@@ -160,6 +160,7 @@ void _tests({
     );
 
     expect(feed.cursor.offset, feed.lastPosition);
+    expect(feed.cursor.toString(), 'Cursor <1:14>');
   });
 
   test('cursor moves to the left', () {
@@ -274,6 +275,28 @@ void _tests({
     feed.cursor.line += 10;
 
     expect(feed.cursor.offset, Offset(0, 1));
+  });
+
+  test('currentLine reflects the cursor position', () {
+    final feed = constructor(
+      lines: [
+        'Hello',
+        'World!',
+      ],
+      cursor: Offset(0, 0),
+    );
+
+    expect(feed.currentLine, 'Hello');
+  });
+
+  test('lastPosition changes as lines are added', () {
+    final feed = constructor();
+
+    expect(feed.lastPosition, Offset.zero);
+
+    feed.writeLine('Hello World!');
+
+    expect(feed.lastPosition, Offset(0, 1));
   });
 }
 

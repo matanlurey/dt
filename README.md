@@ -16,9 +16,7 @@ Inspiration:
 
 Work-in-progress:
 
-- [x] Support a non-interactive ("cooked"), output-only string-based terminal
-  (`StringLineFeed`).
-- [ ] Support a non-interactive ("cooked") string-based terminal with input
+- [x] Support a non-interactive ("cooked") string-based terminal with input
   support (`StringTerminal`).
 - [ ] Support an interactive ("raw") string-based terminal with input and output
   support (`RawStringTerminal`).
@@ -36,7 +34,36 @@ emulating, and interacting with terminal applications in Dart. It's designed to
 be a low-level building block for more complex terminal applications, such as
 text editors, games, and interactive command-line interfaces.
 
-See the diagram below for a high-level overview of the API design:
+### Terminal
+
+A `Terminal` represents a sequence of lines of text that can be written to and
+read from, and a cursor that can be moved around. Intended to represent parts of
+a standard ("cooked" or _canonical_) terminal interface, writing to a terminal
+replaces all spans after the cursor and moves the cursor to the last possible
+position
+
+```dart
+import 'package:dt/dt.dart';
+
+void main() {
+  final terminal = StringTerminal.from(lines: ['Hello, World!']);
+
+  // World isn't that impressive, let's replace it with Dart!
+  terminal.cursor.column -= 6;
+  terminal.write('Dart!');
+
+  print(terminal.toDebugString(drawBorder: true, includeCursor: true));
+}
+```
+
+```shell
+% dart example/terminal.dart
+┌─────────────┐
+│Hello, Dart!█│
+└─────────────┘
+```
+
+The major API surface of a `Terminal` includes:
 
 ```mermaid
 classDiagram
@@ -58,54 +85,6 @@ classDiagram
   TerminalView~T~ <|-- Terminal~T~ : Mixes-in
   Terminal~T~ <|-- StringTerminal : Extends, T=String
 ```
-
-<!--
-```mermaid
-classDiagram
-  class TerminalView~T~
-  <<abstract>> TerminalView
-    TerminalView~T~ : +Cursor get cursor
-    TerminalView~T~ : +Iterable~T~ get lines
-  
-  class TerminalSink~T~
-  <<abstract>> TerminalSink
-    TerminalSink~T~ : +void write(T span)
-    TerminalSink~T~ : +void writeLine(T span)
-
-  class TerminalBuffer~T~
-  <<abstract>> TerminalBuffer
-
-  TerminalView~T~ <|-- TerminalBuffer~T~ : Extends
-  TerminalSink~T~ <|-- TerminalBuffer~T~ : Mixes-in
-  TerminalBuffer~T~ <|-- StringTerminalBuffer : Extends, T=String
-
-  class LineEditor~T~
-  <<abstract>> LineEditor
-    LineEditor~T~ : +LineCursor get cursor
-    LineEditor~T~ : +void backspace()
-    LineEditor~T~ : +void delete()
-
-  class Terminal~T~
-  <<abstract>> Terminal
-
-  LineEditor~T~ <|-- Terminal~T~ : Mixes-in
-  TerminalSink~T~ <|-- Terminal~T~ : Mixes-in
-  TerminalView~T~ <|-- Terminal~T~ : Extends
-  Terminal~T~ <|-- StringTerminal : Extends, T=String
-
-  class TerminalController~T~
-  <<abstract>> TerminalController
-    TerminalController~T~ : +void clear()
-    TerminalController~T~ : +ScreenCursor get cursor
-
-  class RawTerminal~T~
-  <<abstract>> RawTerminal
-
-  Terminal~T~ <|-- RawTerminal~T~ : Extends
-  TerminalController~T~ <|-- RawTerminal~T~ : Mixes-in
-  RawTerminal~T~ <|-- RawStringTerminal : Extends, T=String
-```
--->
 
 ## Benchmarks
 
