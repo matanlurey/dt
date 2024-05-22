@@ -1,2 +1,2 @@
 export 'src/core.dart';
-export 'src/line.dart';
+export 'src/term.dart';

@@ -40,21 +40,23 @@ See the diagram below for a high-level overview of the API design:
 
 ```mermaid
 classDiagram
-  class LineSink~T~
-  <<abstract>> LineSink
-    LineSink~T~ : +void write(T span)
-    LineSink~T~ : +void writeLine(T span)
+  class TerminalSink~T~
+  <<abstract>> TerminalSink
+    TerminalSink~T~ : +void write(T span)
+    TerminalSink~T~ : +void writeLine(T span)
 
-  class LineFeedView~T~
-  <<abstract>> LineFeedView
-    LineFeedView~T~ : +Iterable~T~ get lines
+  class TerminalView~T~
+  <<abstract>> TerminalView
+    TerminalView~T~ : +Iterable~T~ get lines
+    TerminalView~T~ : +Cursor get cursor
 
-  class LineFeed~T~
-  <<abstract>> LineFeed
+  class Terminal~T~
+  <<abstract>> Terminal
+    Terminal~T~ : +InteractiveCursor get cursor
   
-  LineSink~T~ <|-- LineFeed~T~ : Mixes-in
-  LineFeedView~T~ <|-- LineFeed~T~ : Mixes-in
-  LineFeed~T~ <|-- StringLineFeed : Extends, T=String
+  TerminalSink~T~ <|-- Terminal~T~ : Mixes-in
+  TerminalView~T~ <|-- Terminal~T~ : Mixes-in
+  Terminal~T~ <|-- StringTerminal : Extends, T=String
 ```
 
 <!--

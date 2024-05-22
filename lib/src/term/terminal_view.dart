@@ -37,8 +37,70 @@ interface class Cursor {
   /// Lines are zero-based and are clamped to non-negative values.
   final int line;
 
-  /// Returns the cursor represented as an offset.
-  Offset toOffset() => Offset(column, line);
+  /// The cursor represented as an offset.
+  Offset get offset => Offset(column, line);
+
+  @override
+  String toString() => 'Cursor <$line:$column>';
+}
+
+/// A position in a terminal represented by a [column] and [line].
+///
+/// Interactive cursors are _mutable_, and [column] and [line] may be changed
+/// by calling their respective setters, or by calling methods such as [moveTo].
+///
+/// Operations on a cursor that would move it outside the bounds of the terminal
+/// are implementation-defined, and may result in being ignored or clamped to
+/// the nearest valid position.
+abstract mixin class InteractiveCursor implements Cursor {
+  /// Moves the cursor _to_ the given [column] and [line].
+  ///
+  /// If being moved outside the bounds of the terminal, the implementation
+  /// may either ignore the move or clamp the cursor to the nearest valid
+  /// position. The default implementation is equivalent to:
+  /// ```dart
+  /// cursor
+  ///   ..column = column
+  ///   ..line = line;
+  /// ```
+  void moveTo({
+    required int column,
+    required int line,
+  }) {
+    this
+      ..column = column
+      ..line = line;
+  }
+
+  @override
+  Offset get offset => Offset(column, line);
+
+  /// Moves the cursor to the given [offset] if able.
+  ///
+  /// See [moveTo] for more information on cursor movement.
+  set offset(Offset offset) {
+    moveTo(column: offset.x, line: offset.y);
+  }
+
+  @override
+  int get column;
+
+  /// Sets the cursor to the given [column].
+  ///
+  /// If the column would be moved outside the bounds of the terminal, the
+  /// implementation may either ignore the move or clamp the cursor to the
+  /// nearest valid position.
+  set column(int column);
+
+  @override
+  int get line;
+
+  /// Sets the cursor to the given [line].
+  ///
+  /// If the line would be moved outside the bounds of the terminal, the
+  /// implementation may either ignore the move or clamp the cursor to the
+  /// nearest valid position.
+  set line(int line);
 
   @override
   String toString() => 'Cursor <$line:$column>';
@@ -65,6 +127,9 @@ abstract mixin class TerminalView<T> {
   /// The cursor position in the terminal.
   Cursor get cursor;
 
+  /// The last possible position in the terminal.
+  Offset get lastPosition;
+
   /// Number of lines in the terminal.
   ///
   /// Implementations are expected to provide a constant-time implementation.
@@ -85,6 +150,11 @@ abstract mixin class TerminalView<T> {
   /// Reading beyond the bounds of the terminal throws an error.
   T line(int index);
 
+  /// The current line that the cursor is located on.
+  ///
+  /// If the terminal an error is thrown.
+  T get currentLine => line(cursor.line);
+
   /// Lines in the terminal in an idiomatic order.
   ///
   /// A typical terminal is vertically ordered from top to bottom.
@@ -99,6 +169,9 @@ final class _DelegatingTerminalView<T> implements TerminalView<T> {
   Cursor get cursor => _delegate.cursor;
 
   @override
+  Offset get lastPosition => _delegate.lastPosition;
+
+  @override
   bool get isEmpty => _delegate.isEmpty;
 
   @override
@@ -109,6 +182,9 @@ final class _DelegatingTerminalView<T> implements TerminalView<T> {
 
   @override
   T line(int index) => _delegate.line(index);
+
+  @override
+  T get currentLine => _delegate.currentLine;
 
   @override
   Iterable<T> get lines => _delegate.lines;

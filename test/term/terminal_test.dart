@@ -3,18 +3,21 @@ import 'package:dt/src/term.dart';
 import 'package:test/test.dart';
 
 void main() {
-  group('StringLineFeed', () {
+  group('$StringTerminal', () {
     _tests(
       constructor: StringTerminal.from,
     );
   });
-  group('LineFeed<String>.using', () {
+  group('Terminal<String>.using', () {
     _tests(
       constructor: ({lines = const [], cursor}) => Terminal.using(
         defaultSpan: () => '',
-        mergeSpan: (a, b) => '$a$b',
         widthSpan: (span) => span.length,
+        truncateSpan: (span, index, insert) {
+          return span.replaceRange(index, null, insert);
+        },
         lines: lines,
+        cursor: cursor,
       ),
     );
   });
@@ -57,10 +60,12 @@ void _tests({
   });
 
   test('starts with multiple lines', () {
-    final feed = constructor(lines: [
-      'Hello World!',
-      'Goodbye World!',
-    ]);
+    final feed = constructor(
+      lines: [
+        'Hello World!',
+        'Goodbye World!',
+      ],
+    );
 
     expect(feed.lines, [
       'Hello World!',
@@ -139,6 +144,137 @@ void _tests({
 
     expect(feed.lines, ['Hello ', 'World!', '']);
   });
+
+  test('cursor starts at 0:0 in an empty feed', () {
+    final feed = constructor();
+
+    expect(feed.cursor.offset, Offset(0, 0));
+  });
+
+  test('cursor starts at lastPosition in a non-empty feed', () {
+    final feed = constructor(
+      lines: [
+        'Hello World!',
+        'Goodbye World!',
+      ],
+    );
+
+    expect(feed.cursor.offset, feed.lastPosition);
+  });
+
+  test('cursor moves to the left', () {
+    final feed = constructor(
+      lines: ['Hello'],
+    );
+
+    expect(feed.cursor.offset, Offset(5, 0));
+
+    feed.cursor.column -= 1;
+
+    expect(feed.cursor.offset, Offset(4, 0));
+  });
+
+  test('cursor is clamped to 0 when moved too far left', () {
+    final feed = constructor(
+      lines: ['Hello'],
+    );
+
+    expect(feed.cursor.offset, Offset(5, 0));
+
+    feed.cursor.column -= 10;
+
+    expect(feed.cursor.offset, Offset(0, 0));
+  });
+
+  test('cursor moves to the right', () {
+    final feed = constructor(
+      lines: ['Hello'],
+      cursor: Offset(4, 0),
+    );
+
+    expect(feed.cursor.offset, Offset(4, 0));
+
+    feed.cursor.column += 1;
+
+    expect(feed.cursor.offset, Offset(5, 0));
+  });
+
+  test('cursor is clamped to width when oved too far right', () {
+    final feed = constructor(
+      lines: ['Hello'],
+      cursor: Offset(4, 0),
+    );
+
+    expect(feed.cursor.offset, Offset(4, 0));
+
+    feed.cursor.column += 10;
+
+    expect(feed.cursor.offset, Offset(5, 0));
+  });
+
+  test('cursor moves up', () {
+    final feed = constructor(
+      lines: [
+        'Hello',
+        'World!',
+      ],
+      cursor: Offset(0, 1),
+    );
+
+    expect(feed.cursor.offset, Offset(0, 1));
+
+    feed.cursor.line -= 1;
+
+    expect(feed.cursor.offset, Offset(0, 0));
+  });
+
+  test('cursor is clamped to 0 when moved too far up', () {
+    final feed = constructor(
+      lines: [
+        'Hello',
+        'World!',
+      ],
+      cursor: Offset(0, 1),
+    );
+
+    expect(feed.cursor.offset, Offset(0, 1));
+
+    feed.cursor.line -= 10;
+
+    expect(feed.cursor.offset, Offset(0, 0));
+  });
+
+  test('cursor moves down', () {
+    final feed = constructor(
+      lines: [
+        'Hello',
+        'World!',
+      ],
+      cursor: Offset.zero,
+    );
+
+    expect(feed.cursor.offset, Offset(0, 0));
+
+    feed.cursor.line += 1;
+
+    expect(feed.cursor.offset, Offset(0, 1));
+  });
+
+  test('cursor is clamped to height when moved too far down', () {
+    final feed = constructor(
+      lines: [
+        'Hello',
+        'World!',
+      ],
+      cursor: Offset.zero,
+    );
+
+    expect(feed.cursor.offset, Offset(0, 0));
+
+    feed.cursor.line += 10;
+
+    expect(feed.cursor.offset, Offset(0, 1));
+  });
 }
 
 // These types exist to ensure that the class has the intended modifiers.
@@ -146,14 +282,6 @@ void _tests({
 
 // ignore: unused_element
 final class _CanBeImplemented implements Terminal<void> {
-  @override
-  noSuchMethod(Invocation invocation) => super.noSuchMethod(invocation);
-}
-
-// ignore: unused_element
-final class _CanBeExtended extends Terminal<void> {
-  _CanBeExtended() : super.from();
-
   @override
   noSuchMethod(Invocation invocation) => super.noSuchMethod(invocation);
 }
