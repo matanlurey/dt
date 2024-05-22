@@ -2,6 +2,7 @@ import 'package:dt/src/core.dart';
 import 'package:meta/meta.dart';
 
 import 'cursor.dart';
+import 'raw_terminal_buffer.dart';
 import 'terminal_controller.dart';
 import 'terminal_sink.dart';
 import 'terminal_span.dart';
@@ -11,16 +12,17 @@ import 'terminal_view.dart';
 ///
 /// This type provides a way to construct and manipulate the contents of a
 /// terminal of lines, similar to the capabilities of a canonical ("cooked")
-/// terminal.
-///
-/// See [TerminalSink] for definitions of _line_ and _span_.
+/// terminal. In practice, it is the combination of the types:
+/// - [TerminalSink] for writing to the terminal.
+/// - [TerminalView] for reading from the terminal.
+/// - [TerminalController] for manipulating the cursor and terminal contents.
 ///
 /// ## Cursor behavior
 ///
 /// Append-only terminals can safely ignore cursor positioning, as the cursor
 /// is always at the end of the terminal (i.e. [lastPosition]). However, if
 /// the terminal is used interactively the following rules are recommended
-/// and are implemented by the default terminal types:
+/// and are implemented by the default ([Terminal.new]) type:
 ///
 /// - The cursor is always clamped to the bounds of the terminal. If the cursor
 ///   would be placed outside the terminal, it is moved to the nearest valid
@@ -29,11 +31,14 @@ import 'terminal_view.dart';
 /// - If a [write] operation is performed when the cursor is _not_ at the end of
 ///   the buffer, the contents to the right of the cursor are _replaced_ with
 ///   the new contents.
+/// - Clearing content _before_ the cursor will insert empty lines and spans to
+///   replace the cleared content, but will not move the cursor. See
+///   [LineTerminalMixin] for details.
 ///
-/// For customized behavior, consider using [RawTerminal] instead, which is
-/// intended to be used for fully interactive terminals with cursor movement
+/// For customized behavior, consider using [RawTerminalBuffer] instead, which
+/// is intended to be used for fully interactive terminals with cursor movement
 /// and input capabilities.
-abstract interface class Terminal<T>
+abstract interface class TerminalBuffer<T>
     with TerminalView<T>, TerminalSink<T>
     implements TerminalController<T> {
   /// Creates a new line feed with the provided `___Span` implementations.
@@ -47,23 +52,19 @@ abstract interface class Terminal<T>
   ///
   /// ## Example
   ///
-  /// A sample implementation of a [Terminal] that uses a string for spans:
-  ///
   /// ```dart
   /// final terminal = Terminal(
   ///   span: const StringSpan(),
   /// );
   /// ```
-  ///
-  /// See also [StringTerminal].
-  factory Terminal(
+  factory TerminalBuffer(
     TerminalSpan<T> span, {
     Offset? cursor,
     Iterable<T> lines,
   }) = _Terminal;
 
   /// Creates a new line feed, optionally by copying [lines] if provided.
-  Terminal._from({
+  TerminalBuffer._from({
     Iterable<T> lines = const [],
   }) : _lines = List.of(lines);
 
@@ -136,7 +137,7 @@ abstract interface class Terminal<T>
   void writeLines(Iterable<T> lines, {T? separator});
 }
 
-final class _Terminal<T> extends Terminal<T> with ListTerminalMixin<T> {
+final class _Terminal<T> extends TerminalBuffer<T> with ListTerminalMixin<T> {
   _Terminal(
     this.span, {
     super.lines,
