@@ -16,9 +16,7 @@ Inspiration:
 
 Work-in-progress:
 
-- [x] Support a non-interactive ("cooked"), output-only string-based terminal
-  (`StringTerminalBuffer`).
-- [ ] Support a non-interactive ("cooked") string-based terminal with input
+- [x] Support a non-interactive ("cooked") string-based terminal with input
   support (`StringTerminal`).
 - [ ] Support an interactive ("raw") string-based terminal with input and output
   support (`RawStringTerminal`).
@@ -36,39 +34,56 @@ emulating, and interacting with terminal applications in Dart. It's designed to
 be a low-level building block for more complex terminal applications, such as
 text editors, games, and interactive command-line interfaces.
 
-### API Design
+### Terminal
 
-A _subset_ of the API provided by this package includes:
+A `Terminal` represents a sequence of lines of text that can be written to and
+read from, and a cursor that can be moved around. Intended to represent parts of
+a standard ("cooked" or _canonical_) terminal interface, writing to a terminal
+replaces all spans after the cursor and moves the cursor to the last possible
+position
 
-- `TerminalView`: a read-only, but potentially changing, view of a terminal.
-- `TerminalSink`: a write-only interface for writing to a terminal.
-- `TerminalBuffer`: a mutable append-only buffer for writing to a terminal.
-  
-  Sometimes referred to as a "cooked" terminal, this buffer does allow
-  user-defined support cursor positioning or other advanced terminal features,
-  intending to represent a non-TTY output stream. In other words, `.cursor`
-  is always the same as `.lastPosition`.
+```dart
+import 'package:dt/dt.dart';
 
-See the diagram below for a high-level overview of the API design:
+void main() {
+  final terminal = StringTerminal.from(lines: ['Hello, World!']);
+
+  // World isn't that impressive, let's replace it with Dart!
+  terminal.cursor.column -= 6;
+  terminal.write('Dart!');
+
+  print(terminal.toDebugString(drawBorder: true, includeCursor: true));
+}
+```
+
+```shell
+% dart example/terminal.dart
+┌─────────────┐
+│Hello, Dart!█│
+└─────────────┘
+```
+
+The major API surface of a `Terminal` includes:
 
 ```mermaid
 classDiagram
-  class TerminalView~T~
-  <<abstract>> TerminalView
-    TerminalView~T~ : +Cursor get cursor
-    TerminalView~T~ : +Iterable~T~ get lines
-  
   class TerminalSink~T~
   <<abstract>> TerminalSink
     TerminalSink~T~ : +void write(T span)
     TerminalSink~T~ : +void writeLine(T span)
 
-  class TerminalBuffer~T~
-  <<abstract>> TerminalBuffer
+  class TerminalView~T~
+  <<abstract>> TerminalView
+    TerminalView~T~ : +Iterable~T~ get lines
+    TerminalView~T~ : +Cursor get cursor
+
+  class Terminal~T~
+  <<abstract>> Terminal
+    Terminal~T~ : +InteractiveCursor get cursor
   
-  TerminalView~T~ <|-- TerminalBuffer~T~ : Extends
-  TerminalSink~T~ <|-- TerminalBuffer~T~ : Mixes-in
-  TerminalBuffer~T~ <|-- StringTerminalBuffer : Extends, T=String
+  TerminalSink~T~ <|-- Terminal~T~ : Mixes-in
+  TerminalView~T~ <|-- Terminal~T~ : Mixes-in
+  Terminal~T~ <|-- StringTerminal : Extends, T=String
 ```
 
 ## Benchmarks
