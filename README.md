@@ -18,6 +18,8 @@ Work-in-progress:
 
 - [x] Support a non-interactive ("cooked") string-based terminal with input
   support (`Terminal`).
+- [ ] Add and support `TerminalController`.
+- [ ] Rename `Terminal` to `TerminalBuffer`.
 - [ ] Support an interactive ("raw") string-based terminal with input and output
   support (`RawTerminal`).
 - [ ] Add a new span-type for terminal formatting and styling (`Styled`), and
@@ -39,7 +41,8 @@ A `Terminal` represents a sequence of lines of text that can be written to and
 read from, and a cursor that can be moved around. Intended to represent parts of
 a standard ("cooked" or _canonical_) terminal interface, writing to a terminal
 replaces all spans after the cursor and moves the cursor to the last possible
-position
+position, while clearing the screen either removes content or replaces it with
+empty spans.
 
 ```dart
 import 'package:dt/dt.dart';
@@ -71,17 +74,22 @@ classDiagram
     TerminalSink~T~ : +void write(T span)
     TerminalSink~T~ : +void writeLine(T span)
 
+  class TerminalController~T~
+  <<interface>> TerminalController
+    TerminalController~T~ : +InteractiveCursor get cursor
+    TerminalController~T~ : +void clearScreen()
+
   class TerminalView~T~
   <<abstract>> TerminalView
-    TerminalView~T~ : +Iterable~T~ get lines
     TerminalView~T~ : +Cursor get cursor
+    TerminalView~T~ : +Iterable~T~ get lines
 
   class Terminal~T~
   <<abstract>> Terminal
-    Terminal~T~ : +InteractiveCursor get cursor
   
   TerminalSink~T~ <|-- Terminal~T~ : Mixes-in
   TerminalView~T~ <|-- Terminal~T~ : Mixes-in
+  TerminalController~T~ <|-- Terminal~T~ : Implements
 ```
 
 ## Benchmarks

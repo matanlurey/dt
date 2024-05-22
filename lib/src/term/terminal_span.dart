@@ -23,8 +23,8 @@ abstract mixin class TerminalSpan<T> {
   // ignore: public_member_api_docs
   const TerminalSpan();
 
-  /// Returns an empty span of type [T].
-  T empty();
+  /// Returns an empty span of type [T] with a default [width] of `0`.
+  T empty([int width = 0]);
 
   /// Returns the width of the [span] measured in columns.
   int width(T span);
@@ -77,7 +77,12 @@ final class StringSpan extends TerminalSpan<String> {
   const StringSpan();
 
   @override
-  String empty() => '';
+  String empty([int width = 0]) {
+    if (width == 0) {
+      return '';
+    }
+    return ' ' * width;
+  }
 
   @override
   int width(String span) => span.length;
@@ -113,18 +118,26 @@ abstract final class ListSpan<T> extends TerminalSpan<List<T>> {
   /// for all list subtypes, including those that are non-growable (such as
   /// [Uint8List]), are shared between multiple instances, or are unmodifiable
   /// (such as [UnmodifiableListView]).
-  @literal
-  const factory ListSpan() = _ImmutableListSpan<T>;
+  const factory ListSpan({
+    required T Function() defaultElement,
+  }) = _ImmutableListSpan<T>;
 
   /// Creates a list span that mutates an existing list for each operation.
   ///
   /// This implementation is more efficient for growable lists, such as
   /// [List], [ListQueue], and [SplayTreeList], but should not be used with
   /// non-growable lists, shared lists, or unmodifiable lists.
-  @literal
-  const factory ListSpan.mutable() = _MutableListSpan<T>;
+  const factory ListSpan.mutable({
+    required T Function() defaultElement,
+  }) = _MutableListSpan<T>;
 
-  const ListSpan._();
+  const ListSpan._(this._defaultElement);
+  final T Function() _defaultElement;
+
+  @override
+  List<T> empty([int width = 0]) {
+    return List<T>.generate(width, (_) => _defaultElement());
+  }
 
   @override
   @nonVirtual
@@ -138,10 +151,14 @@ abstract final class ListSpan<T> extends TerminalSpan<List<T>> {
 }
 
 final class _ImmutableListSpan<T> extends ListSpan<T> {
-  const _ImmutableListSpan() : super._();
+  const _ImmutableListSpan({
+    required T Function() defaultElement,
+  }) : super._(defaultElement);
 
   @override
-  List<T> empty() => const [];
+  List<T> empty([int width = 0]) {
+    return width == 0 ? const [] : super.empty(width);
+  }
 
   @override
   List<T> merge(List<T> first, List<T> second) => first + second;
@@ -166,10 +183,9 @@ final class _ImmutableListSpan<T> extends ListSpan<T> {
 }
 
 final class _MutableListSpan<T> extends ListSpan<T> {
-  const _MutableListSpan() : super._();
-
-  @override
-  List<T> empty() => [];
+  const _MutableListSpan({
+    required T Function() defaultElement,
+  }) : super._(defaultElement);
 
   @override
   List<T> merge(List<T> first, List<T> second) {

@@ -11,11 +11,11 @@ void main() {
   });
 
   group('ListSpan (Immutable)', () {
-    _listTests(const ListSpan());
+    _listTests(ListSpan(defaultElement: () => 0));
   });
 
   group('ListSpan (Mutable)', () {
-    _listTests(const ListSpan.mutable());
+    _listTests(ListSpan.mutable(defaultElement: () => 0));
   });
 }
 
@@ -24,7 +24,7 @@ final class _NaiveStringSpan extends TerminalSpan<String> {
   const _NaiveStringSpan();
 
   @override
-  String empty() => '';
+  String empty([int width = 0]) => width == 0 ? '' : ' ' * width;
 
   @override
   int width(String span) => span.length;

@@ -1,5 +1,4 @@
-import 'package:dt/src/core.dart';
-import 'package:dt/src/term/terminal_view.dart';
+import 'package:dt/dt.dart';
 import 'package:test/test.dart';
 
 // We use a List<int> to avoid the degenerate case of a span with a '\n'.

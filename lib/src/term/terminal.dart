@@ -1,40 +1,11 @@
 import 'package:dt/src/core.dart';
 import 'package:meta/meta.dart';
 
+import 'cursor.dart';
+import 'terminal_controller.dart';
 import 'terminal_sink.dart';
 import 'terminal_span.dart';
 import 'terminal_view.dart';
-
-final class _InteractiveCursor extends InteractiveCursor {
-  _InteractiveCursor(
-    this._terminal,
-    this._span,
-    this._column,
-    this._line,
-  );
-
-  final Terminal<void> _terminal;
-  final TerminalSpan<void> _span;
-  int _column;
-  int _line;
-
-  @override
-  int get column => _column;
-
-  @override
-  set column(int value) {
-    _column = value.clamp(0, _span.width(_terminal.line(_line)));
-  }
-
-  @override
-  int get line => _line;
-
-  @override
-  set line(int value) {
-    _line = value.clamp(0, _terminal.lineCount - 1);
-    _column = _column.clamp(0, _span.width(_terminal.line(_line)));
-  }
-}
 
 /// A buffered terminal of lines [T] and a [cursor] position.
 ///
@@ -62,7 +33,9 @@ final class _InteractiveCursor extends InteractiveCursor {
 /// For customized behavior, consider using [RawTerminal] instead, which is
 /// intended to be used for fully interactive terminals with cursor movement
 /// and input capabilities.
-abstract interface class Terminal<T> with TerminalView<T>, TerminalSink<T> {
+abstract interface class Terminal<T>
+    with TerminalView<T>, TerminalSink<T>
+    implements TerminalController<T> {
   /// Creates a new line feed with the provided `___Span` implementations.
   ///
   /// This constructor provides a simple way to create a terminal with custom
@@ -92,26 +65,13 @@ abstract interface class Terminal<T> with TerminalView<T>, TerminalSink<T> {
   /// Creates a new line feed, optionally by copying [lines] if provided.
   Terminal._from({
     Iterable<T> lines = const [],
-    Offset? cursor,
-  }) : _lines = List.of(lines) {
-    if (cursor != null) {
-      cursor = cursor.clamp(Offset.zero, lastPosition);
-    } else {
-      cursor = lastPosition;
-    }
-    _cursor = _InteractiveCursor(this, _span, cursor.x, cursor.y);
-  }
+  }) : _lines = List.of(lines);
 
-  /// The span implementation used by the terminal.
-  TerminalSpan<T> get _span;
+  @override
+  InteractiveCursor get cursor;
 
   @override
   Offset get lastPosition;
-
-  @override
-  @nonVirtual
-  InteractiveCursor get cursor => _cursor;
-  late InteractiveCursor _cursor;
 
   @override
   @nonVirtual
@@ -124,7 +84,7 @@ abstract interface class Terminal<T> with TerminalView<T>, TerminalSink<T> {
 
   /// Move the cursor to the last position in the terminal.
   void _resetCursor() {
-    _cursor.offset = lastPosition;
+    cursor.offset = lastPosition;
   }
 
   /// Removes all lines after the cursor.
@@ -176,15 +136,25 @@ abstract interface class Terminal<T> with TerminalView<T>, TerminalSink<T> {
   void writeLines(Iterable<T> lines, {T? separator});
 }
 
-final class _Terminal<T> extends Terminal<T> {
+final class _Terminal<T> extends Terminal<T> with ListTerminalMixin<T> {
   _Terminal(
-    this._span, {
+    this.span, {
     super.lines,
-    super.cursor,
-  }) : super._from();
+    Offset? cursor,
+  }) : super._from() {
+    if (cursor == null) {
+      cursor = lastPosition;
+    } else {
+      cursor = cursor.clamp(Offset.zero, lastPosition);
+    }
+    initializeCursor(cursor);
+  }
 
   @override
-  final TerminalSpan<T> _span;
+  final TerminalSpan<T> span;
+
+  @override
+  List<T> get lines => _lines;
 
   @override
   Offset get lastPosition {
@@ -192,7 +162,7 @@ final class _Terminal<T> extends Terminal<T> {
       return Offset.zero;
     }
     return Offset(
-      _lines.isEmpty ? 0 : _span.width(_lines.last),
+      _lines.isEmpty ? 0 : span.width(_lines.last),
       _lines.length - 1,
     );
   }
@@ -208,7 +178,7 @@ final class _Terminal<T> extends Terminal<T> {
 
     // Replace the remainder of the line with the span.
     final Cursor(:line, :column) = cursor;
-    _lines[line] = _span.replace(_lines[line], span, column);
+    _lines[line] = this.span.replace(_lines[line], span, column);
 
     // Remove any lines after the cursor and reset the cursor.
     _truncateLines();
@@ -222,10 +192,10 @@ final class _Terminal<T> extends Terminal<T> {
     }
 
     // Add a new line at the cursor position.
-    _lines.insert(cursor.line + 1, _span.empty());
+    _lines.insert(cursor.line + 1, this.span.empty());
 
     // Move the cursor to the new line.
-    _cursor.moveTo(column: 0, line: cursor.line + 1);
+    cursor.moveTo(column: 0, line: cursor.line + 1);
 
     // Remove any lines after the cursor.
     _truncateLines();
