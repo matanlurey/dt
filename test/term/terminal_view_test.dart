@@ -27,14 +27,72 @@ void main() {
     expect(cursor.offset, fromXY.offset);
     expect(cursor.toString(), 'Cursor <2:1>');
   });
+
+  test('A string representation of the view', () {
+    final view = _TestView();
+    final result = view.toDebugString(
+      drawBorder: true,
+      format: (span) => span.join(),
+    );
+
+    expect(
+      result,
+      [
+        '┌───┐',
+        '│123│',
+        '└───┘',
+        '',
+      ].join('\n'),
+    );
+  });
+
+  test('A string representation of the view w/ cursor', () {
+    final view = _TestView();
+    final result = view.toDebugString(
+      drawBorder: true,
+      includeCursor: true,
+      format: (span) => span.join(),
+    );
+
+    expect(
+      result,
+      [
+        '┌───┐',
+        '│█23│',
+        '└───┘',
+        '',
+      ].join('\n'),
+    );
+  });
+
+  test('A string representation of the view w/ cursor at end', () {
+    final view = _TestView(cursor: Offset(3, 0));
+    final result = view.toDebugString(
+      drawBorder: true,
+      includeCursor: true,
+      format: (span) => span.join(),
+    );
+
+    expect(
+      result,
+      [
+        '┌────┐',
+        '│123█│',
+        '└────┘',
+        '',
+      ].join('\n'),
+    );
+  });
 }
 
 // A test view with hardcoded return values.
 final class _TestView implements TerminalView<_Span> {
-  const _TestView();
+  _TestView({
+    Offset cursor = Offset.zero,
+  }) : cursor = Cursor.fromXY(cursor.x, cursor.y);
 
   @override
-  Cursor get cursor => Cursor.fromXY(0, 0);
+  final Cursor cursor;
 
   @override
   Offset get lastPosition => Offset(0, 0);
@@ -62,11 +120,16 @@ final class _TestView implements TerminalView<_Span> {
   }
 
   @override
-  String toDebugString({bool drawBorder = false, bool includeCursor = false}) {
+  String toDebugString({
+    bool drawBorder = false,
+    bool includeCursor = false,
+    String Function(_Span)? format,
+  }) {
     return TerminalView.visualize(
       this,
       drawBorder: drawBorder,
       includeCursor: includeCursor,
+      format: format,
     );
   }
 }

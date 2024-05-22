@@ -3,24 +3,13 @@ import 'package:dt/src/term.dart';
 import 'package:test/test.dart';
 
 void main() {
-  group('$StringTerminal', () {
-    _tests(
-      constructor: StringTerminal.from,
-    );
-  });
-  group('Terminal<String>.using', () {
-    _tests(
-      constructor: ({lines = const [], cursor}) => Terminal.using(
-        defaultSpan: () => '',
-        widthSpan: (span) => span.length,
-        truncateSpan: (span, index, insert) {
-          return span.replaceRange(index, null, insert);
-        },
-        lines: lines,
-        cursor: cursor,
-      ),
-    );
-  });
+  _tests(
+    constructor: ({lines = const [], cursor}) => Terminal(
+      const StringSpan(),
+      cursor: cursor,
+      lines: lines,
+    ),
+  );
 }
 
 void _tests({
@@ -297,6 +286,23 @@ void _tests({
     feed.writeLine('Hello World!');
 
     expect(feed.lastPosition, Offset(0, 1));
+  });
+
+  test('writing to a non-terminal cursor replaces the current line', () {
+    final feed = constructor(
+      lines: [
+        'Hello',
+        'World!',
+      ],
+      cursor: Offset(0, 1),
+    );
+
+    feed.write('Goodbye!');
+
+    expect(feed.lines, [
+      'Hello',
+      'Goodbye!',
+    ]);
   });
 }
 

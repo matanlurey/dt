@@ -185,7 +185,7 @@ abstract mixin class TerminalView<T> {
   /// └────────────┘
   /// ```
   ///
-  /// If [includeCursor] is `true`, the cursor is drawn as `█`:
+  /// If [includeCursor] is `true`, the cursor position is replaced with a `█`:
   ///
   /// ```txt
   /// ┌─────────────┐
@@ -204,14 +204,26 @@ abstract mixin class TerminalView<T> {
     format ??= (span) => span.toString();
 
     // Convert the spans to strings.
-    final lines = view.lines.map(format).toList();
+    var lines = view.lines.map(format).toList();
 
     // Calculate the width of the terminal.
     var width = lines.fold<int>(0, (max, line) => math.max(max, line.length));
 
-    // If the cursor is included, add one to the width.
+    // If we are drawing a cursor
     if (includeCursor) {
-      width++;
+      // Increase the width to account for the cursor.
+      if (view.cursor.column == width) {
+        width++;
+        lines = lines.map((line) => '$line ').toList();
+      }
+
+      // Replace the cursor with a block character.
+      final cursorLine = lines[view.cursor.line];
+      lines[view.cursor.line] = cursorLine.replaceRange(
+        view.cursor.column,
+        view.cursor.column + 1,
+        '█',
+      );
     }
 
     // Now render with the given options.
@@ -225,9 +237,6 @@ abstract mixin class TerminalView<T> {
         buffer.write('│');
       }
       buffer.write(line);
-      if (includeCursor && i == view.cursor.line) {
-        buffer.write('█');
-      }
       if (drawBorder) {
         buffer.write('│');
       }
@@ -245,11 +254,13 @@ abstract mixin class TerminalView<T> {
   String toDebugString({
     bool drawBorder = false,
     bool includeCursor = false,
+    String Function(T span)? format,
   }) {
     return visualize(
       this,
       drawBorder: drawBorder,
       includeCursor: includeCursor,
+      format: format,
     );
   }
 }
@@ -286,10 +297,12 @@ final class _DelegatingTerminalView<T> implements TerminalView<T> {
   String toDebugString({
     bool drawBorder = false,
     bool includeCursor = false,
+    String Function(T span)? format,
   }) {
     return _delegate.toDebugString(
       drawBorder: drawBorder,
       includeCursor: includeCursor,
+      format: format,
     );
   }
 }

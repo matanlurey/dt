@@ -17,17 +17,16 @@ Inspiration:
 Work-in-progress:
 
 - [x] Support a non-interactive ("cooked") string-based terminal with input
-  support (`StringTerminal`).
+  support (`Terminal`).
 - [ ] Support an interactive ("raw") string-based terminal with input and output
-  support (`RawStringTerminal`).
-- [ ] Add a new span-type for terminal formatting and styling (`TextSpan`), and
-  support it (i.e. `*SpanTerminal*`).
+  support (`RawTerminal`).
+- [ ] Add a new span-type for terminal formatting and styling (`Styled`), and
+  support it (i.e. `*StyledTerminal*`).
 
 ## Overview
 
 > [!NOTE]
 > This project is a work-in-progress and everything is subject to change.
-> Feedback and contributions are welcome!
 
 This project aims to provide an intuitive and ergonomic API for building,
 emulating, and interacting with terminal applications in Dart. It's designed to
@@ -46,7 +45,7 @@ position
 import 'package:dt/dt.dart';
 
 void main() {
-  final terminal = StringTerminal.from(lines: ['Hello, World!']);
+  final terminal = Terminal(const StringSpan(), lines: ['Hello, World!']);
 
   // World isn't that impressive, let's replace it with Dart!
   terminal.cursor.column -= 6;
@@ -83,7 +82,6 @@ classDiagram
   
   TerminalSink~T~ <|-- Terminal~T~ : Mixes-in
   TerminalView~T~ <|-- Terminal~T~ : Mixes-in
-  Terminal~T~ <|-- StringTerminal : Extends, T=String
 ```
 
 ## Benchmarks
