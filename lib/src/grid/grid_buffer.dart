@@ -4,7 +4,7 @@ import 'grid_view.dart';
 /// A buffer representing a 2-dimensional collection of cells of type [T].
 interface class GridBuffer<T> with GridEditor<T>, GridView<T> {
   /// Creates a new buffer of size `width x height` and a initial cell value.
-  factory GridBuffer(
+  factory GridBuffer.filled(
     int width,
     int height,
     T initialValue,
@@ -25,7 +25,7 @@ interface class GridBuffer<T> with GridEditor<T>, GridView<T> {
   factory GridBuffer.generate(
     int width,
     int height,
-    T Function(int, int) fill,
+    T Function(int row, int column) fill,
   ) {
     RangeError.checkNotNegative(width, 'width');
     RangeError.checkNotNegative(height, 'height');
@@ -34,7 +34,7 @@ interface class GridBuffer<T> with GridEditor<T>, GridView<T> {
       (index) {
         final x = index % width;
         final y = index ~/ width;
-        return fill(x, y);
+        return fill(y, x);
       },
     );
     return GridBuffer._(buffer, width);
@@ -59,7 +59,7 @@ interface class GridBuffer<T> with GridEditor<T>, GridView<T> {
   /// Creates a new buffer by copying [rows].
   ///
   /// Each element must have the same length.
-  factory GridBuffer.fromCells(Iterable<Iterable<T>> rows) {
+  factory GridBuffer.fromRows(Iterable<Iterable<T>> rows) {
     int? width;
     final buffer = <T>[];
     for (final row in rows) {

@@ -12,7 +12,9 @@ abstract mixin class GridView<T> {
   // coverage:ignore-end
 
   /// The cells in the buffer in row-major order.
-  Iterable<T> get cells;
+  Iterable<T> get cells {
+    return Iterable.generate(length, (i) => this[i]);
+  }
 
   /// The number of cells in the buffer.
   ///

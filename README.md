@@ -40,7 +40,10 @@ Intended to represent an emulation of terminal output, writing to a terminal rep
 import 'package:dt/dt.dart';
 
 void main() {
-  final terminal = Terminal(const StringSpan(), lines: ['Hello, World!']);
+  final terminal = TerminalBuffer(
+    const StringSpan(), 
+    lines: ['Hello, World!'],
+  );
 
   // World isn't that impressive, let's replace it with Dart!
   terminal.cursor.column -= 6;
@@ -85,6 +88,36 @@ classDiagram
 ```
 
 ### GridBuffer
+
+A `GridBuffer` is a 2-dimensional buffer of _cells_.
+
+Intended to represent individual pixels, ASCII characters, or code units.
+
+```dart
+import 'package:dt/dt.dart';
+
+void main() {
+  final grid = GridBuffer(3, 3, ' ');
+
+  // An in-progress game of tic-tac-toe.
+  grid.setCell(1, 1, 'X');
+  grid.setCell(0, 0, 'O');
+  grid.setCell(2, 2, 'X');
+;
+  print(terminal.toDebugString(drawBorder: true, includePadding: 1));
+}
+```
+
+```shell
+% dart example/grid.dart
+┌───────┐
+│ O     │
+│   X   │
+│     X │
+└───────┘
+```
+
+The major API surface of a `GridBuffer` includes:
 
 ```mermaid
 classDiagram
