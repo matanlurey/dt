@@ -1,14 +1,13 @@
 import 'package:dt/src/core.dart';
+import 'package:dt/src/term/list_terminal_buffer.dart';
 import 'package:meta/meta.dart';
 
-import 'cursor.dart';
-import 'raw_terminal_buffer.dart';
 import 'terminal_controller.dart';
 import 'terminal_sink.dart';
 import 'terminal_span.dart';
 import 'terminal_view.dart';
 
-/// A buffered terminal of lines [T] and a [cursor] position.
+/// A _canonical_ buffered terminal of lines [T] and a [cursor] position.
 ///
 /// This type provides a way to construct and manipulate the contents of a
 /// terminal of lines, similar to the capabilities of a canonical ("cooked")
@@ -33,11 +32,9 @@ import 'terminal_view.dart';
 ///   the new contents.
 /// - Clearing content _before_ the cursor will insert empty lines and spans to
 ///   replace the cleared content, but will not move the cursor. See
-///   [LineTerminalMixin] for details.
+///   [CanonicalMixin] for details.
 ///
-/// For customized behavior, consider using [RawTerminalBuffer] instead, which
-/// is intended to be used for fully interactive terminals with cursor movement
-/// and input capabilities.
+/// See [RawTerminalBuffer].
 abstract interface class TerminalBuffer<T>
     with TerminalView<T>, TerminalSink<T>
     implements TerminalController<T> {
@@ -83,16 +80,6 @@ abstract interface class TerminalBuffer<T>
   @nonVirtual
   T line(int index) => _lines[index];
 
-  /// Move the cursor to the last position in the terminal.
-  void _resetCursor() {
-    cursor.offset = lastPosition;
-  }
-
-  /// Removes all lines after the cursor.
-  void _truncateLines() {
-    _lines.removeRange(cursor.line + 1, _lines.length);
-  }
-
   /// Writes a [span] to the _current_ line.
   ///
   /// If the [cursor] is at the end of a line, the [span] is appended to the
@@ -137,7 +124,7 @@ abstract interface class TerminalBuffer<T>
   void writeLines(Iterable<T> lines, {T? separator});
 }
 
-final class _Terminal<T> extends TerminalBuffer<T> with ListTerminalMixin<T> {
+final class _Terminal<T> extends TerminalBuffer<T> with ListTerminalBuffer<T> {
   _Terminal(
     this.span, {
     super.lines,
@@ -148,7 +135,7 @@ final class _Terminal<T> extends TerminalBuffer<T> with ListTerminalMixin<T> {
     } else {
       cursor = cursor.clamp(Offset.zero, lastPosition);
     }
-    initializeCursor(cursor);
+    this.cursor.offset = cursor;
   }
 
   @override
@@ -166,39 +153,5 @@ final class _Terminal<T> extends TerminalBuffer<T> with ListTerminalMixin<T> {
       _lines.isEmpty ? 0 : span.width(_lines.last),
       _lines.length - 1,
     );
-  }
-
-  @override
-  void write(T span) {
-    // If the terminal is empty, create a new line and write the span.
-    if (_lines.isEmpty) {
-      _lines.add(span);
-      _resetCursor();
-      return;
-    }
-
-    // Replace the remainder of the line with the span.
-    final Cursor(:line, :column) = cursor;
-    _lines[line] = this.span.replace(_lines[line], span, column);
-
-    // Remove any lines after the cursor and reset the cursor.
-    _truncateLines();
-    _resetCursor();
-  }
-
-  @override
-  void writeLine([T? span]) {
-    if (span != null) {
-      write(span);
-    }
-
-    // Add a new line at the cursor position.
-    _lines.insert(cursor.line + 1, this.span.empty());
-
-    // Move the cursor to the new line.
-    cursor.moveTo(column: 0, line: cursor.line + 1);
-
-    // Remove any lines after the cursor.
-    _truncateLines();
   }
 }

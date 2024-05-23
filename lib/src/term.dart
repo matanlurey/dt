@@ -1,5 +1,5 @@
 export 'term/cursor.dart' show Cursor;
-export 'term/raw_terminal_buffer.dart' show RawTerminalBuffer;
+export 'term/list_terminal_buffer.dart' show ListTerminalBuffer;
 export 'term/terminal_buffer.dart' show TerminalBuffer;
 export 'term/terminal_controller.dart' show TerminalController;
 export 'term/terminal_sink.dart' show TerminalSink;

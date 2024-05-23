@@ -17,7 +17,6 @@ Inspiration:
 Work-in-progress:
 
 - [x] Canonical terminal with input support (`TerminalBuffer`).
-- [ ] Interactive ("raw-mode") terminal (`RawTerminalBuffer`).
 - [ ] Formatting and styling (`Styled`).
 
 ## Overview
@@ -35,10 +34,7 @@ text editors, games, and interactive command-line interfaces.
 A `TerminalBuffer` represents a sequence of lines of text or text-like spans
 that can be written to and read from, and a cursor that can be moved around.
 
-Intended to represent parts of a standard ("cooked" or _canonical_) terminal
-interface, writing to a terminal replaces all spans after the cursor and moves
-the cursor to the last possible position, while clearing the screen either
-removes content or replaces it with empty spans.
+Intended to represent an emulation of terminal output, writing to a terminal replaces all spans after the cursor and moves the cursor accordingly, while clearing the screen either removes content or replaces it with empty spans.
 
 ```dart
 import 'package:dt/dt.dart';

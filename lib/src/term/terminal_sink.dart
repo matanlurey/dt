@@ -1,4 +1,3 @@
-import 'raw_terminal_buffer.dart';
 import 'terminal_buffer.dart';
 
 /// A sink that builds text-like lines of spans [T].
@@ -10,9 +9,9 @@ import 'terminal_buffer.dart';
 ///
 /// Each write operation appends spans and lines to the cursor position, where
 /// the behavior of the cursor is determined by the implementation. For example,
-/// a write operation in a standard [TerminalBuffer] replaces the remainder of the
-/// output and moves the cursor to the end of the new content, while a
-/// [RawTerminalBuffer] does not move the cursor at all.
+/// a write operation in a standard buffer ([TerminalBuffer.new]) _replaces_ the
+/// remainder of the output and moves the cursor to the end of the new content,
+/// while a [RawTerminalBuffer] does _not_ move the cursor.
 ///
 /// It is recommended to _extend_ or _mixin_ this class if able.
 ///
