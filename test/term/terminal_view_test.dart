@@ -5,20 +5,6 @@ import 'package:test/test.dart';
 typedef _Span = List<int>;
 
 void main() {
-  test('TerminalView.of delegates to an underlying view', () {
-    final delegate = _TestView();
-    final wrapper = TerminalView.of(delegate);
-
-    expect(wrapper.cursor.offset, delegate.cursor.offset);
-    expect(wrapper.isEmpty, delegate.isEmpty);
-    expect(wrapper.isNotEmpty, delegate.isNotEmpty);
-    expect(wrapper.currentLine, delegate.currentLine);
-    expect(wrapper.lineCount, delegate.lineCount);
-    expect(wrapper.line(0), delegate.line(0));
-    expect(wrapper.lines, delegate.lines);
-    expect(wrapper.lastPosition, delegate.lastPosition);
-  });
-
   test('Cursor(...) is the same as Cursor.fromXY', () {
     final cursor = Cursor(column: 1, line: 2);
     final fromXY = Cursor.fromXY(1, 2);

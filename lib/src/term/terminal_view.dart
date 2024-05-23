@@ -21,11 +21,6 @@ abstract mixin class TerminalView<T> {
   const TerminalView();
   // coverage:ignore-end
 
-  /// Returns a read-only view of an existing terminal.
-  ///
-  /// All methods and properties are delegated to the provided terminal.
-  const factory TerminalView.of(TerminalView<T> _) = _DelegatingTerminalView;
-
   /// The cursor position in the terminal.
   Cursor get cursor;
 
@@ -149,48 +144,6 @@ abstract mixin class TerminalView<T> {
   }) {
     return visualize(
       this,
-      drawBorder: drawBorder,
-      includeCursor: includeCursor,
-      format: format,
-    );
-  }
-}
-
-final class _DelegatingTerminalView<T> implements TerminalView<T> {
-  const _DelegatingTerminalView(this._delegate);
-  final TerminalView<T> _delegate;
-
-  @override
-  Cursor get cursor => _delegate.cursor;
-
-  @override
-  Offset get lastPosition => _delegate.lastPosition;
-
-  @override
-  bool get isEmpty => _delegate.isEmpty;
-
-  @override
-  bool get isNotEmpty => _delegate.isNotEmpty;
-
-  @override
-  int get lineCount => _delegate.lineCount;
-
-  @override
-  T line(int index) => _delegate.line(index);
-
-  @override
-  T get currentLine => _delegate.currentLine;
-
-  @override
-  Iterable<T> get lines => _delegate.lines;
-
-  @override
-  String toDebugString({
-    bool drawBorder = false,
-    bool includeCursor = false,
-    String Function(T span)? format,
-  }) {
-    return _delegate.toDebugString(
       drawBorder: drawBorder,
       includeCursor: includeCursor,
       format: format,

@@ -84,6 +84,25 @@ classDiagram
   TerminalController~T~ <|-- TerminalBuffer~T~ : Implements
 ```
 
+### GridBuffer
+
+```mermaid
+classDiagram
+  class GridEditor~T~
+  <<abstract>> GridEditor
+    GridEditor~T~ : +void setCell(int y, int x, T v)
+
+  class GridView~T~
+  <<abstract>> GridView
+    GridView~T~ : +Iterable~T~ get cells
+
+  class GridBuffer~T~
+  <<abstract>> GridBuffer
+  
+  GridEditor~T~ <|-- GridBuffer~T~ : Mixes-in
+  GridView~T~ <|-- GridBuffer~T~ : Mixes-in
+```
+
 ## Benchmarks
 
 While not the primary goal of this project, it's interesting to see how the
