@@ -1,7 +1,7 @@
 import 'package:dt/dt.dart';
 
 void main() {
-  final terminal = Terminal(
+  final terminal = TerminalBuffer(
     const StringSpan(),
     lines: ['Hello, World!'],
   );

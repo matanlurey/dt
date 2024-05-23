@@ -3,13 +3,13 @@ import 'dart:typed_data';
 
 import 'package:meta/meta.dart';
 
-import 'terminal.dart';
+import 'terminal_buffer.dart';
 import 'terminal_sink.dart';
 import 'terminal_view.dart';
 
-/// A set of functions that allow a span of type [T] within a [Terminal].
+/// A set of functions that allow a span of type [T] within a [TerminalBuffer].
 ///
-/// The core types, such as [Terminal], [TerminalSink], and [TerminalView], are
+/// The core types, such as [TerminalBuffer], [TerminalSink], and [TerminalView], are
 /// agnostic to the type of span that they operate on, but the actual terminal
 /// itself needs to perform operations on the span.
 ///

@@ -3,11 +3,11 @@ import 'package:dt/src/term.dart';
 import 'package:test/test.dart';
 
 void main() {
-  Terminal<String> terminal({
+  TerminalBuffer<String> terminal({
     List<String> lines = const [],
     Offset? cursor,
   }) {
-    return Terminal(
+    return TerminalBuffer(
       const StringSpan(),
       lines: lines,
       cursor: cursor,
@@ -185,7 +185,7 @@ void main() {
     expect(fixture.cursor.offset, Offset(5, 0));
   });
 
-  test('cursor is clamped to width when oved too far right', () {
+  test('cursor inserts empty spans when moved too far right', () {
     final fixture = terminal(
       lines: ['Hello'],
       cursor: Offset(4, 0),
@@ -195,7 +195,8 @@ void main() {
 
     fixture.cursor.column += 10;
 
-    expect(fixture.cursor.offset, Offset(5, 0));
+    expect(fixture.cursor.offset, Offset(14, 0));
+    expect(fixture.lines, ['Hello         ']);
   });
 
   test('cursor moves up', () {
@@ -440,7 +441,7 @@ void main() {
 // -----------------------------------------------------------------------------
 
 // ignore: unused_element
-final class _CanBeImplemented implements Terminal<void> {
+final class _CanBeImplemented implements TerminalBuffer<void> {
   @override
   noSuchMethod(Invocation invocation) => super.noSuchMethod(invocation);
 }

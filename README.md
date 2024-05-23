@@ -16,14 +16,8 @@ Inspiration:
 
 Work-in-progress:
 
-- [x] Support a non-interactive ("cooked") string-based terminal with input
-  support (`Terminal`).
-- [ ] Add and support `TerminalController`.
-- [ ] Rename `Terminal` to `TerminalBuffer`.
-- [ ] Support an interactive ("raw") string-based terminal with input and output
-  support (`RawTerminal`).
-- [ ] Add a new span-type for terminal formatting and styling (`Styled`), and
-  support it (i.e. `*StyledTerminal*`).
+- [x] Canonical terminal with input support (`TerminalBuffer`).
+- [ ] Formatting and styling (`Styled`).
 
 ## Overview
 
@@ -35,14 +29,12 @@ emulating, and interacting with terminal applications in Dart. It's designed to
 be a low-level building block for more complex terminal applications, such as
 text editors, games, and interactive command-line interfaces.
 
-### Terminal
+### TerminalBuffer
 
-A `Terminal` represents a sequence of lines of text that can be written to and
-read from, and a cursor that can be moved around. Intended to represent parts of
-a standard ("cooked" or _canonical_) terminal interface, writing to a terminal
-replaces all spans after the cursor and moves the cursor to the last possible
-position, while clearing the screen either removes content or replaces it with
-empty spans.
+A `TerminalBuffer` represents a sequence of lines of text or text-like spans
+that can be written to and read from, and a cursor that can be moved around.
+
+Intended to represent an emulation of terminal output, writing to a terminal replaces all spans after the cursor and moves the cursor accordingly, while clearing the screen either removes content or replaces it with empty spans.
 
 ```dart
 import 'package:dt/dt.dart';
@@ -65,7 +57,7 @@ void main() {
 └─────────────┘
 ```
 
-The major API surface of a `Terminal` includes:
+The major API surface of a `TerminalBuffer` includes:
 
 ```mermaid
 classDiagram
@@ -84,12 +76,12 @@ classDiagram
     TerminalView~T~ : +Cursor get cursor
     TerminalView~T~ : +Iterable~T~ get lines
 
-  class Terminal~T~
-  <<abstract>> Terminal
+  class TerminalBuffer~T~
+  <<abstract>> TerminalBuffer
   
-  TerminalSink~T~ <|-- Terminal~T~ : Mixes-in
-  TerminalView~T~ <|-- Terminal~T~ : Mixes-in
-  TerminalController~T~ <|-- Terminal~T~ : Implements
+  TerminalSink~T~ <|-- TerminalBuffer~T~ : Mixes-in
+  TerminalView~T~ <|-- TerminalBuffer~T~ : Mixes-in
+  TerminalController~T~ <|-- TerminalBuffer~T~ : Implements
 ```
 
 ## Benchmarks
