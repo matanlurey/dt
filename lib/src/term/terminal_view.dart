@@ -137,7 +137,7 @@ abstract mixin class TerminalView<T> {
         buffer.write('─' * (lineNumberWidth - 1));
         buffer.write('┬');
       }
-      buffer.write('─' * width);
+      buffer.write('─' * (width - 1));
       buffer.writeln('┐');
     }
     for (var i = 0; i < lines.length; i++) {
@@ -158,7 +158,7 @@ abstract mixin class TerminalView<T> {
         buffer.write('─' * (lineNumberWidth - 1));
         buffer.write('┴');
       }
-      buffer.write('─' * width);
+      buffer.write('─' * (width - 1));
       buffer.writeln('┘');
     }
     return buffer.toString();
