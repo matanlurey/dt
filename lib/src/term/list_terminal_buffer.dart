@@ -2,7 +2,7 @@ import 'package:meta/meta.dart';
 
 import 'cursor.dart';
 import 'terminal_buffer.dart';
-import 'terminal_controller.dart';
+import 'terminal_driver.dart';
 import 'terminal_span.dart';
 
 /// A mixin that provides sensible defaults for terminals backed by a `List<T>`.

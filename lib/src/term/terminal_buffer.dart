@@ -2,7 +2,7 @@ import 'package:dt/src/core.dart';
 import 'package:dt/src/term/list_terminal_buffer.dart';
 import 'package:meta/meta.dart';
 
-import 'terminal_controller.dart';
+import 'terminal_driver.dart';
 import 'terminal_sink.dart';
 import 'terminal_span.dart';
 import 'terminal_view.dart';
@@ -14,7 +14,7 @@ import 'terminal_view.dart';
 /// terminal. In practice, it is the combination of the types:
 /// - [TerminalSink] for writing to the terminal.
 /// - [TerminalView] for reading from the terminal.
-/// - [TerminalController] for manipulating the cursor and terminal contents.
+/// - [TerminalDriver] for manipulating the cursor and terminal contents.
 ///
 /// ## Cursor behavior
 ///
@@ -37,7 +37,7 @@ import 'terminal_view.dart';
 /// See [RawTerminalBuffer].
 abstract interface class TerminalBuffer<T>
     with TerminalView<T>, TerminalSink<T>
-    implements TerminalController<T> {
+    implements TerminalDriver {
   /// Creates a new line feed with the provided `___Span` implementations.
   ///
   /// This constructor provides a simple way to create a terminal with custom

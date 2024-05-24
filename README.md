@@ -74,10 +74,10 @@ classDiagram
     TerminalSink~T~ : +void write(T span)
     TerminalSink~T~ : +void writeLine(T span)
 
-  class TerminalController~T~
-  <<interface>> TerminalController
-    TerminalController~T~ : +InteractiveCursor get cursor
-    TerminalController~T~ : +void clearScreen()
+  class TerminalDriver~T~
+  <<interface>> TerminalDriver
+    TerminalDriver~T~ : +InteractiveCursor get cursor
+    TerminalDriver~T~ : +void clearScreen()
 
   class TerminalView~T~
   <<abstract>> TerminalView
@@ -89,7 +89,7 @@ classDiagram
   
   TerminalSink~T~ <|-- TerminalBuffer~T~ : Mixes-in
   TerminalView~T~ <|-- TerminalBuffer~T~ : Mixes-in
-  TerminalController~T~ <|-- TerminalBuffer~T~ : Implements
+  TerminalDriver~T~ <|-- TerminalBuffer~T~ : Implements
 ```
 
 ### GridBuffer

@@ -12,7 +12,7 @@ import 'cursor.dart';
 /// would be placed outside the terminal, the implementation may either ignore
 /// the move, clamp the cursor to the nearest valid position, or insert empty
 /// lines and spans to accommodate the cursor.
-abstract interface class TerminalController<T> {
+abstract interface class TerminalDriver {
   /// An interactive cursor that can be moved and manipulated in the terminal.
   InteractiveCursor get cursor;
 
