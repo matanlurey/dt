@@ -1,3 +1,5 @@
+import 'dart:math' as math;
+
 /// A view of a grid of _cells_ of type [T].
 ///
 /// This type is used to provide a read-only view of a 2-dimensional grid of
@@ -59,6 +61,131 @@ abstract mixin class GridView<T> {
     return Iterable.generate(
       height,
       (row) => Iterable.generate(width, (column) => getCell(row, column)),
+    );
+  }
+
+  /// Returns a string representation of the grid suitable for debugging.
+  ///
+  /// ```txt
+  /// 1 2 3
+  /// 4 5 6
+  /// 7 8 9
+  /// ```
+  ///
+  /// If [drawGrid] is `true`, the bounds of the grid are drawn:
+  ///
+  /// ```txt
+  /// ┌───┬───┬───┐
+  /// │ 1 │ 2 │ 3 │
+  /// ├───┼───┼───┤
+  /// │ 4 │ 5 │ 6 │
+  /// ├───┼───┼───┤
+  /// │ 7 │ 8 │ 9 │
+  /// └───┴───┴───┘
+  /// ```
+  ///
+  /// If `T.toString` is not suitable, provide a [format] function to convert.
+  static String visualize<T>(
+    GridView<T> grid, {
+    bool drawGrid = false,
+    int padding = 1,
+    String Function(T span)? format,
+  }) {
+    // Default to the identity function.
+    format ??= (span) => span.toString();
+
+    // Render the grid.
+    final buffer = StringBuffer();
+
+    // Convert the grid to a string.
+    final cells = grid.cells.map(format).toList();
+    late final int maxCellWidth;
+    if (drawGrid) {
+      maxCellWidth = cells.fold<int>(
+        0,
+        (max, cell) => math.max(max, cell.length),
+      );
+    }
+
+    // Header.
+    if (drawGrid) {
+      buffer.write('┌');
+      for (var i = 0; i < grid.width; i++) {
+        if (i > 0) {
+          buffer.write('┬');
+        }
+        buffer.write('─' * padding);
+        buffer.write('─' * maxCellWidth);
+        buffer.write('─' * padding);
+      }
+      buffer.write('┐');
+      buffer.writeln();
+    }
+
+    // Rows.
+    for (var row = 0; row < grid.height; row++) {
+      if (drawGrid) {
+        if (row > 0) {
+          buffer.write('├');
+          for (var i = 0; i < grid.width; i++) {
+            if (i > 0) {
+              buffer.write('┼');
+            }
+            buffer.write('─' * padding);
+            buffer.write('─' * maxCellWidth);
+            buffer.write('─' * padding);
+          }
+          buffer.write('┤');
+          buffer.writeln();
+        }
+      }
+
+      buffer.write('│');
+      for (var column = 0; column < grid.width; column++) {
+        if (column > 0) {
+          buffer.write('│');
+        }
+        final cell = cells[row * grid.width + column];
+        buffer.write(' ' * padding);
+        buffer.write(cell);
+        buffer.write(' ' * (maxCellWidth - cell.length));
+        buffer.write(' ' * padding);
+      }
+      buffer.write('│');
+      buffer.writeln();
+    }
+
+    // Footer.
+    if (drawGrid) {
+      buffer.write('└');
+      for (var i = 0; i < grid.width; i++) {
+        if (i > 0) {
+          buffer.write('┴');
+        }
+        buffer.write('─' * padding);
+        buffer.write('─' * maxCellWidth);
+        buffer.write('─' * padding);
+      }
+      buffer.write('┘');
+      buffer.writeln();
+    }
+
+    return buffer.toString();
+  }
+
+  /// Returns a string representation of the grid suitable for debugging.
+  ///
+  /// This method is equivalent to calling [visualize].
+  String toDebugString({
+    bool drawGrid = false,
+    int padding = 1,
+    String Function(T span)? format,
+  }) {
+    return visualize(
+      this,
+      drawGrid: drawGrid,
+      padding: padding,
+      format: format,
     );
   }
 }

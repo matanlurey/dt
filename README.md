@@ -17,6 +17,7 @@ Inspiration:
 Work-in-progress:
 
 - [x] Canonical terminal with input support (`TerminalBuffer`).
+- [ ] Implement `AnsiTerminal`, a sink and controller for ANSI terminal output.
 - [ ] Formatting and styling (`Styled`).
 
 ## Overview
@@ -49,15 +50,19 @@ void main() {
   terminal.cursor.column -= 6;
   terminal.write('Dart!');
 
-  print(terminal.toDebugString(drawBorder: true, includeCursor: true));
+  print(terminal.toDebugString(
+    drawBorder: true,
+    drawCursor: true,
+    includeLineNumbers: true,
+  ));
 }
 ```
 
 ```shell
 % dart example/terminal.dart
-┌─────────────┐
-│Hello, Dart!█│
-└─────────────┘
+┌─┬─────────────┐
+│1│Hello, Dart!█│
+└─┴─────────────┘
 ```
 
 The major API surface of a `TerminalBuffer` includes:
@@ -97,24 +102,26 @@ Intended to represent individual pixels, ASCII characters, or code units.
 import 'package:dt/dt.dart';
 
 void main() {
-  final grid = GridBuffer(3, 3, ' ');
+  final grid = GridBuffer.filled(3, 3, ' ');
 
   // An in-progress game of tic-tac-toe.
   grid.setCell(1, 1, 'X');
   grid.setCell(0, 0, 'O');
   grid.setCell(2, 2, 'X');
-;
-  print(terminal.toDebugString(drawBorder: true, includePadding: 1));
+
+  print(grid.toDebugString(drawGrid: true));
 }
 ```
 
 ```shell
 % dart example/grid.dart
-┌───────┐
-│ O     │
-│   X   │
-│     X │
-└───────┘
+┌───┬───┬───┐
+│ O │   │   │
+├───┼───┼───┤
+│   │ X │   │
+├───┼───┼───┤
+│   │   │ X │
+└───┴───┴───┘
 ```
 
 The major API surface of a `GridBuffer` includes:
@@ -134,6 +141,31 @@ classDiagram
   
   GridEditor~T~ <|-- GridBuffer~T~ : Mixes-in
   GridView~T~ <|-- GridBuffer~T~ : Mixes-in
+```
+
+### AnsiTerminal
+
+An `AnsiTerminal` is a sink and controller for ANSI terminal output.
+
+So far, the types have been focused on emulating terminal output, but an
+`AnsiTerminal` is intended to be a sink for writing ANSI terminal codes _to_ an
+external terminal.
+
+```dart
+import 'package:dt/dt.dart';
+
+void main() {
+  final terminal = AnsiTerminal.fromStdout();
+
+  terminal.write('Hello, World!');
+  terminal.cursor.moveUp(1);
+  terminal.write('Hello, Dart!');
+}
+```
+
+```shell
+% dart example/ansi.dart
+Hello, Dart!
 ```
 
 ## Benchmarks

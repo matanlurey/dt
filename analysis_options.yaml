@@ -4,5 +4,7 @@ analyzer:
   errors:
     # Allow relative imports.
     always_use_package_imports: ignore
+    # Makes code harder to read in some situations.
+    cascade_invocations: ignore
     # Until my fix goes in.
     noop_primitive_operations: ignore

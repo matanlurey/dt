@@ -35,7 +35,7 @@ void main() {
     final view = _TestView();
     final result = view.toDebugString(
       drawBorder: true,
-      includeCursor: true,
+      drawCursor: true,
       format: (span) => span.join(),
     );
 
@@ -54,7 +54,7 @@ void main() {
     final view = _TestView(cursor: Offset(3, 0));
     final result = view.toDebugString(
       drawBorder: true,
-      includeCursor: true,
+      drawCursor: true,
       format: (span) => span.join(),
     );
 
@@ -107,13 +107,15 @@ final class _TestView implements TerminalView<_Span> {
   @override
   String toDebugString({
     bool drawBorder = false,
-    bool includeCursor = false,
+    bool drawCursor = false,
+    bool includeLineNumbers = false,
     String Function(_Span)? format,
   }) {
     return TerminalView.visualize(
       this,
       drawBorder: drawBorder,
-      includeCursor: includeCursor,
+      includeLineNumbers: includeLineNumbers,
+      drawCursor: drawCursor,
       format: format,
     );
   }

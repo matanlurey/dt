@@ -3,7 +3,7 @@
 import 'package:dt/dt.dart';
 
 void main() async {
-  final stdout = AnsiWriter.from(Writer.stdout);
+  final stdout = AnsiWriter.to(Writer.stdout.write);
 
   // Simulate a progress bar.
   for (var i = 0; i < 100; i++) {

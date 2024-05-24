@@ -71,19 +71,33 @@ abstract mixin class TerminalView<T> {
   /// └────────────┘
   /// ```
   ///
-  /// If [includeCursor] is `true`, the cursor position is replaced with a `█`:
+  /// If [drawCursor] is `true`, the cursor position is replaced with a `█`:
   ///
   /// ```txt
-  /// ┌─────────────┐
-  /// │Hello World!█│
-  /// └─────────────┘
+  /// Hello World!█
+  /// ```
+  ///
+  /// If [includeLineNumbers] is `true`, each row is prefixed with a number:
+  ///
+  /// ```txt
+  /// 1: Hello World!
+  /// ```
+  ///
+  /// When combined with [drawBorder] the box is split into two parts:
+  ///
+  /// ```txt
+  /// ┌─┬──────────┐
+  /// │1│Hello     │
+  /// │2│World!    │
+  /// └─┴──────────┘
   /// ```
   ///
   /// If `T.toString` is not suitable, provide a [format] function to convert.
   static String visualize<T>(
     TerminalView<T> view, {
     bool drawBorder = false,
-    bool includeCursor = false,
+    bool drawCursor = false,
+    bool includeLineNumbers = false,
     String Function(T span)? format,
   }) {
     // Default to the identity function.
@@ -96,7 +110,7 @@ abstract mixin class TerminalView<T> {
     var width = lines.fold<int>(0, (max, line) => math.max(max, line.length));
 
     // If we are drawing a cursor
-    if (includeCursor) {
+    if (drawCursor) {
       // Increase the width to account for the cursor.
       if (view.cursor.column == width) {
         width++;
@@ -113,23 +127,39 @@ abstract mixin class TerminalView<T> {
     }
 
     // Now render with the given options.
+    final lineNumberWidth = lines.length.toString().length;
     final buffer = StringBuffer();
     if (drawBorder) {
-      buffer.writeln('┌${'─' * width}┐');
+      // Draw the top border.
+      buffer.write('┌─');
+      if (includeLineNumbers) {
+        // Calculate the width of the line numbers.
+        buffer.write('─' * (lineNumberWidth - 1));
+        buffer.write('┬');
+      }
+      buffer.write('─' * width);
+      buffer.writeln('┐');
     }
     for (var i = 0; i < lines.length; i++) {
-      final line = lines[i];
       if (drawBorder) {
         buffer.write('│');
+        if (includeLineNumbers) {
+          buffer.write('${i + 1}'.padLeft(lineNumberWidth));
+          buffer.write('│');
+        }
       }
-      buffer.write(line);
-      if (drawBorder) {
-        buffer.write('│');
-      }
-      buffer.writeln();
+      buffer.write(lines[i].padRight(width));
+      buffer.writeln(drawBorder ? '│' : '');
     }
     if (drawBorder) {
-      buffer.writeln('└${'─' * width}┘');
+      // Draw the bottom border.
+      buffer.write('└─');
+      if (includeLineNumbers) {
+        buffer.write('─' * (lineNumberWidth - 1));
+        buffer.write('┴');
+      }
+      buffer.write('─' * width);
+      buffer.writeln('┘');
     }
     return buffer.toString();
   }
@@ -139,13 +169,15 @@ abstract mixin class TerminalView<T> {
   /// This method is equivalent to calling [visualize].
   String toDebugString({
     bool drawBorder = false,
-    bool includeCursor = false,
+    bool drawCursor = false,
+    bool includeLineNumbers = false,
     String Function(T span)? format,
   }) {
     return visualize(
       this,
       drawBorder: drawBorder,
-      includeCursor: includeCursor,
+      drawCursor: drawCursor,
+      includeLineNumbers: includeLineNumbers,
       format: format,
     );
   }

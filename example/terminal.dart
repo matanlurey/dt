@@ -10,5 +10,11 @@ void main() {
   terminal.cursor.column -= 6;
   terminal.write('Dart!');
 
-  print(terminal.toDebugString(drawBorder: true, includeCursor: true));
+  print(
+    terminal.toDebugString(
+      drawBorder: true,
+      drawCursor: true,
+      includeLineNumbers: true,
+    ),
+  );
 }

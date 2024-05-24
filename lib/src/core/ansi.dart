@@ -1,5 +1,3 @@
-import 'package:dt/src/core/writer.dart';
-
 /// Typed methods for known ANSI control sequences.
 ///
 /// There are two ways to use this interface:
@@ -31,11 +29,11 @@ abstract class AnsiHandler {
   void write(String text) {}
 }
 
-/// Writes ANSI control sequences to and is a [Writer].
-final class AnsiWriter implements AnsiHandler, Writer {
-  /// Creates a new ANSI writer that writes to the given [writer].
-  const AnsiWriter.from(this._writer);
-  final Writer _writer;
+/// Writes ANSI control sequences.
+final class AnsiWriter implements AnsiHandler {
+  /// Creates a new ANSI writer that writes to the given function.
+  const AnsiWriter.to(this._write);
+  final void Function(String) _write;
 
   void _escape(String value, String suffix) {
     write('\x1B[$value$suffix');
@@ -60,13 +58,7 @@ final class AnsiWriter implements AnsiHandler, Writer {
   void clearScreen() => _escape('2', 'J');
 
   @override
-  Future<void> close() => _writer.close();
-
-  @override
-  Future<void> flush() => _writer.flush();
-
-  @override
-  void write(String text) => _writer.write(text);
+  void write(String text) => _write(text);
 }
 
 /// Typed methods for known and [unknown] ANSI control sequences.
