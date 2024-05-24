@@ -1,7 +1,3 @@
-import 'package:dt/src/core.dart';
-
-import 'cursor.dart';
-
 /// Operations on a terminal-like object not related to writing or styling text.
 ///
 /// This type provides additional operations on a terminal-like object such as
@@ -13,8 +9,8 @@ import 'cursor.dart';
 /// the move, clamp the cursor to the nearest valid position, or insert empty
 /// lines and spans to accommodate the cursor.
 abstract interface class TerminalDriver {
-  /// An interactive cursor that can be moved and manipulated in the terminal.
-  InteractiveCursor get cursor;
+  /// A cursor that can be moved and manipulated in the terminal.
+  Cursor get cursor;
 
   /// Clears the terminal from the cursor position to the end of the screen.
   void clearScreenAfter();
@@ -43,58 +39,63 @@ abstract interface class TerminalDriver {
 /// Operations on a cursor that would move it outside the bounds of the terminal
 /// are implementation-defined, and may result in being ignored or clamped to
 /// the nearest valid position.
-abstract mixin class InteractiveCursor implements Cursor {
+abstract mixin class Cursor {
   /// Moves the cursor _to_ the given [column] and [line].
   ///
   /// If being moved outside the bounds of the terminal, the implementation
   /// may either ignore the move, clamp the cursor to the nearest valid
   /// position or insert empty lines and spans to accommodate the cursor.
-  ///
-  /// The default implementation is equivalent to:
-  /// ```dart
-  /// cursor
-  ///   ..column = column
-  ///   ..line = line;
-  /// ```
   void moveTo({
-    required int column,
-    required int line,
-  }) {
-    this
-      ..column = column
-      ..line = line;
+    int? column,
+    int? line,
+  });
+
+  /// Moves the cursor _by_ the given [columns] and [lines].
+  ///
+  /// If being moved outside the bounds of the terminal, the implementation
+  /// may either ignore the move, clamp the cursor to the nearest valid
+  /// position or insert empty lines and spans to accommodate the cursor.
+  void moveBy({
+    int? columns,
+    int? lines,
+  });
+}
+
+/// Extension methods for [Cursor].
+extension CursorExtension on Cursor {
+  /// Moves the cursor up by [lines] lines.
+  ///
+  /// If [lines] is not provided, the cursor is moved up by one line.
+  ///
+  /// Must be a non-negative integer.
+  void moveUp([int lines = 1]) {
+    moveBy(lines: -RangeError.checkNotNegative(lines));
   }
 
-  @override
-  Offset get offset => Offset(column, line);
-
-  /// Moves the cursor to the given [offset].
+  /// Moves the cursor down by [lines] lines.
   ///
-  /// See [moveTo] for more information on cursor movement.
-  set offset(Offset offset) {
-    moveTo(column: offset.x, line: offset.y);
+  /// If [lines] is not provided, the cursor is moved down by one line.
+  ///
+  /// Must be a non-negative integer.
+  void moveDown([int lines = 1]) {
+    moveBy(lines: RangeError.checkNotNegative(lines));
   }
 
-  @override
-  int get column;
-
-  /// Sets the cursor to the given [column].
+  /// Moves the cursor left by [columns] columns.
   ///
-  /// If the column would be moved outside the bounds of the terminal, the
-  /// implementation may either ignore the move, clamp the cursor to the nearest
-  /// valid position, or insert empty spans to accommodate the cursor.
-  set column(int column);
-
-  @override
-  int get line;
-
-  /// Sets the cursor to the given [line].
+  /// If [columns] is not provided, the cursor is moved left by one column.
   ///
-  /// If the line would be moved outside the bounds of the terminal, the
-  /// implementation may either ignore the move, clamp the cursor to the nearest
-  /// valid position, or insert empty lines and spans to accommodate the cursor.
-  set line(int line);
+  /// Must be a non-negative integer.
+  void moveLeft([int columns = 1]) {
+    moveBy(columns: -RangeError.checkNotNegative(columns));
+  }
 
-  @override
-  String toString() => 'Cursor <$line:$column>';
+  /// Moves the cursor right by [columns] columns.
+  ///
+  /// If [columns] is not provided, the cursor is moved right by one column.
+  ///
+  /// Must be a non-negative integer.
+  void moveRight([int columns = 1]) {
+    moveBy(columns: RangeError.checkNotNegative(columns));
+  }
 }

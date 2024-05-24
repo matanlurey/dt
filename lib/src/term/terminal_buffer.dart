@@ -7,6 +7,18 @@ import 'terminal_sink.dart';
 import 'terminal_span.dart';
 import 'terminal_view.dart';
 
+/// A cursor that stores the current line and column position.
+abstract class CursorBuffer extends Cursor {
+  /// The current line position.
+  int get line;
+
+  /// The current column position.
+  int get column;
+
+  /// Current position as an [Offset].
+  Offset get offset => Offset(column, line);
+}
+
 /// A _canonical_ buffered terminal of lines [T] and a [cursor] position.
 ///
 /// This type provides a way to construct and manipulate the contents of a
@@ -66,7 +78,10 @@ abstract interface class TerminalBuffer<T>
   }) : _lines = List.of(lines);
 
   @override
-  InteractiveCursor get cursor;
+  CursorBuffer get cursor;
+
+  /// The current line in the terminal.
+  T get currentLine => _lines[cursor.line];
 
   @override
   Offset get lastPosition;
@@ -122,6 +137,20 @@ abstract interface class TerminalBuffer<T>
   /// cursor are replaced with the [spans].
   @override
   void writeLines(Iterable<T> lines, {T? separator});
+
+  /// Returns a string representation of the terminal suitable for debugging.
+  String toDebugString({
+    bool drawBorder = false,
+    bool drawCursor = false,
+    bool includeLineNumbers = false,
+  }) {
+    return TerminalView.visualize(
+      this,
+      drawBorder: drawBorder,
+      drawCursor: drawCursor ? cursor.offset : null,
+      includeLineNumbers: includeLineNumbers,
+    );
+  }
 }
 
 final class _Terminal<T> extends TerminalBuffer<T> with ListTerminalBuffer<T> {
@@ -135,7 +164,7 @@ final class _Terminal<T> extends TerminalBuffer<T> with ListTerminalBuffer<T> {
     } else {
       cursor = cursor.clamp(Offset.zero, lastPosition);
     }
-    this.cursor.offset = cursor;
+    this.cursor.moveTo(column: cursor.x, line: cursor.y);
   }
 
   @override

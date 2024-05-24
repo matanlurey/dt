@@ -5,17 +5,10 @@ import 'package:test/test.dart';
 typedef _Span = List<int>;
 
 void main() {
-  test('Cursor(...) is the same as Cursor.fromXY', () {
-    final cursor = Cursor(column: 1, line: 2);
-    final fromXY = Cursor.fromXY(1, 2);
-
-    expect(cursor.offset, fromXY.offset);
-    expect(cursor.toString(), 'Cursor <2:1>');
-  });
-
   test('A string representation of the view', () {
     final view = _TestView();
-    final result = view.toDebugString(
+    final result = TerminalView.visualize(
+      view,
       drawBorder: true,
       format: (span) => span.join(),
     );
@@ -33,9 +26,10 @@ void main() {
 
   test('A string representation of the view w/ cursor', () {
     final view = _TestView();
-    final result = view.toDebugString(
+    final result = TerminalView.visualize(
+      view,
       drawBorder: true,
-      drawCursor: true,
+      drawCursor: Offset.zero,
       format: (span) => span.join(),
     );
 
@@ -51,10 +45,11 @@ void main() {
   });
 
   test('A string representation of the view w/ cursor at end', () {
-    final view = _TestView(cursor: Offset(3, 0));
-    final result = view.toDebugString(
+    final view = _TestView();
+    final result = TerminalView.visualize(
+      view,
       drawBorder: true,
-      drawCursor: true,
+      drawCursor: view.lastPosition,
       format: (span) => span.join(),
     );
 
@@ -72,15 +67,10 @@ void main() {
 
 // A test view with hardcoded return values.
 final class _TestView implements TerminalView<_Span> {
-  _TestView({
-    Offset cursor = Offset.zero,
-  }) : cursor = Cursor.fromXY(cursor.x, cursor.y);
+  const _TestView();
 
   @override
-  final Cursor cursor;
-
-  @override
-  Offset get lastPosition => Offset(0, 0);
+  Offset get lastPosition => Offset(3, 0);
 
   @override
   bool get isEmpty => false;
@@ -95,29 +85,10 @@ final class _TestView implements TerminalView<_Span> {
   _Span line(int index) => [1, 2, 3];
 
   @override
-  _Span get currentLine => [1, 2, 3];
-
-  @override
   Iterable<_Span> get lines {
     return [
       [1, 2, 3],
     ];
-  }
-
-  @override
-  String toDebugString({
-    bool drawBorder = false,
-    bool drawCursor = false,
-    bool includeLineNumbers = false,
-    String Function(_Span)? format,
-  }) {
-    return TerminalView.visualize(
-      this,
-      drawBorder: drawBorder,
-      includeLineNumbers: includeLineNumbers,
-      drawCursor: drawCursor,
-      format: format,
-    );
   }
 }
 

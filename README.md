@@ -17,7 +17,10 @@ Inspiration:
 Work-in-progress:
 
 - [x] Canonical terminal with input support (`TerminalBuffer`).
-- [ ] Implement `AnsiTerminal`, a sink and controller for ANSI terminal output.
+- [ ] Remove `Cursor`, add `CursorBuffer` to `TerminalBuffer`.
+- [ ] Remove elements of `InteractiveCursor` that read the cursor position.
+- [ ] Add cursor positioning to `AnsiHandler`.
+- [ ] Implement `AnsiTerminal`, a driver using ANSI terminal output.
 - [ ] Formatting and styling (`Styled`).
 
 ## Overview
