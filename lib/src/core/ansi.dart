@@ -1,423 +1,9 @@
-/// Typed methods for known ANSI control sequences.
-///
-/// There are two ways to use this interface:
-/// - `implements AnsiHandler` to respond to _all_ ANSI control sequences.
-/// - `extends AnsiHandler` to respond to _some_ ANSI control sequences.
-abstract class AnsiHandler {
-  // ignore: public_member_api_docs
-  const AnsiHandler();
+import 'package:meta/meta.dart';
 
-  /// Clears the current line that the cursor is located on.
-  void clearLine() {}
-
-  /// Clears the current line _after_ the cursor's position.
-  void clearLineAfter() {}
-
-  /// Clears the current line _before_ the cursor's position.
-  void clearLineBefore() {}
-
-  /// Clears the screen.
-  void clearScreen() {}
-
-  /// Clears the screen _after_ the cursor's position.
-  void clearScreenAfter() {}
-
-  /// Clears the screen _before_ the cursor's position.
-  void clearScreenBefore() {}
-
-  /// Move the cursor to home positionn `(0, 0)`.
-  void moveCursorHome() {}
-
-  /// Move the cursor the given [line] and [column] position.
-  void moveCursorTo(int line, int column) {}
-
-  /// Move the cursor up [count] lines.
-  void moveCursorUp(int count) {}
-
-  /// Move the cursor down [count] lines.
-  void moveCursorDown(int count) {}
-
-  /// Move the cursor right [count] columns.
-  void moveCursorRight(int count) {}
-
-  /// Move the cursor left [count] columns.
-  void moveCursorLeft(int count) {}
-
-  /// Move the cursor to the beginning of [count] lines down.
-  void moveCursorDownAndReturn(int count) {}
-
-  /// Move the cursor to the beginning of [count] lines up.
-  void moveCursorUpAndReturn(int count) {}
-
-  /// Move the cursor to the given [column] position.
-  void moveCursorToColumn(int column) {}
-
-  /// Writes the given text to the screen at the cursor's position.
-  void write(String text) {}
-}
-
-/// Writes ANSI control sequences.
-final class AnsiWriter implements AnsiHandler {
-  /// Creates a new ANSI writer that writes to the given function.
-  const AnsiWriter.to(this._write);
-  final void Function(String) _write;
-
-  void _escape(String value, String suffix) {
-    write('\x1B[$value$suffix');
-  }
-
-  @override
-  void clearLineAfter() => _escape('0', 'K');
-
-  @override
-  void clearLineBefore() => _escape('1', 'K');
-
-  @override
-  void clearLine() => _escape('2', 'K');
-
-  @override
-  void clearScreenAfter() => _escape('0', 'J');
-
-  @override
-  void clearScreenBefore() => _escape('1', 'J');
-
-  @override
-  void clearScreen() => _escape('2', 'J');
-
-  @override
-  void moveCursorHome() => _escape('H', '');
-
-  @override
-  void moveCursorTo(int line, int column) => _escape('$line;${column}H', '');
-
-  @override
-  void moveCursorUp(int count) => _escape('$count', 'A');
-
-  @override
-  void moveCursorDown(int count) => _escape('$count', 'B');
-
-  @override
-  void moveCursorRight(int count) => _escape('$count', 'C');
-
-  @override
-  void moveCursorLeft(int count) => _escape('$count', 'D');
-
-  @override
-  void moveCursorDownAndReturn(int count) => _escape('$count', 'E');
-
-  @override
-  void moveCursorUpAndReturn(int count) => _escape('$count', 'F');
-
-  @override
-  void moveCursorToColumn(int column) => _escape('$column', 'G');
-
-  @override
-  void write(String text) => _write(text);
-}
-
-/// Typed methods for known and [unknown] ANSI control sequences.
-///
-/// There are two ways to use this interface:
-/// - `implements AnsiListener` to respond to _all_ ANSI control sequences.
-/// - `extends AnsiListener` to respond to _some_ ANSI control sequences.
-abstract class AnsiListener extends AnsiHandler {
-  /// Creates a new ANSI handler with the given methods.
-  ///
-  /// Each method is optional and will be a no-op if not provided.
-  ///
-  /// This constructor is intended for convenience and testing; prefer extending
-  /// this class to implement only the methods you need over using this
-  /// constructor.
-  const factory AnsiListener.from({
-    void Function() clearLine,
-    void Function() clearLineAfter,
-    void Function() clearLineBefore,
-    void Function() clearScreen,
-    void Function() clearScreenAfter,
-    void Function() clearScreenBefore,
-    void Function() moveCursorHome,
-    void Function(int, int) moveCursorTo,
-    void Function(int) moveCursorUp,
-    void Function(int) moveCursorDown,
-    void Function(int) moveCursorRight,
-    void Function(int) moveCursorLeft,
-    void Function(int) moveCursorDownAndReturn,
-    void Function(int) moveCursorUpAndReturn,
-    void Function(int) moveCursorToColumn,
-    void Function(String) write,
-    void Function(String, int) unknown,
-  }) = _AnsiListener;
-
-  /// Creates a new ANSI handler with the given methods.
-  ///
-  /// Each method is optional and will throw an [UnimplementedError] by default.
-  ///
-  /// This constructor is intended for convenience and testing; prefer
-  /// implementing this class to receive static analysis errors for unhandled
-  /// methods over using this constructor.
-  const factory AnsiListener.fromOrThrow({
-    void Function() clearLine,
-    void Function() clearLineAfter,
-    void Function() clearLineBefore,
-    void Function() clearScreen,
-    void Function() clearScreenAfter,
-    void Function() clearScreenBefore,
-    void Function() moveCursorHome,
-    void Function(int, int) moveCursorTo,
-    void Function(int) moveCursorUp,
-    void Function(int) moveCursorDown,
-    void Function(int) moveCursorRight,
-    void Function(int) moveCursorLeft,
-    void Function(int) moveCursorDownAndReturn,
-    void Function(int) moveCursorUpAndReturn,
-    void Function(int) moveCursorToColumn,
-    void Function(String) write,
-    void Function(String, int) unknown,
-  }) = _AnsiListener.throwsIfMissing;
-
-  /// An unknown ANSI control sequence was received.
-  ///
-  /// This method is called when an unknown ANSI control sequence is received;
-  /// the [value] is the control sequence's value, and [suffix] is the final
-  /// character of the control sequence.
-  ///
-  /// Could be used to log unknown control sequences or to throw an error.
-  void unknown(String value, int suffix) {}
-}
-
-final class _AnsiListener implements AnsiListener {
-  const _AnsiListener({
-    void Function() clearLine = _noop0,
-    void Function() clearLineAfter = _noop0,
-    void Function() clearLineBefore = _noop0,
-    void Function() clearScreen = _noop0,
-    void Function() clearScreenAfter = _noop0,
-    void Function() clearScreenBefore = _noop0,
-    void Function() moveCursorHome = _noop0,
-    void Function(int, int) moveCursorTo = _noop2,
-    void Function(int) moveCursorUp = _noop1,
-    void Function(int) moveCursorDown = _noop1,
-    void Function(int) moveCursorRight = _noop1,
-    void Function(int) moveCursorLeft = _noop1,
-    void Function(int) moveCursorDownAndReturn = _noop1,
-    void Function(int) moveCursorUpAndReturn = _noop1,
-    void Function(int) moveCursorToColumn = _noop1,
-    void Function(String) write = _noop1,
-    void Function(String, int) unknown = _noop2,
-  })  : _clearLine = clearLine,
-        _clearLineAfter = clearLineAfter,
-        _clearLineBefore = clearLineBefore,
-        _clearScreen = clearScreen,
-        _clearScreenAfter = clearScreenAfter,
-        _clearScreenBefore = clearScreenBefore,
-        _moveCursorHome = moveCursorHome,
-        _moveCursorTo = moveCursorTo,
-        _moveCursorUp = moveCursorUp,
-        _moveCursorDown = moveCursorDown,
-        _moveCursorRight = moveCursorRight,
-        _moveCursorLeft = moveCursorLeft,
-        _moveCursorDownAndReturn = moveCursorDownAndReturn,
-        _moveCursorUpAndReturn = moveCursorUpAndReturn,
-        _moveCursorToColumn = moveCursorToColumn,
-        _write = write,
-        _unknown = unknown;
-
-  static void _noop0() {}
-  static void _noop1(void _) {}
-  static void _noop2(void _, void __) {}
-
-  const _AnsiListener.throwsIfMissing({
-    void Function() clearLine = _throw0,
-    void Function() clearLineAfter = _throw0,
-    void Function() clearLineBefore = _throw0,
-    void Function() clearScreen = _throw0,
-    void Function() clearScreenAfter = _throw0,
-    void Function() clearScreenBefore = _throw0,
-    void Function() moveCursorHome = _throw0,
-    void Function(int, int) moveCursorTo = _throw2,
-    void Function(int) moveCursorUp = _throw1,
-    void Function(int) moveCursorDown = _throw1,
-    void Function(int) moveCursorRight = _throw1,
-    void Function(int) moveCursorLeft = _throw1,
-    void Function(int) moveCursorDownAndReturn = _throw1,
-    void Function(int) moveCursorUpAndReturn = _throw1,
-    void Function(int) moveCursorToColumn = _throw1,
-    void Function(String) write = _throw1,
-    void Function(String, int) unknown = _throw2,
-  })  : _clearLine = clearLine,
-        _clearLineAfter = clearLineAfter,
-        _clearLineBefore = clearLineBefore,
-        _clearScreen = clearScreen,
-        _clearScreenAfter = clearScreenAfter,
-        _clearScreenBefore = clearScreenBefore,
-        _moveCursorHome = moveCursorHome,
-        _moveCursorTo = moveCursorTo,
-        _moveCursorUp = moveCursorUp,
-        _moveCursorDown = moveCursorDown,
-        _moveCursorRight = moveCursorRight,
-        _moveCursorLeft = moveCursorLeft,
-        _moveCursorDownAndReturn = moveCursorDownAndReturn,
-        _moveCursorUpAndReturn = moveCursorUpAndReturn,
-        _moveCursorToColumn = moveCursorToColumn,
-        _write = write,
-        _unknown = unknown;
-
-  static void _throw0() => throw UnimplementedError();
-  static void _throw1(void _) => throw UnimplementedError();
-  static void _throw2(void _, void __) => throw UnimplementedError();
-
-  @override
-  void clearLine() => _clearLine();
-  final void Function() _clearLine;
-
-  @override
-  void clearLineAfter() => _clearLineAfter();
-  final void Function() _clearLineAfter;
-
-  @override
-  void clearLineBefore() => _clearLineBefore();
-  final void Function() _clearLineBefore;
-
-  @override
-  void clearScreen() => _clearScreen();
-  final void Function() _clearScreen;
-
-  @override
-  void clearScreenAfter() => _clearScreenAfter();
-  final void Function() _clearScreenAfter;
-
-  @override
-  void clearScreenBefore() => _clearScreenBefore();
-  final void Function() _clearScreenBefore;
-
-  @override
-  void moveCursorHome() => _moveCursorHome();
-  final void Function() _moveCursorHome;
-
-  @override
-  void moveCursorTo(int line, int column) => _moveCursorTo(line, column);
-  final void Function(int, int) _moveCursorTo;
-
-  @override
-  void moveCursorUp(int count) => _moveCursorUp(count);
-  final void Function(int) _moveCursorUp;
-
-  @override
-  void moveCursorDown(int count) => _moveCursorDown(count);
-  final void Function(int) _moveCursorDown;
-
-  @override
-  void moveCursorRight(int count) => _moveCursorRight(count);
-  final void Function(int) _moveCursorRight;
-
-  @override
-  void moveCursorLeft(int count) => _moveCursorLeft(count);
-  final void Function(int) _moveCursorLeft;
-
-  @override
-  void moveCursorDownAndReturn(int count) => _moveCursorDownAndReturn(count);
-  final void Function(int) _moveCursorDownAndReturn;
-
-  @override
-  void moveCursorUpAndReturn(int count) => _moveCursorUpAndReturn(count);
-  final void Function(int) _moveCursorUpAndReturn;
-
-  @override
-  void moveCursorToColumn(int column) => _moveCursorToColumn(column);
-  final void Function(int) _moveCursorToColumn;
-
-  @override
-  void write(String text) => _write(text);
-  final void Function(String) _write;
-
-  @override
-  void unknown(String value, int suffix) => _unknown(value, suffix);
-  final void Function(String, int) _unknown;
-}
-
-/// Parses ANSI control sequences from a stream of text.
-///
-/// This class could be used to implement a terminal emulator or a debugger.
-final class AnsiParser {
-  /// Creates a new ANSI parser which invokes the given listener.
-  const AnsiParser(this._listener);
-
-  final AnsiListener _listener;
-
-  /// Parses the given [text] for ANSI control sequences.
-  ///
-  /// This method should be called for each chunk of text received from the
-  /// terminal. The text may contain ANSI control sequences, which are parsed
-  /// and handled by the listener.
-  void parse(String text) {
-    text.splitMapJoin(
-      _isAnsiEscape,
-      onMatch: (match) {
-        match = _ansiMatchParts.matchAsPrefix(match.group(0)!)!;
-        _onParse(match.group(2)!, match.group(3)!.codeUnitAt(0));
-        return '';
-      },
-      onNonMatch: (string) {
-        if (string.isNotEmpty) {
-          _listener.write(string);
-        }
-        return '';
-      },
-    );
-  }
-
-  void _onParse(String value, int suffix) {
-    switch (suffix) {
-      case _$A:
-        return _listener.moveCursorUp(int.parse(value));
-      case _$B:
-        return _listener.moveCursorDown(int.parse(value));
-      case _$C:
-        return _listener.moveCursorRight(int.parse(value));
-      case _$D:
-        return _listener.moveCursorLeft(int.parse(value));
-      case _$E:
-        return _listener.moveCursorDownAndReturn(int.parse(value));
-      case _$F:
-        return _listener.moveCursorUpAndReturn(int.parse(value));
-      case _$G:
-        return _listener.moveCursorToColumn(int.parse(value));
-      case _$H:
-        final parts = value.split(';');
-        if (parts.length == 2) {
-          return _listener.moveCursorTo(
-            int.parse(parts[0]),
-            int.parse(parts[1]),
-          );
-        }
-        return _listener.moveCursorHome();
-      case _$f:
-        final parts = value.split(';');
-        return _listener.moveCursorTo(
-          int.parse(parts[0]),
-          int.parse(parts[1]),
-        );
-      case _$J:
-        switch (value) {
-          case '0':
-            return _listener.clearScreenBefore();
-          case '1':
-            return _listener.clearScreenAfter();
-          case '2':
-            return _listener.clearScreen();
-        }
-      case _$K:
-        switch (value) {
-          case '0':
-            return _listener.clearLineBefore();
-          case '1':
-            return _listener.clearLineAfter();
-          case '2':
-            return _listener.clearLine();
-        }
-    }
-    return _listener.unknown(value, suffix);
-  }
+/// An ANSI escape code.
+@immutable
+sealed class AnsiEscape {
+  const AnsiEscape();
 
   static const _$A = 0x41;
   static const _$B = 0x42;
@@ -438,4 +24,373 @@ final class AnsiParser {
     r'(?:(?:\d{1,4}(?:;\d{0,4})*)?[\dA-PR-TZcf-nq-uy=><~]))',
   );
   static final _ansiMatchParts = RegExp(r'([\u001B]\[)(.*)(\w$)');
+
+  /// Parses all ANSI escape codes from the given [text].
+  ///
+  /// This method is a default implementation of [AnsiParser].
+  static Iterable<AnsiEscape> parseAll(String text) sync* {
+    // Text could be any number of escapes and text interleaved.
+    var start = 0;
+    for (final match in _isAnsiEscape.allMatches(text)) {
+      if (start < match.start) {
+        yield AnsiText(text.substring(start, match.start));
+      }
+      yield parse(match.group(0)!);
+      start = match.end;
+    }
+
+    // If there is any remaining text, then yield it as text.
+    if (start < text.length) {
+      yield AnsiText(text.substring(start));
+    }
+  }
+
+  /// Parses a single ANSI escape code from the given [text].
+  static AnsiEscape parse(String text) {
+    // Does this text contain exactly one ANSI escape code?
+    final match = _isAnsiEscape.firstMatch(text);
+
+    // If not, then this text is not an ANSI escape code.
+    if (match == null) {
+      return AnsiText(text);
+    }
+
+    // Parse the ANSI escape code.
+    final parts = _ansiMatchParts.matchAsPrefix(match.group(0)!)!;
+
+    // Parse the value and suffix of the ANSI escape code.
+    return _parse(parts.group(2)!, parts.group(3)!.codeUnitAt(0));
+  }
+
+  static AnsiEscape _parse(String value, int suffix) {
+    switch (suffix) {
+      case _$A:
+        return AnsiMoveCursorUp(int.parse(value));
+      case _$B:
+        return AnsiMoveCursorDown(int.parse(value));
+      case _$C:
+        return AnsiMoveCursorRight(int.parse(value));
+      case _$D:
+        return AnsiMoveCursorLeft(int.parse(value));
+      case _$E:
+        return AnsiMoveCursorDownAndReturn(int.parse(value));
+      case _$F:
+        return AnsiMoveCursorUpAndReturn(int.parse(value));
+      case _$G:
+        return AnsiMoveCursorToColumn(int.parse(value));
+      case _$H:
+        final parts = value.split(';');
+        if (parts.length == 2) {
+          return AnsiMoveCursorTo(
+            int.parse(parts[0]),
+            int.parse(parts[1]),
+          );
+        }
+        return const AnsiMoveCursorHome();
+      case _$f:
+        final parts = value.split(';');
+        return AnsiMoveCursorTo(
+          int.parse(parts[0]),
+          int.parse(parts[1]),
+        );
+      case _$J:
+        switch (value) {
+          case '0':
+            return const AnsiClearScreenBefore();
+          case '1':
+            return const AnsiClearScreenAfter();
+          case '2':
+            return const AnsiClearScreen();
+        }
+      case _$K:
+        switch (value) {
+          case '0':
+            return const AnsiClearLineBefore();
+          case '1':
+            return const AnsiClearLineAfter();
+          case '2':
+            return const AnsiClearLine();
+        }
+    }
+    return AnsiUnknown(value, suffix);
+  }
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is AnsiEscape &&
+          runtimeType == other.runtimeType &&
+          toEscapedString() == other.toEscapedString();
+
+  @override
+  int get hashCode => toEscapedString().hashCode;
+
+  /// Returns as an encoded ANSI escape code.
+  String toEscapedString();
+
+  @mustBeOverridden
+  @override
+  String toString();
 }
+
+/// Clears the current line that the cursor is located on.
+final class AnsiClearLine extends AnsiEscape {
+  // ignore: public_member_api_docs
+  const AnsiClearLine();
+
+  @override
+  String toEscapedString() => '\u001B[2K';
+
+  @override
+  String toString() => 'AnsiClearLine';
+}
+
+/// Clears the current line _after_ the cursor's position.
+final class AnsiClearLineAfter extends AnsiEscape {
+  // ignore: public_member_api_docs
+  const AnsiClearLineAfter();
+
+  @override
+  String toEscapedString() => '\u001B[K';
+
+  @override
+  String toString() => 'AnsiClearLineAfter';
+}
+
+/// Clears the current line _before_ the cursor's position.
+final class AnsiClearLineBefore extends AnsiEscape {
+  // ignore: public_member_api_docs
+  const AnsiClearLineBefore();
+
+  @override
+  String toEscapedString() => '\u001B[1K';
+
+  @override
+  String toString() => 'AnsiClearLineBefore';
+}
+
+/// Clears the screen.
+final class AnsiClearScreen extends AnsiEscape {
+  // ignore: public_member_api_docs
+  const AnsiClearScreen();
+
+  @override
+  String toEscapedString() => '\u001B[2J';
+
+  @override
+  String toString() => 'AnsiClearScreen';
+}
+
+/// Clears the screen _after_ the cursor's position.
+final class AnsiClearScreenAfter extends AnsiEscape {
+  @literal
+  // ignore: public_member_api_docs
+  const AnsiClearScreenAfter();
+
+  @override
+  String toEscapedString() => '\u001B[0J';
+
+  @override
+  String toString() => 'AnsiClearScreenAfter';
+}
+
+/// Clears the screen _before_ the cursor's position.
+final class AnsiClearScreenBefore extends AnsiEscape {
+  @literal
+  // ignore: public_member_api_docs
+  const AnsiClearScreenBefore();
+
+  @override
+  String toEscapedString() => '\u001B[1J';
+
+  @override
+  String toString() => 'AnsiClearScreenBefore';
+}
+
+/// Move the cursor to home position `(0, 0)`.
+final class AnsiMoveCursorHome extends AnsiEscape {
+  @literal
+  // ignore: public_member_api_docs
+  const AnsiMoveCursorHome();
+
+  @override
+  String toEscapedString() => '\u001B[H';
+
+  @override
+  String toString() => 'AnsiMoveCursorHome';
+}
+
+/// Move the cursor the given [line] and [column] position.
+final class AnsiMoveCursorTo extends AnsiEscape {
+  /// Creates a new ANSI escape code to move the
+  @literal
+  const AnsiMoveCursorTo(this.line, this.column);
+
+  /// The line to move the cursor to.
+  final int line;
+
+  /// The column to move the cursor to.
+  final int column;
+
+  @override
+  String toEscapedString() => '\u001B[$line;${column}H';
+
+  @override
+  String toString() => 'AnsiMoveCursorTo($line, $column)';
+}
+
+/// Move the cursor up [count] lines.
+final class AnsiMoveCursorUp extends AnsiEscape {
+  /// Creates a new ANSI escape code to move the cursor up by [count] lines.
+  @literal
+  const AnsiMoveCursorUp(this.count);
+
+  /// The number of lines to move the cursor up.
+  final int count;
+
+  @override
+  String toEscapedString() => '\u001B[${count}A';
+
+  @override
+  String toString() => 'AnsiMoveCursorUp($count)';
+}
+
+/// Move the cursor down [count] lines.
+final class AnsiMoveCursorDown extends AnsiEscape {
+  /// Creates a new ANSI escape code to move the cursor down by [count] lines.
+  @literal
+  const AnsiMoveCursorDown(this.count);
+
+  /// The number of lines to move the cursor down.
+  final int count;
+
+  @override
+  String toEscapedString() => '\u001B[${count}B';
+
+  @override
+  String toString() => 'AnsiMoveCursorDown($count)';
+}
+
+/// Move the cursor right [count] columns.
+final class AnsiMoveCursorRight extends AnsiEscape {
+  @literal
+
+  /// Creates a new ANSI escape code to move the cursor right by [count] columns.
+  const AnsiMoveCursorRight(this.count);
+
+  /// The number of columns to move the cursor right.
+  final int count;
+
+  @override
+  String toEscapedString() => '\u001B[${count}C';
+
+  @override
+  String toString() => 'AnsiMoveCursorRight($count)';
+}
+
+/// Move the cursor left [count] columns.
+final class AnsiMoveCursorLeft extends AnsiEscape {
+  /// Creates a new ANSI escape code to move the cursor left by [count] columns.
+  @literal
+  const AnsiMoveCursorLeft(this.count);
+
+  /// The number of columns to move the cursor left.
+  final int count;
+
+  @override
+  String toEscapedString() => '\u001B[${count}D';
+
+  @override
+  String toString() => 'AnsiMoveCursorLeft($count)';
+}
+
+/// Move the cursor to the beginning of [count] lines down.
+final class AnsiMoveCursorDownAndReturn extends AnsiEscape {
+  /// Creates a new ANSI escape code to move the cursor down and return.
+  @literal
+  const AnsiMoveCursorDownAndReturn(this.count);
+
+  /// The number of lines to move the cursor down.
+  final int count;
+
+  @override
+  String toEscapedString() => '\u001B[${count}E';
+
+  @override
+  String toString() => 'AnsiMoveCursorDownAndReturn($count)';
+}
+
+/// Move the cursor to the beginning of [count] lines up.
+final class AnsiMoveCursorUpAndReturn extends AnsiEscape {
+  /// Creates a new ANSI escape code to move the cursor up and return.
+  @literal
+  const AnsiMoveCursorUpAndReturn(this.count);
+
+  /// The number of lines to move the cursor up.
+  final int count;
+
+  @override
+  String toEscapedString() => '\u001B[${count}F';
+
+  @override
+  String toString() => 'AnsiMoveCursorUpAndReturn($count)';
+}
+
+/// Move the cursor to the given [column] position.
+final class AnsiMoveCursorToColumn extends AnsiEscape {
+  /// Creates a new ANSI escape code to move the cursor to the given column.
+  @literal
+  const AnsiMoveCursorToColumn(this.column);
+
+  /// The column to move the cursor to.
+  final int column;
+
+  @override
+  String toEscapedString() => '\u001B[${column}G';
+
+  @override
+  String toString() => 'AnsiMoveCursorToColumn($column)';
+}
+
+/// An unknown ANSI escape code.
+final class AnsiUnknown extends AnsiEscape {
+  /// Creates a new ANSI escape code with the given value and suffix.
+  @literal
+  const AnsiUnknown(this.value, this.suffix);
+
+  /// The value of the unknown escape code.
+  final String value;
+
+  /// The suffix of the unknown escape code.
+  final int suffix;
+
+  @override
+  String toEscapedString() => '\u001B[$value$suffix';
+
+  @override
+  String toString() => 'AnsiUnknown($value, $suffix)';
+}
+
+/// Text that does not contain any ANSI control sequences.
+final class AnsiText extends AnsiEscape {
+  /// Creates a new ANSI text escape code with the given text
+  @literal
+  const AnsiText(this.text);
+
+  /// The text that does not contain any ANSI control sequences.
+  final String text;
+
+  @override
+  String toEscapedString() => text;
+
+  @override
+  String toString() => 'AnsiText($text)';
+}
+
+/// A method that handles ANSI control sequences.
+typedef AnsiHandler<T> = T Function(AnsiEscape escape);
+
+/// A method that parses ANSI control sequences.
+///
+/// A default implementation is provided by [AnsiEscape.parseAll].
+typedef AnsiParser = Iterable<AnsiEscape> Function(String text);

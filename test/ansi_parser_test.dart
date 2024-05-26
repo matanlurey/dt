@@ -1,268 +1,108 @@
-import 'package:dt/dt.dart';
+import 'package:dt/src/core/ansi.dart';
 import 'package:test/test.dart';
 
 void main() {
-  group('$AnsiParser', () {
+  group('$AnsiEscape.parse', () {
     test('parses clearScreenBefore', () {
-      var calls = 0;
-
-      final listener = AnsiListener.fromOrThrow(
-        clearScreenBefore: () {
-          calls++;
-        },
-      );
-
-      AnsiParser(listener).parse('\x1B[0J');
-      expect(calls, 1);
+      final escape = const AnsiClearScreenBefore();
+      expect(escape.toEscapedString(), escape);
     });
 
     test('parses clearScreenAfter', () {
-      var calls = 0;
-
-      final listener = AnsiListener.fromOrThrow(
-        clearScreenAfter: () {
-          calls++;
-        },
-      );
-
-      AnsiParser(listener).parse('\x1B[1J');
-      expect(calls, 1);
+      final escape = const AnsiClearScreenAfter();
+      expect(AnsiEscape.parse(escape.toEscapedString()), escape);
     });
 
     test('parses clearScreen', () {
-      var calls = 0;
-
-      final listener = AnsiListener.fromOrThrow(
-        clearScreen: () {
-          calls++;
-        },
-      );
-
-      AnsiParser(listener).parse('\x1B[2J');
-      expect(calls, 1);
+      final escape = const AnsiClearScreen();
+      expect(AnsiEscape.parse(escape.toEscapedString()), escape);
     });
 
     test('parses clearLineBefore', () {
-      var calls = 0;
-
-      final listener = AnsiListener.fromOrThrow(
-        clearLineBefore: () {
-          calls++;
-        },
-      );
-
-      AnsiParser(listener).parse('\x1B[0K');
-      expect(calls, 1);
+      final escape = const AnsiClearLineBefore();
+      expect(AnsiEscape.parse(escape.toEscapedString()), escape);
     });
 
     test('parses clearLineAfter', () {
-      var calls = 0;
-
-      final listener = AnsiListener.fromOrThrow(
-        clearLineAfter: () {
-          calls++;
-        },
-      );
-
-      AnsiParser(listener).parse('\x1B[1K');
-      expect(calls, 1);
+      final escape = const AnsiClearLineAfter();
+      expect(AnsiEscape.parse(escape.toEscapedString()), escape);
     });
 
     test('parses clearLine', () {
-      var calls = 0;
-
-      final listener = AnsiListener.fromOrThrow(
-        clearLine: () {
-          calls++;
-        },
-      );
-
-      AnsiParser(listener).parse('\x1B[2K');
-      expect(calls, 1);
+      final escape = const AnsiClearLine();
+      expect(AnsiEscape.parse(escape.toEscapedString()), escape);
     });
 
     test('parses moveCursorHome', () {
-      var calls = 0;
-
-      final listener = AnsiListener.fromOrThrow(
-        moveCursorHome: () {
-          calls++;
-        },
-      );
-
-      AnsiParser(listener).parse('\x1B[H');
-      expect(calls, 1);
+      final escape = const AnsiMoveCursorHome();
+      expect(AnsiEscape.parse(escape.toEscapedString()), escape);
     });
 
     test('parses moveCursorTo', () {
-      final calls = <Offset>[];
-      final listener = AnsiListener.fromOrThrow(
-        moveCursorTo: (x, y) {
-          calls.add(Offset(x, y));
-        },
-      );
-
-      AnsiParser(listener).parse('\x1B[3;4H');
-      expect(calls, [Offset(3, 4)]);
+      final escape = const AnsiMoveCursorTo(1, 2);
+      expect(AnsiEscape.parse(escape.toEscapedString()), escape);
     });
 
     test('parses moveCursorUp', () {
-      var calls = 0;
-
-      final listener = AnsiListener.fromOrThrow(
-        moveCursorUp: (count) {
-          calls += count;
-        },
-      );
-
-      AnsiParser(listener).parse('\x1B[5A');
-      expect(calls, 5);
+      final escape = const AnsiMoveCursorUp(3);
+      expect(AnsiEscape.parse(escape.toEscapedString()), escape);
     });
 
     test('parses moveCursorDown', () {
-      var calls = 0;
-
-      final listener = AnsiListener.fromOrThrow(
-        moveCursorDown: (count) {
-          calls += count;
-        },
-      );
-
-      AnsiParser(listener).parse('\x1B[6B');
-      expect(calls, 6);
+      final escape = const AnsiMoveCursorDown(4);
+      expect(AnsiEscape.parse(escape.toEscapedString()), escape);
     });
 
     test('parses moveCursorRight', () {
-      var calls = 0;
-
-      final listener = AnsiListener.fromOrThrow(
-        moveCursorRight: (count) {
-          calls += count;
-        },
-      );
-
-      AnsiParser(listener).parse('\x1B[7C');
-      expect(calls, 7);
+      final escape = const AnsiMoveCursorRight(5);
+      expect(AnsiEscape.parse(escape.toEscapedString()), escape);
     });
 
     test('parses moveCursorLeft', () {
-      var calls = 0;
-
-      final listener = AnsiListener.fromOrThrow(
-        moveCursorLeft: (count) {
-          calls += count;
-        },
-      );
-
-      AnsiParser(listener).parse('\x1B[8D');
-      expect(calls, 8);
+      final escape = const AnsiMoveCursorLeft(6);
+      expect(AnsiEscape.parse(escape.toEscapedString()), escape);
     });
 
     test('parses moveCursorDownAndReturn', () {
-      var calls = 0;
-
-      final listener = AnsiListener.fromOrThrow(
-        moveCursorDownAndReturn: (count) {
-          calls += count;
-        },
-      );
-
-      AnsiParser(listener).parse('\x1B[9E');
-      expect(calls, 9);
+      final escape = const AnsiMoveCursorDownAndReturn(7);
+      expect(AnsiEscape.parse(escape.toEscapedString()), escape);
     });
 
     test('parses moveCursorUpAndReturn', () {
-      var calls = 0;
-
-      final listener = AnsiListener.fromOrThrow(
-        moveCursorUpAndReturn: (count) {
-          calls += count;
-        },
-      );
-
-      AnsiParser(listener).parse('\x1B[10F');
-      expect(calls, 10);
+      final escape = const AnsiMoveCursorUpAndReturn(8);
+      expect(AnsiEscape.parse(escape.toEscapedString()), escape);
     });
 
     test('parses moveCursorToColumn', () {
-      var calls = 0;
-
-      final listener = AnsiListener.fromOrThrow(
-        moveCursorToColumn: (column) {
-          calls = column;
-        },
-      );
-
-      AnsiParser(listener).parse('\x1B[11G');
-      expect(calls, 11);
+      final escape = const AnsiMoveCursorToColumn(9);
+      expect(AnsiEscape.parse(escape.toEscapedString()), escape);
     });
 
-    test('parses write', () {
-      final calls = <String>[];
-      final listener = AnsiListener.fromOrThrow(
-        write: calls.add,
-      );
-
-      AnsiParser(listener).parse('Hello World');
-      expect(calls, ['Hello World']);
+    test('parses non-escaped text', () {
+      final escape = const AnsiText('Hello World');
+      expect(AnsiEscape.parse(escape.toEscapedString()), escape);
     });
 
     test('parses unknown', () {
-      var calls = 0;
-
-      final listener = AnsiListener.fromOrThrow(
-        unknown: (code, count) {
-          calls++;
-        },
-      );
-
-      AnsiParser(listener).parse('\x1B[3J');
-      expect(calls, 1);
+      final escape = AnsiUnknown('3', 'J'.codeUnitAt(0));
+      expect(AnsiEscape.parse(escape.toEscapedString()), escape);
     });
 
     test('parses interleaved', () {
-      final calls = <String>[];
-      final listener = AnsiListener.fromOrThrow(
-        clearScreenBefore: () {
-          calls.add('clearScreenBefore');
-        },
-        clearScreenAfter: () {
-          calls.add('clearScreenAfter');
-        },
-        clearScreen: () {
-          calls.add('clearScreen');
-        },
-        clearLineBefore: () {
-          calls.add('clearLineBefore');
-        },
-        clearLineAfter: () {
-          calls.add('clearLineAfter');
-        },
-        clearLine: () {
-          calls.add('clearLine');
-        },
-        write: (text) {
-          calls.add('write:$text');
-        },
-        unknown: (value, suffix) {
-          calls.add('unknown:$value:${String.fromCharCode(suffix)}');
-        },
-      );
-
-      AnsiParser(listener).parse(
-        '\x1B[0J\x1B[1J\x1B[2J\x1B[0K\x1B[1K\x1B[2KHello World\x1B[3J',
+      final calls = AnsiEscape.parseAll(
+        '\x1B[2J\x1B[0J\x1B[1J\x1B[2J\x1B[0J\x1B[1JHello World\x1B[3J',
       );
       expect(
         calls,
         [
-          'clearScreenBefore',
-          'clearScreenAfter',
-          'clearScreen',
-          'clearLineBefore',
-          'clearLineAfter',
-          'clearLine',
-          'write:Hello World',
-          'unknown:3:J',
+          const AnsiClearScreen(),
+          const AnsiClearScreenBefore(),
+          const AnsiClearScreenAfter(),
+          const AnsiClearScreen(),
+          const AnsiClearScreenBefore(),
+          const AnsiClearScreenAfter(),
+          const AnsiText('Hello World'),
+          AnsiUnknown('3', 'J'.codeUnitAt(0)),
         ],
       );
     });
