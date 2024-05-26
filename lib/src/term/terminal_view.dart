@@ -112,7 +112,7 @@ abstract mixin class TerminalView<T> {
       final cursorLine = lines[drawCursor.y];
       lines[drawCursor.y] = cursorLine.replaceRange(
         drawCursor.x,
-        drawCursor.y + 1,
+        drawCursor.x + 1,
         '█',
       );
     }
@@ -122,13 +122,13 @@ abstract mixin class TerminalView<T> {
     final buffer = StringBuffer();
     if (drawBorder) {
       // Draw the top border.
-      buffer.write('┌─');
+      buffer.write('┌');
       if (includeLineNumbers) {
         // Calculate the width of the line numbers.
-        buffer.write('─' * (lineNumberWidth - 1));
+        buffer.write('─' * lineNumberWidth);
         buffer.write('┬');
       }
-      buffer.write('─' * (width - 1));
+      buffer.write('─' * width);
       buffer.writeln('┐');
     }
     for (var i = 0; i < lines.length; i++) {
@@ -144,12 +144,12 @@ abstract mixin class TerminalView<T> {
     }
     if (drawBorder) {
       // Draw the bottom border.
-      buffer.write('└─');
+      buffer.write('└');
       if (includeLineNumbers) {
-        buffer.write('─' * (lineNumberWidth - 1));
+        buffer.write('─' * lineNumberWidth);
         buffer.write('┴');
       }
-      buffer.write('─' * (width - 1));
+      buffer.write('─' * width);
       buffer.writeln('┘');
     }
     return buffer.toString();

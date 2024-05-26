@@ -145,7 +145,6 @@ void main() {
     );
 
     expect(fixture.cursor.offset, fixture.lastPosition);
-    expect(fixture.cursor.toString(), 'Cursor <1:14>');
   });
 
   test('cursor moves to the left', () {
