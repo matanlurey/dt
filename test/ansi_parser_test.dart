@@ -81,6 +81,122 @@ void main() {
       expect(calls, 1);
     });
 
+    test('parses moveCursorHome', () {
+      var calls = 0;
+
+      final listener = AnsiListener.fromOrThrow(
+        moveCursorHome: () {
+          calls++;
+        },
+      );
+
+      AnsiParser(listener).parse('\x1B[H');
+      expect(calls, 1);
+    });
+
+    test('parses moveCursorTo', () {
+      final calls = <Offset>[];
+      final listener = AnsiListener.fromOrThrow(
+        moveCursorTo: (x, y) {
+          calls.add(Offset(x, y));
+        },
+      );
+
+      AnsiParser(listener).parse('\x1B[3;4H');
+      expect(calls, [Offset(3, 4)]);
+    });
+
+    test('parses moveCursorUp', () {
+      var calls = 0;
+
+      final listener = AnsiListener.fromOrThrow(
+        moveCursorUp: (count) {
+          calls += count;
+        },
+      );
+
+      AnsiParser(listener).parse('\x1B[5A');
+      expect(calls, 5);
+    });
+
+    test('parses moveCursorDown', () {
+      var calls = 0;
+
+      final listener = AnsiListener.fromOrThrow(
+        moveCursorDown: (count) {
+          calls += count;
+        },
+      );
+
+      AnsiParser(listener).parse('\x1B[6B');
+      expect(calls, 6);
+    });
+
+    test('parses moveCursorRight', () {
+      var calls = 0;
+
+      final listener = AnsiListener.fromOrThrow(
+        moveCursorRight: (count) {
+          calls += count;
+        },
+      );
+
+      AnsiParser(listener).parse('\x1B[7C');
+      expect(calls, 7);
+    });
+
+    test('parses moveCursorLeft', () {
+      var calls = 0;
+
+      final listener = AnsiListener.fromOrThrow(
+        moveCursorLeft: (count) {
+          calls += count;
+        },
+      );
+
+      AnsiParser(listener).parse('\x1B[8D');
+      expect(calls, 8);
+    });
+
+    test('parses moveCursorDownAndReturn', () {
+      var calls = 0;
+
+      final listener = AnsiListener.fromOrThrow(
+        moveCursorDownAndReturn: (count) {
+          calls += count;
+        },
+      );
+
+      AnsiParser(listener).parse('\x1B[9E');
+      expect(calls, 9);
+    });
+
+    test('parses moveCursorUpAndReturn', () {
+      var calls = 0;
+
+      final listener = AnsiListener.fromOrThrow(
+        moveCursorUpAndReturn: (count) {
+          calls += count;
+        },
+      );
+
+      AnsiParser(listener).parse('\x1B[10F');
+      expect(calls, 10);
+    });
+
+    test('parses moveCursorToColumn', () {
+      var calls = 0;
+
+      final listener = AnsiListener.fromOrThrow(
+        moveCursorToColumn: (column) {
+          calls = column;
+        },
+      );
+
+      AnsiParser(listener).parse('\x1B[11G');
+      expect(calls, 11);
+    });
+
     test('parses write', () {
       final calls = <String>[];
       final listener = AnsiListener.fromOrThrow(
