@@ -17,6 +17,7 @@ Inspiration:
 Work-in-progress:
 
 - [x] Canonical terminal with input support (`TerminalBuffer`).
+- [ ] Finish `AnsiEscapeCode` re-implementation.
 - [ ] Implement `AnsiTerminal`, a driver using ANSI terminal output.
 - [ ] Formatting and styling (`Styled`).
 
