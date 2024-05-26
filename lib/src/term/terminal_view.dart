@@ -3,7 +3,6 @@ import 'dart:math' as math;
 import 'package:dt/src/core.dart';
 import 'package:meta/meta.dart';
 
-import 'cursor.dart';
 import 'terminal_sink.dart';
 
 /// A view of a terminal: a sequence of lines [T] and a [cursor] position.
@@ -20,9 +19,6 @@ abstract mixin class TerminalView<T> {
   // ignore: public_member_api_docs
   const TerminalView();
   // coverage:ignore-end
-
-  /// The cursor position in the terminal.
-  Cursor get cursor;
 
   /// The last possible position in the terminal.
   Offset get lastPosition;
@@ -46,11 +42,6 @@ abstract mixin class TerminalView<T> {
   ///
   /// Reading beyond the bounds of the terminal throws an error.
   T line(int index);
-
-  /// The current line that the cursor is located on.
-  ///
-  /// If the terminal an error is thrown.
-  T get currentLine => line(cursor.line);
 
   /// Lines in the terminal in an idiomatic order.
   ///
@@ -96,7 +87,7 @@ abstract mixin class TerminalView<T> {
   static String visualize<T>(
     TerminalView<T> view, {
     bool drawBorder = false,
-    bool drawCursor = false,
+    Offset? drawCursor,
     bool includeLineNumbers = false,
     String Function(T span)? format,
   }) {
@@ -110,18 +101,18 @@ abstract mixin class TerminalView<T> {
     var width = lines.fold<int>(0, (max, line) => math.max(max, line.length));
 
     // If we are drawing a cursor
-    if (drawCursor) {
+    if (drawCursor != null) {
       // Increase the width to account for the cursor.
-      if (view.cursor.column == width) {
+      if (drawCursor.x == width) {
         width++;
         lines = lines.map((line) => '$line ').toList();
       }
 
       // Replace the cursor with a block character.
-      final cursorLine = lines[view.cursor.line];
-      lines[view.cursor.line] = cursorLine.replaceRange(
-        view.cursor.column,
-        view.cursor.column + 1,
+      final cursorLine = lines[drawCursor.y];
+      lines[drawCursor.y] = cursorLine.replaceRange(
+        drawCursor.x,
+        drawCursor.x + 1,
         '█',
       );
     }
@@ -131,13 +122,13 @@ abstract mixin class TerminalView<T> {
     final buffer = StringBuffer();
     if (drawBorder) {
       // Draw the top border.
-      buffer.write('┌─');
+      buffer.write('┌');
       if (includeLineNumbers) {
         // Calculate the width of the line numbers.
-        buffer.write('─' * (lineNumberWidth - 1));
+        buffer.write('─' * lineNumberWidth);
         buffer.write('┬');
       }
-      buffer.write('─' * (width - 1));
+      buffer.write('─' * width);
       buffer.writeln('┐');
     }
     for (var i = 0; i < lines.length; i++) {
@@ -153,32 +144,14 @@ abstract mixin class TerminalView<T> {
     }
     if (drawBorder) {
       // Draw the bottom border.
-      buffer.write('└─');
+      buffer.write('└');
       if (includeLineNumbers) {
-        buffer.write('─' * (lineNumberWidth - 1));
+        buffer.write('─' * lineNumberWidth);
         buffer.write('┴');
       }
-      buffer.write('─' * (width - 1));
+      buffer.write('─' * width);
       buffer.writeln('┘');
     }
     return buffer.toString();
-  }
-
-  /// Returns a string representation of the terminal suitable for debugging.
-  ///
-  /// This method is equivalent to calling [visualize].
-  String toDebugString({
-    bool drawBorder = false,
-    bool drawCursor = false,
-    bool includeLineNumbers = false,
-    String Function(T span)? format,
-  }) {
-    return visualize(
-      this,
-      drawBorder: drawBorder,
-      drawCursor: drawCursor,
-      includeLineNumbers: includeLineNumbers,
-      format: format,
-    );
   }
 }

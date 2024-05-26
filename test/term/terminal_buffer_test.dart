@@ -145,7 +145,6 @@ void main() {
     );
 
     expect(fixture.cursor.offset, fixture.lastPosition);
-    expect(fixture.cursor.toString(), 'Cursor <1:14>');
   });
 
   test('cursor moves to the left', () {
@@ -155,7 +154,7 @@ void main() {
 
     expect(fixture.cursor.offset, Offset(5, 0));
 
-    fixture.cursor.column -= 1;
+    fixture.cursor.moveLeft();
 
     expect(fixture.cursor.offset, Offset(4, 0));
   });
@@ -167,7 +166,7 @@ void main() {
 
     expect(fixture.cursor.offset, Offset(5, 0));
 
-    fixture.cursor.column -= 10;
+    fixture.cursor.moveLeft(10);
 
     expect(fixture.cursor.offset, Offset(0, 0));
   });
@@ -180,7 +179,7 @@ void main() {
 
     expect(fixture.cursor.offset, Offset(4, 0));
 
-    fixture.cursor.column += 1;
+    fixture.cursor.moveRight();
 
     expect(fixture.cursor.offset, Offset(5, 0));
   });
@@ -193,7 +192,7 @@ void main() {
 
     expect(fixture.cursor.offset, Offset(4, 0));
 
-    fixture.cursor.column += 10;
+    fixture.cursor.moveRight(10);
 
     expect(fixture.cursor.offset, Offset(14, 0));
     expect(fixture.lines, ['Hello         ']);
@@ -210,7 +209,7 @@ void main() {
 
     expect(fixture.cursor.offset, Offset(0, 1));
 
-    fixture.cursor.line -= 1;
+    fixture.cursor.moveUp();
 
     expect(fixture.cursor.offset, Offset(0, 0));
   });
@@ -226,7 +225,7 @@ void main() {
 
     expect(fixture.cursor.offset, Offset(0, 1));
 
-    fixture.cursor.line -= 10;
+    fixture.cursor.moveUp(10);
 
     expect(fixture.cursor.offset, Offset(0, 0));
   });
@@ -242,7 +241,7 @@ void main() {
 
     expect(fixture.cursor.offset, Offset(0, 0));
 
-    fixture.cursor.line += 1;
+    fixture.cursor.moveDown();
 
     expect(fixture.cursor.offset, Offset(0, 1));
   });
@@ -258,7 +257,7 @@ void main() {
 
     expect(fixture.cursor.offset, Offset(0, 0));
 
-    fixture.cursor.line += 10;
+    fixture.cursor.moveDown(10);
 
     expect(fixture.cursor.offset, Offset(0, 1));
   });

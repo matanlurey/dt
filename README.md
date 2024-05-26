@@ -17,7 +17,10 @@ Inspiration:
 Work-in-progress:
 
 - [x] Canonical terminal with input support (`TerminalBuffer`).
-- [ ] Implement `AnsiTerminal`, a sink and controller for ANSI terminal output.
+- [x] Remove `Cursor`, add `CursorBuffer` to `TerminalBuffer`.
+- [x] Remove elements of `InteractiveCursor` that read the cursor position.
+- [x] Add cursor positioning to `AnsiHandler`.
+- [ ] Implement `AnsiTerminal`, a driver using ANSI terminal output.
 - [ ] Formatting and styling (`Styled`).
 
 ## Overview
@@ -74,22 +77,22 @@ classDiagram
     TerminalSink~T~ : +void write(T span)
     TerminalSink~T~ : +void writeLine(T span)
 
-  class TerminalController~T~
-  <<interface>> TerminalController
-    TerminalController~T~ : +InteractiveCursor get cursor
-    TerminalController~T~ : +void clearScreen()
+  class TerminalDriver~T~
+  <<interface>> TerminalDriver
+    TerminalDriver~T~ : +Cursor get cursor
+    TerminalDriver~T~ : +void clearScreen()
 
   class TerminalView~T~
   <<abstract>> TerminalView
-    TerminalView~T~ : +Cursor get cursor
     TerminalView~T~ : +Iterable~T~ get lines
 
   class TerminalBuffer~T~
   <<abstract>> TerminalBuffer
+    TerminalView~T~ : +CursorBuffer get cursor
   
   TerminalSink~T~ <|-- TerminalBuffer~T~ : Mixes-in
   TerminalView~T~ <|-- TerminalBuffer~T~ : Mixes-in
-  TerminalController~T~ <|-- TerminalBuffer~T~ : Implements
+  TerminalDriver~T~ <|-- TerminalBuffer~T~ : Implements
 ```
 
 ### GridBuffer

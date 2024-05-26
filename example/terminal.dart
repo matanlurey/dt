@@ -7,7 +7,7 @@ void main() {
   );
 
   // World isn't that impressive, let's replace it with Dart!
-  terminal.cursor.column -= 6;
+  terminal.cursor.moveLeft(6);
   terminal.write('Dart!');
 
   print(

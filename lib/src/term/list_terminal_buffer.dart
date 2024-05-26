@@ -1,8 +1,7 @@
 import 'package:meta/meta.dart';
 
-import 'cursor.dart';
 import 'terminal_buffer.dart';
-import 'terminal_controller.dart';
+import 'terminal_driver.dart';
 import 'terminal_span.dart';
 
 /// A mixin that provides sensible defaults for terminals backed by a `List<T>`.
@@ -49,7 +48,7 @@ import 'terminal_span.dart';
 /// // 0 Hello World!█
 /// print(buffer.toDebugString());
 ///
-/// buffer.cursor.column -= 6;
+/// buffer.cursor.moveLeft(6);
 ///
 /// // 0 Hello █orld!
 /// print(buffer.toDebugString());
@@ -77,16 +76,16 @@ import 'terminal_span.dart';
 mixin ListTerminalBuffer<T> implements TerminalBuffer<T> {
   @override
   @nonVirtual
-  InteractiveCursor get cursor {
+  CursorBuffer get cursor {
     var cursor = _cursor;
     if (cursor == null) {
       final position = lastPosition;
-      _cursor = cursor = _InteractiveCursor(this, position.x, position.y);
+      _cursor = cursor = _CursorBuffer(this, position.x, position.y);
     }
     return cursor;
   }
 
-  InteractiveCursor? _cursor;
+  CursorBuffer? _cursor;
 
   /// Details about how the contents of the terminal are stored and manipulated.
   @protected
@@ -128,14 +127,14 @@ mixin ListTerminalBuffer<T> implements TerminalBuffer<T> {
 
   @override
   void clearLineAfter() {
-    final Cursor(:line, :column) = cursor;
+    final CursorBuffer(:line, :column) = cursor;
     lines[line] = span.extract(lines[line], end: column);
   }
 
   /// Replaces the current line before the cursor with empty content.
   @override
   void clearLineBefore() {
-    final Cursor(:line, :column) = cursor;
+    final CursorBuffer(:line, :column) = cursor;
     lines[line] = span.replace(
       lines[line],
       span.empty(column),
@@ -147,7 +146,7 @@ mixin ListTerminalBuffer<T> implements TerminalBuffer<T> {
   /// Replaces the current line with empty content up to the cursor position.
   @override
   void clearLine() {
-    final Cursor(:line, :column) = cursor;
+    final CursorBuffer(:line, :column) = cursor;
     lines[line] = span.empty(column);
   }
 
@@ -170,9 +169,9 @@ mixin ListTerminalBuffer<T> implements TerminalBuffer<T> {
     }
 
     // Replace the remainder of the line with the span.
-    final Cursor(:line, :column) = cursor;
+    final CursorBuffer(:line, :column) = cursor;
     lines[line] = this.span.replace(lines[line], span, column);
-    cursor.column += this.span.width(span);
+    cursor.moveRight(this.span.width(span));
   }
 
   /// Writes a [span] to the [currentLine], if given, and terminates the line.
@@ -188,27 +187,21 @@ mixin ListTerminalBuffer<T> implements TerminalBuffer<T> {
       write(span);
     }
     lines.add(this.span.empty());
-    cursor.line++;
-    cursor.column = 0;
+    cursor.moveDown();
+    cursor.moveTo(column: 0);
   }
 }
 
-final class _InteractiveCursor<T> extends InteractiveCursor {
-  _InteractiveCursor(
-    this._terminal,
-    this._column,
-    this._line,
-  );
+final class _CursorBuffer<T> extends CursorBuffer {
+  _CursorBuffer(this._terminal, this._line, this._column);
 
   final ListTerminalBuffer<T> _terminal;
-  int _column;
-  int _line;
 
   @override
   int get column => _column;
+  int _column;
 
-  @override
-  set column(int value) {
+  void _setColumn(int value) {
     // No-op if the value is the same.
     if (value == _column) {
       return;
@@ -234,13 +227,33 @@ final class _InteractiveCursor<T> extends InteractiveCursor {
 
   @override
   int get line => _line;
+  int _line;
 
-  @override
-  set line(int value) {
+  void _setLine(int value) {
     if (value == _line) {
       return;
     }
 
     _line = value.clamp(0, _terminal.lines.length - 1);
+  }
+
+  @override
+  void moveBy({int? columns, int? lines}) {
+    if (lines != null) {
+      _setLine(_line + lines);
+    }
+    if (columns != null) {
+      _setColumn(_column + columns);
+    }
+  }
+
+  @override
+  void moveTo({int? column, int? line}) {
+    if (line != null) {
+      _setLine(line);
+    }
+    if (column != null) {
+      _setColumn(column);
+    }
   }
 }
