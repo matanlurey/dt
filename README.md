@@ -17,10 +17,6 @@ Inspiration:
 Work-in-progress:
 
 - [x] Canonical terminal with input support (`TerminalBuffer`).
-- [x] Remove `Cursor`, add `CursorBuffer` to `TerminalBuffer`.
-- [x] Remove elements of `InteractiveCursor` that read the cursor position.
-- [x] Add cursor positioning to `AnsiHandler`.
-- [ ] Implement `AnsiTerminal`, a driver using ANSI terminal output.
 - [ ] Formatting and styling (`Styled`).
 
 ## Overview
@@ -148,21 +144,21 @@ classDiagram
 
 ### AnsiTerminal
 
-An `AnsiTerminal` is a sink and controller for ANSI terminal output.
+An `AnsiTerminalDriver` is a `TerminalDriver` that emits ANSI escape codes.
 
 So far, the types have been focused on emulating terminal output, but an
-`AnsiTerminal` is intended to be a sink for writing ANSI terminal codes _to_ an
-external terminal.
+`AnsiTerminalDriver` and the `AnsiTerminal` class provide a way to interact with
+a real terminal.
 
 ```dart
-import 'package:dt/dt.dart';
+import 'package:dt/ansi.dart';
 
 void main() {
   final terminal = AnsiTerminal.fromStdout();
 
   terminal.write('Hello, World!');
-  terminal.cursor.moveUp(1);
-  terminal.write('Hello, Dart!');
+  terminal.cursor.moveLeft(6);
+  terminal.write('Dart!');
 }
 ```
 

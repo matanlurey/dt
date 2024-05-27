@@ -40,17 +40,17 @@ abstract interface class TerminalDriver {
 /// are implementation-defined, and may result in being ignored or clamped to
 /// the nearest valid position.
 abstract mixin class Cursor {
-  /// Moves the cursor _to_ the given [column] and [line].
+  /// Moves the cursor _to_ the given [column] and optionally [line].
   ///
   /// If being moved outside the bounds of the terminal, the implementation
   /// may either ignore the move, clamp the cursor to the nearest valid
   /// position or insert empty lines and spans to accommodate the cursor.
   void moveTo({
-    int? column,
+    required int column,
     int? line,
   });
 
-  /// Moves the cursor _by_ the given [columns] and [lines].
+  /// Moves the cursor _by_ the given [columns] and/or [lines].
   ///
   /// If being moved outside the bounds of the terminal, the implementation
   /// may either ignore the move, clamp the cursor to the nearest valid
