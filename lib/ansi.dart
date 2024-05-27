@@ -20,4 +20,5 @@ export 'src/ansi/ansi_escape.dart'
         AnsiParser,
         AnsiText,
         AnsiUnknown;
+export 'src/ansi/ansi_terminal.dart' show AnsiTerminal;
 export 'src/ansi/ansi_terminal_driver.dart' show AnsiTerminalDriver;
