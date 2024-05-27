@@ -1,7 +1,7 @@
 #!/usr/bin/env dart
 
+import 'package:dt/ansi.dart';
 import 'package:dt/dt.dart';
-import 'package:dt/src/core/ansi.dart';
 
 void main() async {
   final stdout = Writer.stdout;

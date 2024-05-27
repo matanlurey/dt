@@ -1,26 +1,44 @@
-import 'package:dt/dt.dart';
-import 'package:dt/src/core/ansi.dart';
+import 'package:dt/ansi.dart';
 import 'package:test/test.dart';
 
 void main() {
+  test('invokes clearScreenAfter', () {
+    final commands = _when((driver) => driver.clearScreenAfter());
+    expect(commands, [const AnsiClearScreenAfter()]);
+  });
+
+  test('invokes clearScreenBefore', () {
+    final commands = _when((driver) => driver.clearScreenBefore());
+    expect(commands, [const AnsiClearScreenBefore()]);
+  });
+
+  test('invokes clearScreen', () {
+    final commands = _when((driver) => driver.clearScreen());
+    expect(commands, [const AnsiClearScreen()]);
+  });
+
+  test('invokes clearLineAfter', () {
+    final commands = _when((driver) => driver.clearLineAfter());
+    expect(commands, [const AnsiClearLineAfter()]);
+  });
+
+  test('invokes clearLineBefore', () {
+    final commands = _when((driver) => driver.clearLineBefore());
+    expect(commands, [const AnsiClearLineBefore()]);
+  });
+
   test('invokes clearLine', () {
-    _when(
-      (driver) => driver.clearLine(),
-    );
+    final commands = _when((driver) => driver.clearLine());
+    expect(commands, [const AnsiClearLine()]);
   });
 }
 
-Iterable<String> _when(
+Iterable<AnsiEscape> _when(
   void Function(AnsiTerminalDriver) drive,
 ) {
-  final calls = <String>[];
-  final driver = _TestAnsiTerminal((code) {
-    calls.add(code.toString());
-    return '';
-  });
-
+  final calls = <AnsiEscape>[];
+  final driver = _TestAnsiTerminal(calls.add);
   drive(driver);
-
   return calls;
 }
 
@@ -28,6 +46,6 @@ final class _TestAnsiTerminal with AnsiTerminalDriver {
   _TestAnsiTerminal(this._ansi);
 
   @override
-  String handleAnsi(AnsiEscape code) => _ansi(code);
-  final AnsiHandler<String> _ansi;
+  void handleAnsi(AnsiEscape code) => _ansi(code);
+  final AnsiHandler<void> _ansi;
 }

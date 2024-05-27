@@ -95,24 +95,24 @@ sealed class AnsiEscape {
         );
       case _$J:
         switch (value) {
-          case '0':
-            return const AnsiClearScreenBefore();
-          case '1':
+          case '0' || '':
             return const AnsiClearScreenAfter();
+          case '1':
+            return const AnsiClearScreenBefore();
           case '2':
             return const AnsiClearScreen();
         }
       case _$K:
         switch (value) {
-          case '0':
-            return const AnsiClearLineBefore();
-          case '1':
+          case '0' || '':
             return const AnsiClearLineAfter();
+          case '1':
+            return const AnsiClearLineBefore();
           case '2':
             return const AnsiClearLine();
         }
     }
-    return AnsiUnknown(value, suffix);
+    return AnsiUnknown(String.fromCharCode(suffix), int.tryParse(value));
   }
 
   @override
@@ -356,16 +356,21 @@ final class AnsiMoveCursorToColumn extends AnsiEscape {
 final class AnsiUnknown extends AnsiEscape {
   /// Creates a new ANSI escape code with the given value and suffix.
   @literal
-  const AnsiUnknown(this.value, this.suffix);
+  const AnsiUnknown(this.suffix, [this.value]);
 
   /// The value of the unknown escape code.
-  final String value;
+  final int? value;
 
   /// The suffix of the unknown escape code.
-  final int suffix;
+  final String suffix;
 
   @override
-  String toEscapedString() => '\u001B[$value$suffix';
+  String toEscapedString() {
+    if (value == null) {
+      return '\u001B[$suffix';
+    }
+    return '\u001B[$value$suffix';
+  }
 
   @override
   String toString() => 'AnsiUnknown($value, $suffix)';

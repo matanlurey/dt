@@ -1,11 +1,11 @@
-import 'package:dt/src/core/ansi.dart';
+import 'package:dt/ansi.dart';
 import 'package:test/test.dart';
 
 void main() {
   group('$AnsiEscape.parse', () {
     test('parses clearScreenBefore', () {
       final escape = const AnsiClearScreenBefore();
-      expect(escape.toEscapedString(), escape);
+      expect(AnsiEscape.parse(escape.toEscapedString()), escape);
     });
 
     test('parses clearScreenAfter', () {
@@ -84,7 +84,7 @@ void main() {
     });
 
     test('parses unknown', () {
-      final escape = AnsiUnknown('3', 'J'.codeUnitAt(0));
+      final escape = const AnsiUnknown('J', 3);
       expect(AnsiEscape.parse(escape.toEscapedString()), escape);
     });
 
@@ -96,13 +96,13 @@ void main() {
         calls,
         [
           const AnsiClearScreen(),
-          const AnsiClearScreenBefore(),
           const AnsiClearScreenAfter(),
+          const AnsiClearScreenBefore(),
           const AnsiClearScreen(),
-          const AnsiClearScreenBefore(),
           const AnsiClearScreenAfter(),
+          const AnsiClearScreenBefore(),
           const AnsiText('Hello World'),
-          AnsiUnknown('3', 'J'.codeUnitAt(0)),
+          const AnsiUnknown('J', 3),
         ],
       );
     });

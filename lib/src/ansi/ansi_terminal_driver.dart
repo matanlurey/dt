@@ -1,4 +1,4 @@
-import 'package:dt/src/core/ansi.dart';
+import 'package:dt/src/ansi/ansi_escape.dart';
 import 'package:dt/src/term.dart';
 import 'package:meta/meta.dart';
 
@@ -55,7 +55,7 @@ mixin AnsiTerminalDriver implements TerminalDriver {
 
 final class _AnsiCursor implements Cursor {
   const _AnsiCursor(this._ansi);
-  final AnsiHandler _ansi;
+  final AnsiHandler<void> _ansi;
 
   @override
   void moveTo({required int column, int? line}) {
