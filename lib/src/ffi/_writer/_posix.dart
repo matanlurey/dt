@@ -1,6 +1,6 @@
 import 'dart:convert' show utf8;
 
-import 'package:dt/dt.dart';
+import 'package:dt/core.dart';
 import 'package:dt/src/core/writer.dart';
 import 'package:dt/src/ffi/libc.dart';
 

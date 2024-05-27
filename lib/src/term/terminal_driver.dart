@@ -59,6 +59,15 @@ abstract mixin class Cursor {
     int? columns,
     int? lines,
   });
+
+  /// Resets the cursor to its default position, typically the top-left corner.
+  void reset();
+
+  /// Hides the cursor.
+  void hide();
+
+  /// Shows the cursor.
+  void show();
 }
 
 /// Extension methods for [Cursor].

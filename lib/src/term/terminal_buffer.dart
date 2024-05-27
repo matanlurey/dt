@@ -17,6 +17,9 @@ abstract class CursorBuffer extends Cursor {
 
   /// Current position as an [Offset].
   Offset get offset => Offset(column, line);
+
+  /// Whether the cursor is visible.
+  bool get visible;
 }
 
 /// A _canonical_ buffered terminal of lines [T] and a [cursor] position.

@@ -1,4 +1,4 @@
-import 'package:dt/dt.dart';
+import 'package:dt/core.dart';
 
 void main() {
   final grid = GridBuffer.filled(3, 3, ' ');
