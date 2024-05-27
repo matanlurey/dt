@@ -1,7 +1,7 @@
 #!/usr/bin/env dart
 
 import 'package:dt/ansi.dart';
-import 'package:dt/dt.dart';
+import 'package:dt/core.dart';
 
 void main() async {
   // Create a terminal that writes to standard output.

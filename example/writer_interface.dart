@@ -1,6 +1,6 @@
 #!/usr/bin/env dart
 
-import 'package:dt/dt.dart';
+import 'package:dt/core.dart';
 
 void main() {
   // Use an in-memory string buffer.

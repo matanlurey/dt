@@ -1,6 +1,7 @@
 import 'package:dt/dt.dart';
 
 import 'ansi_escape.dart';
+import 'ansi_terminal_driver.dart';
 
 /// A terminal that writes ANSI escape codes to a [Writer].
 abstract interface class AnsiTerminal<T>
