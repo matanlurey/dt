@@ -31,6 +31,11 @@ void main() {
     final commands = _when((driver) => driver.clearLine());
     expect(commands, [const AnsiClearLine()]);
   });
+
+  test('invoke cursor.reset', () {
+    final commands = _when((driver) => driver.cursor.reset());
+    expect(commands, [const AnsiMoveCursorHome()]);
+  });
 }
 
 Iterable<AnsiEscape> _when(

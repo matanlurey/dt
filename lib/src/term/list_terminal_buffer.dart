@@ -104,6 +104,9 @@ mixin ListTerminalBuffer<T> implements TerminalBuffer<T> {
 
   @override
   void clearScreenAfter() {
+    if (isEmpty) {
+      return;
+    }
     lines.removeRange(cursor.line + 1, lines.length);
     clearLineAfter();
   }
@@ -115,6 +118,9 @@ mixin ListTerminalBuffer<T> implements TerminalBuffer<T> {
   /// of no content.
   @override
   void clearScreenBefore() {
+    if (isEmpty) {
+      return;
+    }
     lines.replaceRange(0, cursor.line, List.filled(cursor.line, span.empty()));
     clearLineBefore();
   }
@@ -193,9 +199,14 @@ mixin ListTerminalBuffer<T> implements TerminalBuffer<T> {
 }
 
 final class _CursorBuffer<T> extends CursorBuffer {
-  _CursorBuffer(this._terminal, this._line, this._column);
+  _CursorBuffer(this._terminal, this._line, this._column) {
+    _initialLine = _line;
+    _initialColumn = _column;
+  }
 
   final ListTerminalBuffer<T> _terminal;
+  late final int _initialLine;
+  late final int _initialColumn;
 
   @override
   int get column => _column;
@@ -255,5 +266,25 @@ final class _CursorBuffer<T> extends CursorBuffer {
     if (column != null) {
       _setColumn(column);
     }
+  }
+
+  @override
+  void reset() {
+    _line = _initialLine;
+    _column = _initialColumn;
+  }
+
+  @override
+  bool get visible => _visible;
+  var _visible = true;
+
+  @override
+  void hide() {
+    _visible = false;
+  }
+
+  @override
+  void show() {
+    _visible = true;
   }
 }

@@ -352,6 +352,32 @@ final class AnsiMoveCursorToColumn extends AnsiEscape {
   String toString() => 'AnsiMoveCursorToColumn($column)';
 }
 
+/// Shows the cursor.
+final class AnsiShowCursor extends AnsiEscape {
+  @literal
+  // ignore: public_member_api_docs
+  const AnsiShowCursor();
+
+  @override
+  String toEscapedString() => '\u001B[?25h';
+
+  @override
+  String toString() => 'AnsiShowCursor';
+}
+
+/// Hides the cursor.
+final class AnsiHideCursor extends AnsiEscape {
+  @literal
+  // ignore: public_member_api_docs
+  const AnsiHideCursor();
+
+  @override
+  String toEscapedString() => '\u001B[?25l';
+
+  @override
+  String toString() => 'AnsiHideCursor';
+}
+
 /// An unknown ANSI escape code.
 final class AnsiUnknown extends AnsiEscape {
   /// Creates a new ANSI escape code with the given value and suffix.

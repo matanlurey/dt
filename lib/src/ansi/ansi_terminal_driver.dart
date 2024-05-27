@@ -84,4 +84,19 @@ final class _AnsiCursor implements Cursor {
       }
     }
   }
+
+  @override
+  void reset() {
+    _ansi(const AnsiMoveCursorHome());
+  }
+
+  @override
+  void hide() {
+    _ansi(const AnsiHideCursor());
+  }
+
+  @override
+  void show() {
+    _ansi(const AnsiShowCursor());
+  }
 }
