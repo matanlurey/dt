@@ -1,4 +1,4 @@
-import 'package:dt/dt.dart';
+import 'package:dt/core.dart';
 
 import 'ansi_escape.dart';
 import 'ansi_terminal_driver.dart';
