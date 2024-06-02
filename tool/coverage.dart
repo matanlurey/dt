@@ -75,7 +75,12 @@ Future<io.File> _generateImportAll() async {
   files.sort();
 
   // Create a file that imports all the files.
-  final output = StringBuffer('// ignore_for_file: unused_import\n\n');
+  final output = StringBuffer();
+  output.writeln('// Auto-generated file. Do not edit.');
+  output.writeln('// To regenerate, run `dart tool/coverage.dart`.');
+  output.writeln();
+  output.writeln('// ignore_for_file: unused_import\n\n');
+
   for (final file in files) {
     final relative = p.relative(file, from: 'lib');
     output.writeln("import 'package:dt/$relative';");

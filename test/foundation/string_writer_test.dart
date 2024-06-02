@@ -32,6 +32,22 @@ void main() {
     expect(output.toString(), 'HelloWorld');
   });
 
+  test('should write a new line', () {
+    writer.writeLine('Hello');
+    writer.writeLine('World');
+    expect(output.toString(), 'Hello\nWorld\n');
+  });
+
+  test('should write multiple spans', () {
+    writer.writeAll(['Hello', 'World'], ' ');
+    expect(output.toString(), 'Hello World');
+  });
+
+  test('should write multiple lines', () {
+    writer.writeLines(['Hello', 'World']);
+    expect(output.toString(), 'Hello\nWorld\n');
+  });
+
   test('should delegate flush', () async {
     var flushed = false;
     onFlush = () {

@@ -1,6 +1,3 @@
-/// Commands that perform actions on a terminal.
-library;
-
 import 'package:meta/meta.dart';
 
 /// An interface for a command that performs an action on a terminal.
