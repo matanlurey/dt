@@ -1,12 +1,6 @@
 include: ../analysis_options.yaml
 
+# Relax lint rules to make examples more readable.
 analyzer:
   errors:
-    # OK for sample code.
-    avoid_print: ignore
-
-    # Obfuscates sample code where consistency is less important.
-    cascade_invocations: ignore
-
-    # Used to make the examples clearer.
-    prefer_asserts_with_message: ignore
+    unnecessary_raw_strings: ignore

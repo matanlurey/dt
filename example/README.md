@@ -1,27 +1,15 @@
 # Examples
 
-## In-Memory Buffers
+## Basic Output
 
-### [Using `TermninalBuffer`](./memory_terminal_buffer.dart)
+Append-only output with no input.
 
-In-memory emulation of a terminal-like buffer.
+- [x] [Hello message](basic/hello.dart)
 
-### [Using `GridBuffer`](./memory_grid_buffer.dart)
+## Limited Interaction
 
-In-memory emulation of a 2D grid-like buffer.
+Full TTY output with input, using canonical mode.
 
-## ANSI Escape Codes
+## Loop Rendered
 
-### [Controlling a Cursor](./ansi_cursor.dart)
-
-Controlling the cursor position using ANSI escape codes.
-
-### [Controlling the Display](./ansi_display.dart)
-
-Controlling the display using ANSI escape codes.
-
-## Other
-
-### [`Writer` Interface](./writer_interface.dart)
-
-A simple interface for writing to a buffer.
+Full TTY output with input, using raw mode for complete control.
