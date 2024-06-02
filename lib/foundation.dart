@@ -97,10 +97,13 @@ final class StringWriter {
   StringWriter(
     this._writer, {
     Encoding encoding = utf8,
-  }) : _encoding = encoding;
+    String newLine = '\n',
+  })  : _encoding = encoding,
+        _newLine = newLine;
 
   final Writer _writer;
   final Encoding _encoding;
+  final String _newLine;
 
   /// Flushes the buffer, ensuring all written data is actually written.
   Future<void> flush() => _writer.flush();
@@ -110,6 +113,29 @@ final class StringWriter {
   /// This method is non-blocking and may be buffered.
   void write(String string) {
     _writer.write(_encoding.encode(string));
+  }
+
+  /// Writes the provided [string] to the sink, followed by a newline.
+  ///
+  /// This method is non-blocking and may be buffered.
+  void writeLine([String string = '']) {
+    _writer.write(_encoding.encode('$string$_newLine'));
+  }
+
+  /// Writes the provided [strings] to the sink.
+  ///
+  /// Optionally, a [separator] may be provided to join the strings.
+  ///
+  /// This method is non-blocking and may be buffered.
+  void writeAll(Iterable<String> strings, [String separator = '']) {
+    write(strings.join(separator));
+  }
+
+  /// Writes the provided [strings] to the sink, each followed by a newline.
+  ///
+  /// This method is non-blocking and may be buffered.
+  void writeLines(Iterable<String> strings) {
+    writeAll(strings, _newLine);
   }
 }
 

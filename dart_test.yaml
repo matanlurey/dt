@@ -1,0 +1,6 @@
+presets:
+  coverage:
+    reporter: github
+    paths:
+      - coverage
+      - test
