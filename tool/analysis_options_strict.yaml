@@ -1,0 +1,9 @@
+include: package:oath/library.yaml
+
+linter:
+  rules:
+    # Allow relative imports.
+    always_use_package_imports: false
+
+    # Makes code harder to read in some situations.
+    cascade_invocations: false

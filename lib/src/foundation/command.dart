@@ -1,5 +1,45 @@
 import 'package:meta/meta.dart';
 
+/// Returns an ANSI escape sequence for the given command and parameters.
+///
+/// If [parameters] is provided, they are used as the parameters for the escape
+/// sequence. If [defaults] is provided, they are used as the default
+/// parameters for the escape sequence and excluded from the output if they are
+/// the same as the parameters.
+@visibleForTesting
+String escapeSequence(
+  String commandLetter, [
+  List<int> parameters = const [],
+  @mustBeConst List<int> defaults = const [],
+]) {
+  assert(commandLetter.length == 1, 'commandLetter must be a single character');
+
+  // No parameters.
+  if (parameters.isEmpty) {
+    assert(defaults.isEmpty, 'defaultParameters must be empty');
+    return '\x1B[$commandLetter';
+  }
+
+  // Parameters are checked from right to left.
+  assert(
+    defaults.isEmpty || parameters.length == defaults.length,
+    'parameters and defaultParameters must have the same length if provided',
+  );
+
+  // If the parameter is the same as the default parameter, it is excluded.
+  // Once a non-default parameter is found, remaining parameters are included.
+  final buffer = StringBuffer('\x1B[');
+  for (var i = parameters.length - 1; i >= 0; i--) {
+    final parameter = parameters[i];
+    final defaultTo = defaults.length > i ? defaults[i] : null;
+    if (parameter != defaultTo) {
+      buffer.writeAll(parameters.sublist(0, i + 1), ';');
+      break;
+    }
+  }
+  return (buffer..write(commandLetter)).toString();
+}
+
 /// An interface for a command that performs an action on a terminal.
 ///
 /// Typically the commands are converted to ANSI escape sequences before being
@@ -93,7 +133,7 @@ final class MoveCursorUp implements Command {
 
   @override
   String toEscapeSequence({bool short = true}) {
-    return short && rows == 1 ? '\x1B[A' : '\x1B[${rows}A';
+    return escapeSequence('A', [rows], short ? const [1] : const []);
   }
 }
 

@@ -1,10 +1,7 @@
-include: package:oath/library.yaml
+# https://dart.dev/tools/analysis#the-analysis-options-file
+
+include: tool/analysis_options_relaxed.yaml
 
 analyzer:
-  errors:
-    # Allow relative imports.
-    always_use_package_imports: ignore
-    # Makes code harder to read in some situations.
-    cascade_invocations: ignore
-    # Until my fix goes in.
-    noop_primitive_operations: ignore
+  exclude:
+    - coverage/all_test.dart
