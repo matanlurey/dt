@@ -99,36 +99,6 @@ final class Literal extends Sequence {
   String toEscapedString({bool verbose = false}) => value;
 }
 
-/// Returns an ANSI escape sequence for the given command and parameters.
-///
-/// If [parameters] is provided, they are used as the parameters for the escape
-/// sequence. If [defaults] is provided, they are used as the default
-/// parameters for the escape sequence and excluded from the output if they are
-/// the same as the parameters.
-String _escape(
-  String commandLetter, [
-  List<int> parameters = const [],
-  @mustBeConst List<int> defaults = const [],
-]) {
-  // No parameters.
-  if (parameters.isEmpty) {
-    return '\x1B[$commandLetter';
-  }
-
-  // If the parameter is the same as the default parameter, it is excluded.
-  // Once a non-default parameter is found, remaining parameters are included.
-  final buffer = StringBuffer('\x1B[');
-  for (var i = parameters.length - 1; i >= 0; i--) {
-    final parameter = parameters[i];
-    final defaultTo = defaults.length > i ? defaults[i] : null;
-    if (parameter != defaultTo) {
-      buffer.writeAll(parameters.sublist(0, i + 1), ';');
-      break;
-    }
-  }
-  return (buffer..write(commandLetter)).toString();
-}
-
 /// A CSI escape sequence.
 abstract final class EscapeSequence extends Sequence {
   /// Creates a new escape sequence.
@@ -212,7 +182,7 @@ abstract final class EscapeSequence extends Sequence {
 
   /// Default parameters for the escape sequence.
   @protected
-  List<int> get _defaultParameters;
+  List<int> get _defaults;
 
   @override
   @nonVirtual
@@ -238,7 +208,23 @@ abstract final class EscapeSequence extends Sequence {
   @override
   @nonVirtual
   String toEscapedString({bool verbose = false}) {
-    return _escape(finalByte, parameters, _defaultParameters);
+    // No parameters.
+    if (parameters.isEmpty) {
+      return '\x1B[$finalByte';
+    }
+
+    // If the parameter is the same as the default parameter, it is excluded.
+    // Once a non-default parameter is found, remaining parameters are included.
+    final buffer = StringBuffer('\x1B[');
+    for (var i = parameters.length - 1; i >= 0; i--) {
+      final parameter = parameters[i];
+      final defaultTo = _defaults.length > i ? _defaults[i] : null;
+      if (parameter != defaultTo) {
+        buffer.writeAll(parameters.sublist(0, i + 1), ';');
+        break;
+      }
+    }
+    return (buffer..write(finalByte)).toString();
   }
 
   @override
@@ -253,13 +239,13 @@ final class _EscapeSequence extends EscapeSequence {
     Iterable<int> parameters = const [],
     Iterable<int> defaultParameters = const [],
   ])  : parameters = List.unmodifiable(parameters),
-        _defaultParameters = List.of(defaultParameters),
+        _defaults = List.of(defaultParameters),
         super._();
 
   const _EscapeSequence.noCopy(
     this.finalByte, [
     this.parameters = const [],
-    this._defaultParameters = const [],
+    this._defaults = const [],
   ]) : super._(); // coverage:ignore-line
 
   @override
@@ -269,5 +255,5 @@ final class _EscapeSequence extends EscapeSequence {
   final List<int> parameters;
 
   @override
-  final List<int> _defaultParameters;
+  final List<int> _defaults;
 }
