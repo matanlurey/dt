@@ -54,6 +54,11 @@ sealed class Sequence {
   @override
   String toString();
 
+  /// Returns the terse representation of this sequence.
+  ///
+  /// This is the same as the sequence, but with default parameters removed.
+  Sequence toTerse();
+
   /// Returns the string representation of this sequence.
   ///
   /// If [verbose] is `true`, parameters that are otherwise default are still
@@ -96,6 +101,9 @@ final class Literal extends Sequence {
   String toString() => value;
 
   @override
+  Sequence toTerse() => this;
+
+  @override
   String toEscapedString({bool verbose = false}) => value;
 }
 
@@ -103,24 +111,15 @@ final class Literal extends Sequence {
 abstract final class EscapeSequence extends Sequence {
   /// Creates a new escape sequence.
   ///
-  /// The [finalByte] must be a single byte character.
-  ///
   /// If [defaults] is provided, they are used when computing [toEscapedString]
   /// output if `verbose: false`, and are excluded from the output if they are
   /// the same as the parameters. Must be the same length as [parameters] if
   /// provided.
   factory EscapeSequence(
-    String finalByte, [
+    String finalChars, [
     Iterable<int> parameters = const [],
     Iterable<int> defaults = const [],
   ]) {
-    if (finalByte.length != 1) {
-      throw ArgumentError.value(
-        finalByte,
-        'finalByte',
-        'must be a single character',
-      );
-    }
     if (defaults.isNotEmpty && parameters.length != defaults.length) {
       throw ArgumentError.value(
         defaults,
@@ -128,7 +127,7 @@ abstract final class EscapeSequence extends Sequence {
         'must have the same length as parameters',
       );
     }
-    return _EscapeSequence(finalByte, parameters, defaults);
+    return _EscapeSequence(finalChars, parameters, defaults);
   }
 
   /// Creates a new escape sequence without copying or validating the inputs.
@@ -146,7 +145,7 @@ abstract final class EscapeSequence extends Sequence {
   /// }
   @literal
   const factory EscapeSequence.unchecked(
-    String finalByte, [
+    String finalBytes, [
     @mustBeConst List<int> parameters,
     @mustBeConst List<int> defaults,
   ]) = _EscapeSequence.noCopy;
@@ -168,10 +167,10 @@ abstract final class EscapeSequence extends Sequence {
     );
   }
 
-  /// A single byte character for the escape sequence.
+  /// Final characters for the escape sequence.
   ///
   /// For example, `'H'` for `ESC[H`.
-  String get finalByte;
+  String get finalChars;
 
   /// Parameters for the escape sequence.
   ///
@@ -187,7 +186,7 @@ abstract final class EscapeSequence extends Sequence {
   @override
   @nonVirtual
   bool operator ==(Object other) {
-    if (other is! EscapeSequence || finalByte != other.finalByte) {
+    if (other is! EscapeSequence || finalChars != other.finalChars) {
       return false;
     }
     if (parameters.length != other.parameters.length) {
@@ -203,39 +202,46 @@ abstract final class EscapeSequence extends Sequence {
 
   @override
   @nonVirtual
-  int get hashCode => Object.hash(finalByte, Object.hashAll(parameters));
+  int get hashCode => Object.hash(finalChars, Object.hashAll(parameters));
 
   @override
   @nonVirtual
   String toEscapedString({bool verbose = false}) {
-    // No parameters.
-    if (parameters.isEmpty) {
-      return '\x1B[$finalByte';
+    var sequence = this;
+    if (!verbose) {
+      sequence = sequence.toTerse();
     }
-
-    // If the parameter is the same as the default parameter, it is excluded.
-    // Once a non-default parameter is found, remaining parameters are included.
-    final buffer = StringBuffer('\x1B[');
-    for (var i = parameters.length - 1; i >= 0; i--) {
-      final parameter = parameters[i];
-      final defaultTo = _defaults.length > i ? _defaults[i] : null;
-      if (parameter != defaultTo) {
-        buffer.writeAll(parameters.sublist(0, i + 1), ';');
-        break;
-      }
-    }
-    return (buffer..write(finalByte)).toString();
+    final params = sequence.parameters.join(';');
+    return '\x1B[$params${sequence.finalChars}';
   }
 
   @override
   String toString() {
-    return 'EscapeSequence <${parameters.join(';')}$finalByte>';
+    return 'EscapeSequence <${parameters.join(';')}$finalChars>';
+  }
+
+  @override
+  EscapeSequence toTerse() {
+    if (_defaults.isEmpty) {
+      return this;
+    }
+
+    final params = parameters.toList();
+    for (var i = params.length - 1; i >= 0; i--) {
+      if (params[i] == _defaults[i]) {
+        params.removeAt(i);
+      } else {
+        break;
+      }
+    }
+
+    return EscapeSequence(finalChars, params);
   }
 }
 
 final class _EscapeSequence extends EscapeSequence {
   _EscapeSequence(
-    this.finalByte, [
+    this.finalChars, [
     Iterable<int> parameters = const [],
     Iterable<int> defaultParameters = const [],
   ])  : parameters = List.unmodifiable(parameters),
@@ -243,13 +249,13 @@ final class _EscapeSequence extends EscapeSequence {
         super._();
 
   const _EscapeSequence.noCopy(
-    this.finalByte, [
+    this.finalChars, [
     this.parameters = const [],
     this._defaults = const [],
   ]) : super._(); // coverage:ignore-line
 
   @override
-  final String finalByte;
+  final String finalChars;
 
   @override
   final List<int> parameters;

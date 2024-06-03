@@ -9,6 +9,43 @@ import 'sequence.dart';
 /// implementing this interface.
 @immutable
 abstract mixin class Command {
+  /// Parses an escape sequence into a _command_.
+  static Command? tryParse(Sequence sequence) {
+    if (sequence is! EscapeSequence) {
+      return null;
+    }
+    return switch (sequence.finalChars) {
+      'H' => switch (sequence.parameters) {
+          [final int row, final int column] => MoveCursorTo(row, column),
+          [final int row] => MoveCursorTo(row),
+          [] => MoveCursorTo(),
+          _ => null,
+        },
+      'G' => switch (sequence.parameters) {
+          [final int column] => MoveCursorToColumn(column),
+          [] => MoveCursorToColumn(),
+          _ => null,
+        },
+      'J' => switch (sequence.parameters) {
+          [0] || [] => ClearScreen.all,
+          [1] => ClearScreen.fromCursorDown,
+          [2] => ClearScreen.fromCursorUp,
+          [3] => ClearScreen.allAndScrollback,
+          _ => null,
+        },
+      'K' => switch (sequence.parameters) {
+          [0] || [] => ClearScreen.toEndOfLine,
+          [2] => ClearScreen.currentLine,
+          _ => null,
+        },
+      '?25h' => SetCursorVisibility.visible,
+      '?25l' => SetCursorVisibility.hidden,
+      '?1049h' => AlternateScreenBuffer.enter,
+      '?1049l' => AlternateScreenBuffer.leave,
+      _ => null,
+    };
+  }
+
   // ignore: public_member_api_docs
   const Command();
 
@@ -48,7 +85,7 @@ final class MoveCursorTo extends Command {
 
   @override
   Sequence toSequence() {
-    return EscapeSequence('H', [row, column]);
+    return EscapeSequence('H', [row, column], const [0, 0]);
   }
 
   @override
@@ -73,7 +110,7 @@ final class MoveCursorToColumn extends Command {
 
   @override
   Sequence toSequence() {
-    return EscapeSequence('G', [column]);
+    return EscapeSequence('G', [column], const [0]);
   }
 
   @override
@@ -127,7 +164,7 @@ enum ClearScreen implements Command {
 
   /// Clears the current line.
   currentLine(
-    EscapeSequence.unchecked('K', [0], [0]),
+    EscapeSequence.unchecked('K', [2], [0]),
   ),
 
   /// Clears the line from the cursor to the end of the line.

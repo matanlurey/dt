@@ -43,8 +43,32 @@ void main() {
       final command = MoveCursorTo(1, 2);
 
       check(command.toSequence()).isA<EscapeSequence>()
-        ..has((a) => a.finalByte, 'finalByte').equals('H')
+        ..has((a) => a.finalChars, 'finalByte').equals('H')
         ..has((a) => a.parameters, 'parameters').deepEquals([1, 2]);
+    });
+
+    test('converts back to Command', () {
+      final Command noParams = MoveCursorTo();
+      final Command oneParam = MoveCursorTo(1);
+      final Command twoParams = MoveCursorTo(1, 2);
+
+      check(noParams).equals(
+        Command.tryParse(
+          noParams.toSequence().toTerse(),
+        )!,
+      );
+
+      check(oneParam).equals(
+        Command.tryParse(
+          oneParam.toSequence().toTerse(),
+        )!,
+      );
+
+      check(twoParams).equals(
+        Command.tryParse(
+          twoParams.toSequence().toTerse(),
+        )!,
+      );
     });
   });
 
@@ -73,94 +97,136 @@ void main() {
       final command = MoveCursorToColumn(1);
 
       check(command.toSequence()).isA<EscapeSequence>()
-        ..has((a) => a.finalByte, 'finalByte').equals('G')
+        ..has((a) => a.finalChars, 'finalByte').equals('G')
         ..has((a) => a.parameters, 'parameters').deepEquals([1]);
+    });
+
+    test('converts back to Command', () {
+      final Command noParams = MoveCursorToColumn();
+      final Command oneParam = MoveCursorToColumn(1);
+
+      check(noParams).equals(
+        Command.tryParse(noParams.toSequence().toTerse())!,
+      );
+      check(oneParam).equals(
+        Command.tryParse(oneParam.toSequence().toTerse())!,
+      );
     });
   });
 
   group('SetCursorVisibility', () {
     test('visible', () {
-      final command = SetCursorVisibility.visible;
+      final Command command = SetCursorVisibility.visible;
+      final sequence = command.toSequence();
 
-      check(command.toSequence()).isA<EscapeSequence>()
-        ..has((a) => a.finalByte, 'finalByte').equals('?25h')
+      check(sequence).isA<EscapeSequence>()
+        ..has((a) => a.finalChars, 'finalByte').equals('?25h')
         ..has((a) => a.parameters, 'parameters').isEmpty();
+
+      check(command).equals(Command.tryParse(sequence)!);
     });
 
     test('hidden', () {
-      final command = SetCursorVisibility.hidden;
+      final Command command = SetCursorVisibility.hidden;
+      final sequence = command.toSequence();
 
       check(command.toSequence()).isA<EscapeSequence>()
-        ..has((a) => a.finalByte, 'finalByte').equals('?25l')
+        ..has((a) => a.finalChars, 'finalByte').equals('?25l')
         ..has((a) => a.parameters, 'parameters').isEmpty();
+
+      check(command).equals(Command.tryParse(sequence)!);
     });
   });
 
   group('AlternateScreenBuffer', () {
     test('enter', () {
-      final command = AlternateScreenBuffer.enter;
+      final Command command = AlternateScreenBuffer.enter;
+      final sequence = command.toSequence();
 
-      check(command.toSequence()).isA<EscapeSequence>()
-        ..has((a) => a.finalByte, 'finalByte').equals('?1049h')
+      check(sequence).isA<EscapeSequence>()
+        ..has((a) => a.finalChars, 'finalByte').equals('?1049h')
         ..has((a) => a.parameters, 'parameters').isEmpty();
+
+      check(command).equals(Command.tryParse(sequence)!);
     });
 
     test('leave', () {
-      final command = AlternateScreenBuffer.leave;
+      final Command command = AlternateScreenBuffer.leave;
+      final sequence = command.toSequence();
 
-      check(command.toSequence()).isA<EscapeSequence>()
-        ..has((a) => a.finalByte, 'finalByte').equals('?1049l')
+      check(sequence).isA<EscapeSequence>()
+        ..has((a) => a.finalChars, 'finalByte').equals('?1049l')
         ..has((a) => a.parameters, 'parameters').isEmpty();
+
+      check(command).equals(Command.tryParse(sequence)!);
     });
   });
 
   group('ClearScreen', () {
     test('all', () {
-      final command = ClearScreen.all;
+      final Command command = ClearScreen.all;
+      final sequence = command.toSequence();
 
-      check(command.toSequence()).isA<EscapeSequence>()
-        ..has((a) => a.finalByte, 'finalByte').equals('J')
+      check(sequence).isA<EscapeSequence>()
+        ..has((a) => a.finalChars, 'finalByte').equals('J')
         ..has((a) => a.parameters, 'parameters').deepEquals([0]);
+
+      check(command).equals(Command.tryParse(sequence)!);
     });
 
     test('allAndScrollback', () {
-      final command = ClearScreen.allAndScrollback;
+      final Command command = ClearScreen.allAndScrollback;
+      final sequence = command.toSequence();
 
-      check(command.toSequence()).isA<EscapeSequence>()
-        ..has((a) => a.finalByte, 'finalByte').equals('J')
+      check(sequence).isA<EscapeSequence>()
+        ..has((a) => a.finalChars, 'finalByte').equals('J')
         ..has((a) => a.parameters, 'parameters').deepEquals([3]);
+
+      check(command).equals(Command.tryParse(sequence)!);
     });
 
     test('fromCursorDown', () {
-      final command = ClearScreen.fromCursorDown;
+      final Command command = ClearScreen.fromCursorDown;
+      final sequence = command.toSequence();
 
-      check(command.toSequence()).isA<EscapeSequence>()
-        ..has((a) => a.finalByte, 'finalByte').equals('J')
+      check(sequence).isA<EscapeSequence>()
+        ..has((a) => a.finalChars, 'finalByte').equals('J')
         ..has((a) => a.parameters, 'parameters').deepEquals([1]);
+
+      check(command).equals(Command.tryParse(sequence)!);
     });
 
     test('fromCursorUp', () {
-      final command = ClearScreen.fromCursorUp;
+      final Command command = ClearScreen.fromCursorUp;
+      final sequence = command.toSequence();
 
       check(command.toSequence()).isA<EscapeSequence>()
-        ..has((a) => a.finalByte, 'finalByte').equals('J')
+        ..has((a) => a.finalChars, 'finalByte').equals('J')
         ..has((a) => a.parameters, 'parameters').deepEquals([2]);
+
+      check(command).equals(Command.tryParse(sequence)!);
     });
 
     test('currentLine', () {
-      final command = ClearScreen.currentLine;
+      final Command command = ClearScreen.currentLine;
+      final sequence = command.toSequence();
 
       check(command.toSequence()).isA<EscapeSequence>()
-        ..has((a) => a.finalByte, 'finalByte').equals('K')
-        ..has((a) => a.parameters, 'parameters').deepEquals([0]);
+        ..has((a) => a.finalChars, 'finalByte').equals('K')
+        ..has((a) => a.parameters, 'parameters').deepEquals([2]);
+
+      check(command).equals(Command.tryParse(sequence)!);
     });
 
     test('toEndOfLine', () {
-      final command = ClearScreen.toEndOfLine;
+      final Command command = ClearScreen.toEndOfLine;
+      final sequence = command.toSequence();
 
       check(command.toSequence()).isA<EscapeSequence>()
-        ..has((a) => a.finalByte, 'finalByte').equals('K')
+        ..has((a) => a.finalChars, 'finalByte').equals('K')
         ..has((a) => a.parameters, 'parameters').deepEquals([0]);
+
+      check(command).equals(Command.tryParse(sequence)!);
     });
   });
 }

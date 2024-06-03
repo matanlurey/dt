@@ -88,12 +88,6 @@ void main() {
     ).throws<ArgumentError>();
   });
 
-  test('should refuse an escape sequence with an invalid final byte', () {
-    check(
-      () => EscapeSequence('xx'),
-    ).throws<ArgumentError>();
-  });
-
   test('should refuse an escape sequence with invalid defaults', () {
     check(
       () => EscapeSequence('m', [1], [2, 1]),
@@ -134,5 +128,17 @@ void main() {
     check(EscapeSequence('m', [1, 2], [1, 1]))
         .has((p) => p.toEscapedString(), 'toEscapedString')
         .equals('\x1B[1;2m');
+  });
+
+  test('should return a terse representation of a literal', () {
+    check(Literal('Hello, World!'))
+        .has((p) => p.toTerse(), 'toTerse')
+        .equals(Literal('Hello, World!'));
+  });
+
+  test('should return a terse representation of an escape sequence', () {
+    check(EscapeSequence('m', [2, 1], [1, 1]))
+        .has((p) => p.toTerse(), 'toTerse')
+        .equals(EscapeSequence('m', [2]));
   });
 }
