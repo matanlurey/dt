@@ -1,5 +1,6 @@
+import 'package:checks/checks.dart';
 import 'package:dt/foundation.dart';
-import 'package:test/test.dart';
+import 'package:test/test.dart' show fail, setUp, test;
 
 void main() {
   late StringBuffer output;
@@ -24,22 +25,22 @@ void main() {
 
   test('should not write to underlying writer', () {
     writer.write('Hello'.codeUnits);
-    expect(output, isEmpty);
+    check(output.toString()).isEmpty();
   });
 
   test('should write to underlying writer when capacity is reached', () {
     // Write 4 bytes, which is less than the capacity.
     writer.write('1234'.codeUnits);
-    expect(output, isEmpty);
+    check(output.toString()).isEmpty();
 
     // Write 4 more bytes, which should flush the buffer.
     writer.write('5678'.codeUnits);
-    expect(output.toString(), '12345678');
+    check(output.toString()).equals('12345678');
   });
 
   test('should write to underlying writer when flush is called', () async {
     writer.write('1234'.codeUnits);
-    expect(output, isEmpty);
+    check(output.toString()).isEmpty();
 
     var flushed = false;
     onFlush = () {
@@ -49,18 +50,18 @@ void main() {
       flushed = true;
     };
     await writer.flush();
-    expect(output.toString(), '1234');
-    expect(flushed, isTrue);
+    check(output.toString()).equals('1234');
+    check(flushed).isTrue();
   });
 
   test('should write the first block and store the next partial', () {
     // Writes the first 8 bytes and stores the next 4.
     writer.write('123412341234'.codeUnits);
-    expect(output.toString(), '12341234');
+    check(output.toString()).equals('12341234');
 
     // Writes the next 4 bytes and flushes the buffer.
     writer.write('1234'.codeUnits);
-    expect(output.toString(), '1234123412341234');
+    check(output.toString()).equals('1234123412341234');
   });
 }
 
