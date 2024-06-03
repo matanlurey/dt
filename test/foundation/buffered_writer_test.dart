@@ -1,6 +1,6 @@
-import 'package:checks/checks.dart';
 import 'package:dt/foundation.dart';
-import 'package:test/test.dart' show fail, setUp, test;
+
+import '../prelude.dart';
 
 void main() {
   late StringBuffer output;

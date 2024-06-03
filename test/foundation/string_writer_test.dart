@@ -1,5 +1,6 @@
 import 'package:dt/foundation.dart';
-import 'package:test/test.dart';
+
+import '../prelude.dart';
 
 void main() {
   late StringBuffer output;
@@ -23,29 +24,29 @@ void main() {
 
   test('should write to the underlying writer', () {
     writer.write('Hello');
-    expect(output.toString(), 'Hello');
+    check(output.toString()).equals('Hello');
   });
 
   test('should write the entire buffer', () {
     writer.write('Hello');
     writer.write('World');
-    expect(output.toString(), 'HelloWorld');
+    check(output.toString()).equals('HelloWorld');
   });
 
   test('should write a new line', () {
     writer.writeLine('Hello');
     writer.writeLine('World');
-    expect(output.toString(), 'Hello\nWorld\n');
+    check(output.toString()).equals('Hello\nWorld\n');
   });
 
   test('should write multiple spans', () {
     writer.writeAll(['Hello', 'World'], ' ');
-    expect(output.toString(), 'Hello World');
+    check(output.toString()).equals('Hello World');
   });
 
   test('should write multiple lines', () {
     writer.writeLines(['Hello', 'World']);
-    expect(output.toString(), 'Hello\nWorld\n');
+    check(output.toString()).equals('Hello\nWorld\n');
   });
 
   test('should delegate flush', () async {
@@ -57,7 +58,7 @@ void main() {
       flushed = true;
     };
     await writer.flush();
-    expect(flushed, isTrue);
+    check(flushed).isTrue();
   });
 }
 

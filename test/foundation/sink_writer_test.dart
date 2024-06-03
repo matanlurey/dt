@@ -3,11 +3,13 @@
 @TestOn('vm')
 library;
 
+import 'dart:async';
 import 'dart:convert';
 import 'dart:io' as io;
 
 import 'package:dt/foundation.dart';
-import 'package:test/test.dart';
+
+import '../prelude.dart';
 
 void main() {
   late Future<void> Function() close;
@@ -27,7 +29,10 @@ void main() {
     await writer.flush();
     await close();
 
-    expect(await output.first, 'Hello');
+    await check(output).withQueue.inOrder([
+      (s) => s.emits((v) => v.equals('Hello')),
+      (s) => s.isDone(),
+    ]);
   });
 
   test('should write the entire buffer', () async {
@@ -36,7 +41,10 @@ void main() {
     await writer.flush();
     await close();
 
-    expect(await output.first, 'HelloWorld');
+    await check(output).withQueue.inOrder([
+      (s) => s.emits((v) => v.equals('HelloWorld')),
+      (s) => s.isDone(),
+    ]);
   });
 
   test('should write the specified range', () async {
@@ -44,7 +52,10 @@ void main() {
     await writer.flush();
     await close();
 
-    expect(await output.first, 'ell');
+    await check(output).withQueue.inOrder([
+      (s) => s.emits((v) => v.equals('ell')),
+      (s) => s.isDone(),
+    ]);
   });
 
   test('should write the specified range of a Uint8List', () async {
@@ -52,6 +63,9 @@ void main() {
     await writer.flush();
     await close();
 
-    expect(await output.first, 'ell');
+    await check(output).withQueue.inOrder([
+      (s) => s.emits((v) => v.equals('ell')),
+      (s) => s.isDone(),
+    ]);
   });
 }

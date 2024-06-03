@@ -130,7 +130,7 @@ String _escape(
 }
 
 /// A CSI escape sequence.
-sealed class EscapeSequence extends Sequence {
+abstract final class EscapeSequence extends Sequence {
   /// Creates a new escape sequence.
   ///
   /// The [finalByte] must be a single byte character.
@@ -160,6 +160,26 @@ sealed class EscapeSequence extends Sequence {
     }
     return _EscapeSequence(finalByte, parameters, defaults);
   }
+
+  /// Creates a new escape sequence without copying or validating the inputs.
+  ///
+  /// This constructor is unsafe and should only be used when the inputs are
+  /// known to be correct and are all constant values. For example, when
+  /// creating an `enum` that produces escape sequences:
+  /// ```dart
+  /// enum ShakeTheScreen {
+  ///   once(EscapeSequence.unchecked('H', [1], [1])),
+  ///   twice(EscapeSequence.unchecked('H', [2])),
+  ///
+  ///   const ShakeTheScreen(this.sequence);
+  ///   final EscapeSequence sequence;
+  /// }
+  @literal
+  const factory EscapeSequence.unchecked(
+    String finalByte, [
+    @mustBeConst List<int> parameters,
+    @mustBeConst List<int> defaults,
+  ]) = _EscapeSequence.noCopy;
 
   const EscapeSequence._();
 
@@ -236,6 +256,12 @@ final class _EscapeSequence extends EscapeSequence {
         _defaultParameters = List.of(defaultParameters),
         super._();
 
+  const _EscapeSequence.noCopy(
+    this.finalByte, [
+    this.parameters = const [],
+    this._defaultParameters = const [],
+  ]) : super._(); // coverage:ignore-line
+
   @override
   final String finalByte;
 
@@ -244,32 +270,4 @@ final class _EscapeSequence extends EscapeSequence {
 
   @override
   final List<int> _defaultParameters;
-}
-
-/// Moves the cursor to the specified position.
-final class MoveCursorTo extends EscapeSequence {
-  /// Creates an escape sequence to move the cursor to the specified position.
-  MoveCursorTo([this.line = 1, this.column = 1]) : super._();
-
-  /// The line to move the cursor to.
-  ///
-  /// 1-based index.
-  final int line;
-
-  /// The column to move the cursor to.
-  ///
-  /// 1-based index.
-  final int column;
-
-  @override
-  String get finalByte => 'H';
-
-  @override
-  List<int> get parameters => [line, column];
-
-  @override
-  List<int> get _defaultParameters => const [1, 1];
-
-  @override
-  String toString() => 'MoveCursorTo <$line:$column>';
 }
