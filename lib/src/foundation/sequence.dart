@@ -45,15 +45,12 @@ sealed class Sequence {
 
   const Sequence();
 
-  @mustBeOverridden
   @override
   bool operator ==(Object other);
 
-  @mustBeOverridden
   @override
   int get hashCode;
 
-  @mustBeOverridden
   @override
   String toString();
 
@@ -133,7 +130,7 @@ String _escape(
 }
 
 /// A CSI escape sequence.
-abstract final class EscapeSequence extends Sequence {
+sealed class EscapeSequence extends Sequence {
   /// Creates a new escape sequence.
   ///
   /// The [finalByte] must be a single byte character.
@@ -190,7 +187,7 @@ abstract final class EscapeSequence extends Sequence {
   ///
   /// For example, `[1, 1]` for `ESC[1;1H`.
   ///
-  /// This list is unmodifiable.
+  /// This list should not be modified.
   List<int> get parameters;
 
   /// Default parameters for the escape sequence.
@@ -200,9 +197,7 @@ abstract final class EscapeSequence extends Sequence {
   @override
   @nonVirtual
   bool operator ==(Object other) {
-    if (other is! EscapeSequence ||
-        finalByte != other.finalByte ||
-        runtimeType != other.runtimeType) {
+    if (other is! EscapeSequence || finalByte != other.finalByte) {
       return false;
     }
     if (parameters.length != other.parameters.length) {
@@ -232,7 +227,6 @@ abstract final class EscapeSequence extends Sequence {
   }
 }
 
-// ignore: missing_override_of_must_be_overridden
 final class _EscapeSequence extends EscapeSequence {
   _EscapeSequence(
     this.finalByte, [
@@ -250,4 +244,32 @@ final class _EscapeSequence extends EscapeSequence {
 
   @override
   final List<int> _defaultParameters;
+}
+
+/// Moves the cursor to the specified position.
+final class MoveCursorTo extends EscapeSequence {
+  /// Creates an escape sequence to move the cursor to the specified position.
+  MoveCursorTo([this.line = 1, this.column = 1]) : super._();
+
+  /// The line to move the cursor to.
+  ///
+  /// 1-based index.
+  final int line;
+
+  /// The column to move the cursor to.
+  ///
+  /// 1-based index.
+  final int column;
+
+  @override
+  String get finalByte => 'H';
+
+  @override
+  List<int> get parameters => [line, column];
+
+  @override
+  List<int> get _defaultParameters => const [1, 1];
+
+  @override
+  String toString() => 'MoveCursorTo <$line:$column>';
 }

@@ -1,6 +1,6 @@
 import 'package:checks/checks.dart';
 import 'package:dt/foundation.dart';
-import 'package:test/test.dart' show test;
+import 'package:test/test.dart' show group, test;
 
 void main() {
   test('should parse an empty literal', () {
@@ -134,5 +134,19 @@ void main() {
     check(EscapeSequence('m', [1, 2], [1, 1]))
         .has((p) => p.toEscapedString(), 'toEscapedString')
         .equals('\x1B[1;2m');
+  });
+
+  group('commands', () {
+    test('MoveCursorTo', () {
+      check(EscapeSequence('H', [1, 1])).equals(MoveCursorTo());
+    });
+
+    test('MoveCursorTo with a line number', () {
+      check(EscapeSequence('H', [2, 1])).equals(MoveCursorTo(2));
+    });
+
+    test('MoveCursorTo with a column and line number', () {
+      check(EscapeSequence('H', [2, 3])).equals(MoveCursorTo(2, 3));
+    });
   });
 }
