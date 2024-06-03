@@ -82,6 +82,25 @@ final class MoveCursorToColumn extends Command {
   }
 }
 
+/// Sets the cursor visibility.
+enum SetCursorVisibility implements Command {
+  /// Sets the cursor visibility to visible.
+  visible(
+    EscapeSequence.unchecked('?25h'),
+  ),
+
+  /// Sets the cursor visibility to hidden.
+  hidden(
+    EscapeSequence.unchecked('?25l'),
+  );
+
+  const SetCursorVisibility(this._sequence);
+  final EscapeSequence _sequence;
+
+  @override
+  Sequence toSequence() => _sequence;
+}
+
 /// Clears the terminal screen buffer.
 ///
 /// Note that the cursor is _not_ moved as a result of this command.
@@ -117,6 +136,25 @@ enum ClearScreen implements Command {
   );
 
   const ClearScreen(this._sequence);
+  final EscapeSequence _sequence;
+
+  @override
+  Sequence toSequence() => _sequence;
+}
+
+/// Enters or leaves the alternate screen buffer.
+enum AlternateScreenBuffer implements Command {
+  /// Enters the alternate screen buffer.
+  enter(
+    EscapeSequence.unchecked('?1049h'),
+  ),
+
+  /// Leaves the alternate screen buffer.
+  leave(
+    EscapeSequence.unchecked('?1049l'),
+  );
+
+  const AlternateScreenBuffer(this._sequence);
   final EscapeSequence _sequence;
 
   @override

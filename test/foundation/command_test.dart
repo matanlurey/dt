@@ -78,6 +78,42 @@ void main() {
     });
   });
 
+  group('SetCursorVisibility', () {
+    test('visible', () {
+      final command = SetCursorVisibility.visible;
+
+      check(command.toSequence()).isA<EscapeSequence>()
+        ..has((a) => a.finalByte, 'finalByte').equals('?25h')
+        ..has((a) => a.parameters, 'parameters').isEmpty();
+    });
+
+    test('hidden', () {
+      final command = SetCursorVisibility.hidden;
+
+      check(command.toSequence()).isA<EscapeSequence>()
+        ..has((a) => a.finalByte, 'finalByte').equals('?25l')
+        ..has((a) => a.parameters, 'parameters').isEmpty();
+    });
+  });
+
+  group('AlternateScreenBuffer', () {
+    test('enter', () {
+      final command = AlternateScreenBuffer.enter;
+
+      check(command.toSequence()).isA<EscapeSequence>()
+        ..has((a) => a.finalByte, 'finalByte').equals('?1049h')
+        ..has((a) => a.parameters, 'parameters').isEmpty();
+    });
+
+    test('leave', () {
+      final command = AlternateScreenBuffer.leave;
+
+      check(command.toSequence()).isA<EscapeSequence>()
+        ..has((a) => a.finalByte, 'finalByte').equals('?1049l')
+        ..has((a) => a.parameters, 'parameters').isEmpty();
+    });
+  });
+
   group('ClearScreen', () {
     test('all', () {
       final command = ClearScreen.all;
