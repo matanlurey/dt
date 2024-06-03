@@ -79,7 +79,7 @@ Future<io.File> _generateImportAll() async {
   output.writeln('// Auto-generated file. Do not edit.');
   output.writeln('// To regenerate, run `dart tool/coverage.dart`.');
   output.writeln();
-  output.writeln('// ignore_for_file: unused_import\n\n');
+  output.writeln('// ignore_for_file: unused_import\n');
 
   for (final file in files) {
     final relative = p.relative(file, from: 'lib');
