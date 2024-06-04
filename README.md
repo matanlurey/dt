@@ -17,3 +17,14 @@ Inspiration:
 - <https://crates.io/crates/crossterm>
 - <https://crates.io/crates/termwiz>
 - <https://crates.io/crates/termion>
+- <https://pub.dev/packages/ansix>
+- <https://pub.dev/packages/pathxp>
+- <https://pub.dev/packages/grid_world>
+- <https://pub.dev/packages/hex_toolkit>
+- <https://pub.dev/packages/pathfinding>
+- <https://pub.dev/packages/fortress>
+- <https://pub.dev/packages/mini_sprite>
+- <https://crates.io/crates/taffy>
+- <https://docs.rs/grid/latest/grid/struct.Grid.html>
+- <https://docs.rs/sqrid/latest/sqrid/mappos/trait.MapPos.html>
+- <https://docs.rs/sqrid/latest/sqrid/pos/struct.Pos.html>
