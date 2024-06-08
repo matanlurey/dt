@@ -1,15 +1,13 @@
 # Examples
 
-## Basic Output
+## [Hello](./hello.dart)
 
-Append-only output with no input.
+Prints an ASCII art of "Hello".
 
-- [x] [Hello message](basic/hello.dart)
+## [Commands](./commands.dart)
 
-## Limited Interaction
+Uses various `Command`s to manipulate the terminal.
 
-Full TTY output with input, using canonical mode.
+## [Game of Life](./game_of_life.dart)
 
-## Loop Rendered
-
-Full TTY output with input, using raw mode for complete control.
+A simple implementation of Conway's Game of Life.
