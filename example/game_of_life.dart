@@ -7,10 +7,10 @@ import 'package:dt/foundation.dart';
 /// Simulates Conway's Game of Life in the terminal.
 void main() async {
   final random = math.Random();
-  final world = Grid.generate(
-    io.stdout.terminalColumns,
-    io.stdout.terminalLines,
-    (x, y) => random.nextBool(),
+  final width = io.stdout.terminalColumns;
+  final world = List.generate(
+    io.stdout.terminalLines * width,
+    (_) => random.nextBool(),
   );
   try {
     // Switch to the alternate screen buffer.
@@ -27,6 +27,7 @@ void main() async {
     await run(
       StringWriter(Writer.fromSink(io.stdout, onFlush: io.stdout.flush)),
       world,
+      width: width,
       done: io.ProcessSignal.sigint.watch().first,
     );
   } finally {
@@ -45,12 +46,23 @@ void main() async {
 
 Future<void> run(
   StringWriter out,
-  Grid<bool> world, {
+  List<bool> world, {
+  required int width,
   required Future<void> done,
   Future<void> Function() wait = _wait250ms,
 }) async {
+  final height = world.length ~/ width;
+
+  bool get(List<bool> world, int x, int y) => world[y * width + x];
+
+  // ignore: avoid_positional_boolean_parameters
+  void set(List<bool> world, int x, int y, bool value) {
+    world[y * width + x] = value;
+  }
+
   var running = true;
   unawaited(done.whenComplete(() => running = false));
+
   while (running) {
     final buffer = StringBuffer();
 
@@ -59,9 +71,9 @@ Future<void> run(
     io.stdout.write(ClearScreen.all.toSequence().toEscapedString());
 
     // Write the world to the buffer.
-    for (final row in world.rows) {
-      for (final cell in row) {
-        buffer.write(cell ? '█' : ' ');
+    for (var y = 0; y < height; y++) {
+      for (var x = 0; x < width; x++) {
+        buffer.write(get(world, x, y) ? '█' : ' ');
       }
       buffer.writeln();
     }
@@ -71,18 +83,18 @@ Future<void> run(
     await wait();
 
     // Evolution.
-    final next = Grid.filled(world.width, world.height, false);
-    for (var y = 0; y < world.height; y++) {
-      for (var x = 0; x < world.width; x++) {
+    final next = List.filled(world.length, false);
+    for (var y = 0; y < height; y++) {
+      for (var x = 0; x < width; x++) {
         var alive = 0;
         for (final [dx, dy] in _neighbors) {
           final nx = x + dx;
           final ny = y + dy;
-          if (nx >= 0 && nx < world.width && ny >= 0 && ny < world.height) {
-            alive += world.get(nx, ny) ? 1 : 0;
+          if (nx >= 0 && nx < width && ny >= 0 && ny < height) {
+            alive += get(world, nx, ny) ? 1 : 0;
           }
         }
-        next.set(x, y, alive == 3 || (alive == 2 && world.get(x, y)));
+        set(next, x, y, alive == 3 || (alive == 2 && get(world, x, y)));
       }
     }
 
