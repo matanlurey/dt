@@ -10,3 +10,6 @@ linter:
 
     # Makes code harder to read in some situations.
     cascade_invocations: false
+
+    # Worth the false positives in a package IMO.
+    comment_references: true

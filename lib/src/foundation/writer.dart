@@ -4,7 +4,7 @@ import 'dart:typed_data';
 /// An interface for objects that are byte-oriented sinks.
 ///
 /// Writers are defined by two required methods: [write] and [flush]:
-/// - [write] will attempt to write the provided [bytes] to the sink, returning
+/// - [write] will attempt to write the provided `bytes` to the sink, returning
 ///   how many bytes were actually written.
 /// - [flush] will ensure that all written data is actually written, useful for
 ///   adapters and explicit buffers that may not write data immediately.

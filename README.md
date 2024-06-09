@@ -28,3 +28,7 @@ Inspiration:
 - <https://docs.rs/grid/latest/grid/struct.Grid.html>
 - <https://docs.rs/sqrid/latest/sqrid/mappos/trait.MapPos.html>
 - <https://docs.rs/sqrid/latest/sqrid/pos/struct.Pos.html>
+
+Notable:
+
+- This library entirely is concerned about 2D terminal rendering and input.
