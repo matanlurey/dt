@@ -7,7 +7,7 @@ import '../prelude.dart';
 void main() {
   test('orders constraints by precedence', () {
     final constraints = [
-      Flexible(1),
+      Fill(1),
       Relative(0.5),
       Fixed(10),
       Minimum(5),
@@ -20,7 +20,7 @@ void main() {
       Maximum(15),
       Fixed(10),
       Relative(0.5),
-      Flexible(1),
+      Fill(1),
     ]);
   });
 
@@ -134,25 +134,25 @@ void main() {
 
   group('Constraint.flexible', () {
     test('treats a size < 0 as 0', () {
-      final flexible = Flexible(-1);
+      final flexible = Fill(-1);
       check(flexible).has((c) => c.value, 'value').equals(0);
     });
 
     test('when applied to a size, returns the maximum of the two', () {
-      final flexible = Flexible(2);
+      final flexible = Fill(2);
       check(flexible.apply(1)).equals(2);
       check(flexible.apply(3)).equals(3);
     });
 
     test('two flexible constraints with the same value are equal', () {
-      check(Flexible(2)).equals(Flexible(2));
-      check(Flexible(2))
+      check(Fill(2)).equals(Fill(2));
+      check(Fill(2))
           .has((c) => c.hashCode, 'hashCode')
-          .equals(Flexible(2).hashCode);
+          .equals(Fill(2).hashCode);
     });
 
     test('should have a toString', () {
-      check(Flexible(2).toString()).equals('Constraint.flexible(2)');
+      check(Fill(2).toString()).equals('Constraint.fill(2)');
     });
   });
 }

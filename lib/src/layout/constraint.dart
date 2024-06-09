@@ -5,7 +5,7 @@ import 'package:meta/meta.dart';
 /// Defines the size of a layout element.
 ///
 /// Constraints can be used to specify a [Fixed] size, a [Relative] ratio of the
-/// available space, a [Minimum] or [Maximum] size, or a [Flexible] proportional
+/// available space, a [Minimum] or [Maximum] size, or a [Fill] proportional
 /// value for a layout element.
 ///
 /// [Relative] constraints calculated relative to the entire space being
@@ -20,7 +20,7 @@ import 'package:meta/meta.dart';
 /// 2. [Maximum]
 /// 3. [Fixed]
 /// 4. [Relative]
-/// 5. [Flexible]
+/// 5. [Fill]
 ///
 /// The values of the constraints themselves are not conisdered when comparing.
 @immutable
@@ -62,7 +62,7 @@ sealed class Constraint implements Comparable<Constraint> {
   ///
   /// A negative value is clamped to zero.
   @literal
-  const factory Constraint.flexible(int value) = Flexible;
+  const factory Constraint.fill(int value) = Fill;
 
   /// Applies the constraint to the given [length] to return the final size.
   int apply(int length);
@@ -233,12 +233,12 @@ final class Relative extends Constraint {
 }
 
 /// A constraint that fills the available space proportionally.
-final class Flexible extends Constraint {
+final class Fill extends Constraint {
   /// Creates a new flexible constraint.
   ///
   /// If [value] is negative, it is clamped to zero.
   @literal
-  const Flexible(int value) : value = value < 0 ? 0 : value;
+  const Fill(int value) : value = value < 0 ? 0 : value;
 
   /// The scaling factor of the element's size proportional to others.
   final int value;
@@ -251,12 +251,12 @@ final class Flexible extends Constraint {
 
   @override
   bool operator ==(Object other) {
-    return other is Flexible && other.value == value;
+    return other is Fill && other.value == value;
   }
 
   @override
-  int get hashCode => Object.hash(Flexible, value);
+  int get hashCode => Object.hash(Fill, value);
 
   @override
-  String toString() => 'Constraint.flexible($value)';
+  String toString() => 'Constraint.fill($value)';
 }

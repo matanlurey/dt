@@ -23,7 +23,8 @@ import 'layout.dart';
 
 export 'src/layout/axis.dart' show Axis;
 export 'src/layout/constraint.dart'
-    show Constraint, Fixed, Flexible, Maximum, Minimum, Relative;
+    show Constraint, Fill, Fixed, Maximum, Minimum, Relative;
+export 'src/layout/flex.dart' show Flex;
 export 'src/layout/layout.dart' show Layout;
 export 'src/layout/margin.dart' show Margin;
 export 'src/layout/offset.dart' show Offset;
