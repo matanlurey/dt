@@ -141,4 +141,13 @@ void main() {
         .has((p) => p.toTerse(), 'toTerse')
         .equals(EscapeSequence('m', [2]));
   });
+
+  test('should have a blank sequence', () {
+    check(Sequence.none)
+      ..has((p) => p.toEscapedString(), 'toEscapedString').equals('')
+      ..has((p) => p.toString(), 'toString').equals('')
+      ..has((p) => p.toTerse(), 'toTerse').equals(Sequence.none)
+      ..has((p) => p.hashCode, 'hashCode').equals(Sequence.none.hashCode)
+      ..equals(Sequence.none);
+  });
 }

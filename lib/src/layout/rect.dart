@@ -200,7 +200,7 @@ final class Rect {
 
   @override
   String toString() {
-    return 'Rect($x, $y, $width, $height)';
+    return 'Rect.fromXYWH($x, $y, $width, $height)';
   }
 }
 

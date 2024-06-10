@@ -43,6 +43,15 @@ sealed class Sequence {
     }
   }
 
+  /// A sequence that represents nothing and does nothing.
+  ///
+  /// This is useful when you want to represent an empty sequence, for example
+  /// for a style that has no effect, or for converting an unsupported sequence
+  /// to a valid sequence.
+  ///
+  /// In practice, this should be rarely used.
+  static const Sequence none = _NullSequence();
+
   const Sequence();
 
   @override
@@ -105,6 +114,26 @@ final class Literal extends Sequence {
 
   @override
   String toEscapedString({bool verbose = false}) => value;
+}
+
+/// A null sequence.
+final class _NullSequence extends Sequence {
+  const _NullSequence();
+
+  @override
+  bool operator ==(Object other) => other is _NullSequence;
+
+  @override
+  int get hashCode => 0;
+
+  @override
+  String toString() => '';
+
+  @override
+  Sequence toTerse() => this;
+
+  @override
+  String toEscapedString({bool verbose = false}) => '';
 }
 
 /// A CSI escape sequence.

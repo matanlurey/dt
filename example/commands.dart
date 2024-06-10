@@ -1,6 +1,7 @@
 import 'dart:io' as io;
 
 import 'package:dt/foundation.dart';
+import 'package:dt/rendering.dart';
 
 /// Uses various commands to manipulate the terminal.
 void main() async {

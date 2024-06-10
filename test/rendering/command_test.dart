@@ -1,4 +1,5 @@
 import 'package:dt/foundation.dart';
+import 'package:dt/rendering.dart';
 
 import '../prelude.dart';
 
@@ -228,5 +229,129 @@ void main() {
 
       check(command).equals(Command.tryParse(sequence)!);
     });
+  });
+
+  group('SetForegroundColor256', () {
+    test('== and hashCode', () {
+      final a = SetForegroundColor256(1);
+      final b = SetForegroundColor256(1);
+      final c = SetForegroundColor256(2);
+
+      check(a)
+        ..has((a) => a == b, '== b').isTrue()
+        ..has((a) => a == c, '== c').isFalse()
+        ..has((a) => a.hashCode, 'hashCode').equals(b.hashCode);
+    });
+
+    test('ignores bits above 255', () {
+      final command = SetForegroundColor256(-1);
+
+      check(command).has((a) => a.color, 'color').equals(-1 & 0xff);
+    });
+
+    test('ignores bits above 255', () {
+      final command = SetForegroundColor256(256);
+
+      check(command).has((a) => a.color, 'color').equals(256 & 0xff);
+    });
+
+    test('includes index in toString', () {
+      final command = SetForegroundColor256(1);
+
+      check(command.toString())
+        ..contains('SetForegroundColor256')
+        ..contains('1');
+    });
+
+    test('converts to sequence', () {
+      final command = SetForegroundColor256(1);
+
+      check(command.toSequence()).isA<EscapeSequence>()
+        ..has((a) => a.finalChars, 'finalByte').equals('m')
+        ..has((a) => a.parameters, 'parameters').deepEquals([38, 5, 1]);
+    });
+
+    test('converts back to Command', () {
+      final Command zero = SetForegroundColor256(0);
+      final Command one = SetForegroundColor256(1);
+      final Command two = SetForegroundColor256(2);
+
+      check(zero).equals(
+        Command.tryParse(zero.toSequence().toTerse())!,
+      );
+
+      check(one).equals(
+        Command.tryParse(one.toSequence().toTerse())!,
+      );
+
+      check(two).equals(
+        Command.tryParse(two.toSequence().toTerse())!,
+      );
+    });
+  });
+
+  group('SetBackgroundColor256', () {
+    test('== and hashCode', () {
+      final a = SetBackgroundColor256(1);
+      final b = SetBackgroundColor256(1);
+      final c = SetBackgroundColor256(2);
+
+      check(a)
+        ..has((a) => a == b, '== b').isTrue()
+        ..has((a) => a == c, '== c').isFalse()
+        ..has((a) => a.hashCode, 'hashCode').equals(b.hashCode);
+    });
+
+    test('ignores bits above 255', () {
+      final command = SetBackgroundColor256(-1);
+
+      check(command).has((a) => a.color, 'color').equals(-1 & 0xff);
+    });
+
+    test('ignores bits above 255', () {
+      final command = SetBackgroundColor256(256);
+
+      check(command).has((a) => a.color, 'color').equals(256 & 0xff);
+    });
+
+    test('includes index in toString', () {
+      final command = SetBackgroundColor256(1);
+
+      check(command.toString())
+        ..contains('SetBackgroundColor256')
+        ..contains('1');
+    });
+
+    test('converts to sequence', () {
+      final command = SetBackgroundColor256(1);
+
+      check(command.toSequence()).isA<EscapeSequence>()
+        ..has((a) => a.finalChars, 'finalByte').equals('m')
+        ..has((a) => a.parameters, 'parameters').deepEquals([48, 5, 1]);
+    });
+
+    test('converts back to Command', () {
+      final Command zero = SetBackgroundColor256(0);
+      final Command one = SetBackgroundColor256(1);
+      final Command two = SetBackgroundColor256(2);
+
+      check(zero).equals(
+        Command.tryParse(zero.toSequence().toTerse())!,
+      );
+
+      check(one).equals(
+        Command.tryParse(one.toSequence().toTerse())!,
+      );
+
+      check(two).equals(
+        Command.tryParse(two.toSequence().toTerse())!,
+      );
+    });
+  });
+
+  test('Command.none returns Sequence.none', () {
+    check(Command.none)
+        .has((a) => a.toSequence(), 'toSequence')
+        .equals(Sequence.none);
   });
 }

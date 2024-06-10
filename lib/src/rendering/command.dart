@@ -1,6 +1,6 @@
 import 'package:meta/meta.dart';
 
-import 'sequence.dart';
+import '../foundation/sequence.dart';
 
 /// An interface for a command that performs an action on a terminal.
 ///
@@ -38,6 +38,11 @@ abstract mixin class Command {
           [2] => ClearScreen.currentLine,
           _ => null,
         },
+      'm' => switch (sequence.parameters) {
+          [38, 5, final int color] => SetForegroundColor256(color),
+          [48, 5, final int color] => SetBackgroundColor256(color),
+          _ => null,
+        },
       '?25h' => SetCursorVisibility.visible,
       '?25l' => SetCursorVisibility.hidden,
       '?1049h' => AlternateScreenBuffer.enter,
@@ -45,6 +50,13 @@ abstract mixin class Command {
       _ => null,
     };
   }
+
+  /// A command that does nothing and returns [Sequence.none] when rendered.
+  ///
+  /// This command is useful when you want to represent a no-op command.
+  ///
+  /// **NOTE**: This command is _never_ returned by [tryParse].
+  static const Command none = _NullCommand();
 
   // ignore: public_member_api_docs
   const Command();
@@ -62,6 +74,14 @@ abstract mixin class Command {
 
   /// Returns the ANSI escape sequence for this command.
   Sequence toSequence();
+}
+
+/// A command that does nothing.
+final class _NullCommand extends Command {
+  const _NullCommand();
+
+  @override
+  Sequence toSequence() => Sequence.none;
 }
 
 /// Moves the terminal cursor to the given position (row, column).
@@ -196,4 +216,54 @@ enum AlternateScreenBuffer implements Command {
 
   @override
   Sequence toSequence() => _sequence;
+}
+
+/// Sets the foreground color to one of the 256 colors.
+///
+/// This command is compatible with both 4-bit and 8-bit color terminals, where
+/// the [color] is a value between `0` and `255`, inclusive. Any value outside
+/// this range will be clamped to the nearest valid value.
+final class SetForegroundColor256 extends Command {
+  /// Creates a set foreground color command.
+  ///
+  /// The [color] must be between `0` and `255`, inclusive.
+  const SetForegroundColor256(int color) : color = 0xFF & color;
+
+  /// The color to set the foreground to.
+  final int color;
+
+  @override
+  Sequence toSequence() {
+    return EscapeSequence('m', [38, 5, color]);
+  }
+
+  @override
+  String toString() {
+    return 'SetForegroundColor256(0x${color.toRadixString(16)})';
+  }
+}
+
+/// Sets the background color to one of the 256 colors.
+///
+/// This command is compatible with both 4-bit and 8-bit color terminals, where
+/// the [color] is a value between `0` and `255`, inclusive. Any value outside
+/// this range will be clamped to the nearest valid value.
+final class SetBackgroundColor256 extends Command {
+  /// Creates a set background color command.
+  ///
+  /// The [color] must be between `0` and `255`, inclusive.
+  const SetBackgroundColor256(int color) : color = 0xFF & color;
+
+  /// The color to set the background to.
+  final int color;
+
+  @override
+  Sequence toSequence() {
+    return EscapeSequence('m', [48, 5, color]);
+  }
+
+  @override
+  String toString() {
+    return 'SetBackgroundColor256(0x${color.toRadixString(16)})';
+  }
 }

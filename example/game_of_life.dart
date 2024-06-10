@@ -3,6 +3,7 @@ import 'dart:io' as io;
 import 'dart:math' as math;
 
 import 'package:dt/foundation.dart';
+import 'package:dt/rendering.dart';
 
 /// Simulates Conway's Game of Life in the terminal.
 void main() async {
