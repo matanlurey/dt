@@ -21,8 +21,5 @@ library layout;
 
 import 'layout.dart';
 
-export 'src/layout/axis.dart' show Axis;
-export 'src/layout/flex.dart' show Flex;
-export 'src/layout/margin.dart' show Margin;
 export 'src/layout/offset.dart' show Offset;
 export 'src/layout/rect.dart' show Rect;
