@@ -12,6 +12,7 @@ export 'src/rendering/command.dart'
         SetBackgroundColor256,
         SetCursorVisibility,
         SetForegroundColor256;
+export 'src/rendering/frame.dart' show Frame;
 export 'src/rendering/line.dart' show Line;
 export 'src/rendering/span.dart' show Span;
 export 'src/rendering/style.dart' show Style;
