@@ -1,4 +1,6 @@
 export 'src/rendering/alignment.dart' show Alignment;
+export 'src/rendering/buffer.dart' show Buffer;
+export 'src/rendering/cell.dart' show Cell;
 export 'src/rendering/color.dart' show AnsiColor, Color;
 export 'src/rendering/command.dart'
     show
