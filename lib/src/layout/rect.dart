@@ -124,7 +124,7 @@ final class Rect {
   /// Returns an intersection of this rectangle and [other].
   ///
   /// If the rectangles do not intersect, an empty rectangle is returned.
-  Rect intersection(Rect other) {
+  Rect intersect(Rect other) {
     final x1 = math.max(x, other.x);
     final y1 = math.max(y, other.y);
     final x2 = math.min(right, other.right);
@@ -134,8 +134,8 @@ final class Rect {
 
   /// Returns an intersection of this rectangle and [other].
   ///
-  /// An alias for [intersection].
-  Rect operator |(Rect other) => intersection(other);
+  /// An alias for [intersect].
+  Rect operator |(Rect other) => intersect(other);
 
   /// Returns whether this rectangle intersects with [other].
   bool intersects(Rect other) {
@@ -153,9 +153,17 @@ final class Rect {
         offset.y < bottom;
   }
 
+  /// Returns whether this rectangle contains the given [rect].
+  bool containsRect(Rect rect) {
+    return x <= rect.x &&
+        y <= rect.y &&
+        right >= rect.right &&
+        bottom >= rect.bottom;
+  }
+
   /// Clamps this rectangle to fit within the given [bounds].
   ///
-  /// This is different from [intersection] in that the size of the rectangle
+  /// This is different from [intersect] in that the size of the rectangle
   /// is not changed, only its position.
   Rect clamp(Rect bounds) {
     final x = math.max(this.x, bounds.x);

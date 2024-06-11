@@ -1,6 +1,5 @@
 // ignore_for_file: avoid_redundant_argument_values, non_const_call_to_literal_constructor
 
-import 'package:dt/layout.dart';
 import 'package:dt/rendering.dart';
 
 import '../prelude.dart';
@@ -158,6 +157,111 @@ void main() {
         Cell.empty,
         Cell.empty,
       ],
+    ]);
+  });
+
+  test('Buffer.within returns a view into the buffer', () {
+    final buffer = Buffer(10, 2);
+    final view = buffer.within(Rect.fromXYWH(1, 1, 6, 1));
+
+    check(view).has((b) => b.rows, 'rows').deepEquals([
+      [
+        Cell.empty,
+        Cell.empty,
+        Cell.empty,
+        Cell.empty,
+        Cell.empty,
+        Cell.empty,
+      ],
+    ]);
+
+    view.set(0, 0, Cell('H'));
+    check(view).has((b) => b.rows, 'rows').deepEquals([
+      [
+        Cell('H'),
+        Cell.empty,
+        Cell.empty,
+        Cell.empty,
+        Cell.empty,
+        Cell.empty,
+      ],
+    ]);
+
+    check(buffer).has((b) => b.rows, 'rows').deepEquals([
+      [
+        Cell.empty,
+        Cell.empty,
+        Cell.empty,
+        Cell.empty,
+        Cell.empty,
+        Cell.empty,
+        Cell.empty,
+        Cell.empty,
+        Cell.empty,
+        Cell.empty,
+      ],
+      [
+        Cell.empty,
+        Cell('H'),
+        Cell.empty,
+        Cell.empty,
+        Cell.empty,
+        Cell.empty,
+        Cell.empty,
+        Cell.empty,
+        Cell.empty,
+        Cell.empty,
+      ],
+    ]);
+  });
+
+  test('Buffer.within outside the buffer throws an error', () {
+    final buffer = Buffer(10, 2);
+
+    check(
+      () => buffer.within(Rect.fromXYWH(1, 1, 10, 2)),
+    ).throws<ArgumentError>();
+  });
+
+  test('Buffer.within.within (nested) returns a view into the buffer', () {
+    // 0 1 2
+    // 3 4 5
+    // 6 7 8
+    final buffer = Buffer(3, 3);
+
+    // Create a view of the last 2x2 area.
+    // 4 5
+    // 7 8
+    final view1 = buffer.within(Rect.fromXYWH(1, 1, 2, 2));
+
+    // Create a view of the first 2x1 area.
+    // 4 5
+    final view2 = view1.within(Rect.fromXYWH(0, 0, 2, 1));
+
+    // Draw a character to the inner view.
+    view2.set(1, 0, Cell('#'));
+
+    // The inner view should have the character.
+    check(view2).has((b) => b.rows, 'rows').deepEquals([
+      [Cell(' '), Cell('#')],
+    ]);
+
+    check(view2).has((b) => b.cells, 'cells').deepEquals([
+      Cell(' '),
+      Cell('#'),
+    ]);
+
+    // The outer view should have the character.
+    check(view1).has((b) => b.rows, 'rows').deepEquals([
+      [Cell(' '), Cell('#')],
+      [Cell(' '), Cell(' ')],
+    ]);
+
+    // The original buffer should have the character.
+    check(buffer).has((b) => b.rows, 'rows').deepEquals([
+      [Cell(' '), Cell(' '), Cell(' ')],
+      [Cell(' '), Cell(' '), Cell('#')],
+      [Cell(' '), Cell(' '), Cell(' ')],
     ]);
   });
 }

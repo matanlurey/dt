@@ -3,4 +3,13 @@ library;
 
 export 'package:checks/checks.dart';
 export 'package:test/test.dart'
-    show TestOn, fail, group, setUp, setUpAll, tearDown, tearDownAll, test;
+    show
+        TestOn,
+        fail,
+        group,
+        pumpEventQueue,
+        setUp,
+        setUpAll,
+        tearDown,
+        tearDownAll,
+        test;

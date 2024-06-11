@@ -42,6 +42,21 @@ abstract final class Buffer {
     return buffer;
   }
 
+  /// Creates a view into the given [buffer] within the given [bounds].
+  ///
+  /// The bounds must be within the buffer's area.
+  factory Buffer.within(Buffer buffer, Rect bounds) {
+    final area = buffer.toArea();
+    if (!area.containsRect(bounds)) {
+      throw ArgumentError.value(
+        bounds,
+        'bounds',
+        "Must be within the buffer's area: $area",
+      );
+    }
+    return _BoundBuffer(buffer, bounds);
+  }
+
   const Buffer._();
 
   /// Individual cells in the buffer from top-left to bottom-right.
@@ -161,6 +176,11 @@ abstract final class Buffer {
       }
     }
   }
+
+  /// Returns a view into the buffer within the given [bounds].
+  ///
+  /// The bounds must be within the buffer's area.
+  Buffer within(Rect bounds) => Buffer.within(this, bounds);
 }
 
 final class _Buffer extends Buffer {
@@ -178,5 +198,51 @@ final class _Buffer extends Buffer {
   @override
   void set(int x, int y, Cell cell) {
     cells[_indexOf(x, y)] = cell;
+  }
+}
+
+final class _BoundBuffer extends Buffer {
+  const _BoundBuffer(this._buffer, this._bounds) : super._();
+
+  /// The delegate buffer.
+  final Buffer _buffer;
+
+  /// The bounds this buffer is drawn within.
+  final Rect _bounds;
+
+  @override
+  Iterable<Cell> get cells {
+    return _bounds.offsets.map((offset) {
+      final Offset(:x, :y) = offset;
+      return _buffer.get(x, y);
+    });
+  }
+
+  @override
+  Iterable<Iterable<Cell>> get rows {
+    return _bounds.rows.map((row) {
+      return row.columns.map((column) {
+        final Offset(:x, :y) = column.topLeft;
+        return _buffer.get(x, y);
+      });
+    });
+  }
+
+  @override
+  int get width => _bounds.width;
+
+  @override
+  int get height => _bounds.height;
+
+  @override
+  Cell get(int x2, int y2) {
+    final Offset(x: x1, y: y1) = _bounds.topLeft;
+    return _buffer.get(x1 + x2, y1 + y2);
+  }
+
+  @override
+  void set(int x2, int y2, Cell cell) {
+    final Offset(x: x1, y: y1) = _bounds.topLeft;
+    _buffer.set(x1 + x2, y1 + y2, cell);
   }
 }

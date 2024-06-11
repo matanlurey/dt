@@ -137,7 +137,7 @@ void main() {
 
   test('intersection returns a rect that contains the intersection', () {
     check(
-      Rect.fromXYWH(1, 2, 3, 4).intersection(
+      Rect.fromXYWH(1, 2, 3, 4).intersect(
         Rect.fromXYWH(3, 4, 5, 6),
       ),
     ).equals(
@@ -146,7 +146,7 @@ void main() {
   });
 
   test('intersection returns an empty rect if there is no intersection', () {
-    final result = Rect.fromXYWH(1, 2, 3, 4).intersection(
+    final result = Rect.fromXYWH(1, 2, 3, 4).intersect(
       Rect.fromXYWH(5, 6, 7, 8),
     );
     check(result).has((r) => r.isEmpty, 'isEmpty').isTrue();
@@ -179,6 +179,15 @@ void main() {
     ).isTrue();
     check(
       Rect.fromXYWH(1, 2, 3, 4).contains(Offset(4, 6)),
+    ).isFalse();
+  });
+
+  test('containsRect returns true if the given rectangle is inside', () {
+    check(
+      Rect.fromXYWH(0, 0, 8, 2).containsRect(Rect.fromXYWH(1, 1, 6, 1)),
+    ).isTrue();
+    check(
+      Rect.fromXYWH(1, 2, 3, 4).containsRect(Rect.fromXYWH(4, 6, 1, 1)),
     ).isFalse();
   });
 
