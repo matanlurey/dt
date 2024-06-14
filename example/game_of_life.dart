@@ -2,8 +2,8 @@ import 'dart:async';
 import 'dart:io' as io;
 import 'dart:math' as math;
 
-import 'package:dt/foundation.dart';
 import 'package:dt/rendering.dart';
+import 'package:dt/terminal.dart';
 
 /// Simulates Conway's Game of Life in the terminal.
 void main() async {
@@ -13,40 +13,22 @@ void main() async {
     io.stdout.terminalLines * width,
     (_) => random.nextBool(),
   );
+
+  final terminal = Terminal.fromStdio();
   try {
-    // Switch to the alternate screen buffer.
-    io.stdout.write(AlternateScreenBuffer.enter.toSequence().toEscapedString());
-
-    // Hide the cursor.
-    io.stdout.write(SetCursorVisibility.hidden.toSequence().toEscapedString());
-
-    // Enable raw mode.
-    io.stdin
-      ..echoMode = false
-      ..lineMode = false;
-
     await run(
-      StringWriter(Writer.fromSink(io.stdout, onFlush: io.stdout.flush)),
+      terminal,
       world,
       width: width,
       done: io.ProcessSignal.sigint.watch().first,
     );
   } finally {
-    // Disable raw mode.
-    io.stdin
-      ..echoMode = true
-      ..lineMode = true;
-
-    // Show the cursor.
-    io.stdout.write(SetCursorVisibility.visible.toSequence().toEscapedString());
-
-    // Switch back to the main screen buffer.
-    io.stdout.write(AlternateScreenBuffer.leave.toSequence().toEscapedString());
+    terminal.dispose();
   }
 }
 
 Future<void> run(
-  StringWriter out,
+  Terminal terminal,
   List<bool> world, {
   required int width,
   required Future<void> done,
@@ -65,25 +47,22 @@ Future<void> run(
   unawaited(done.whenComplete(() => running = false));
 
   while (running) {
-    final buffer = StringBuffer();
+    // Render.
+    terminal.draw((frame) {
+      frame.draw((buffer) {
+        for (var y = 0; y < height; y++) {
+          for (var x = 0; x < width; x++) {
+            final cell = get(world, x, y) ? Cell('█') : Cell.empty;
+            buffer.set(x, y, cell);
+          }
+        }
+      });
+    });
 
-    // Move to the top-left corner and clear the screen.
-    io.stdout.write(MoveCursorTo().toSequence().toEscapedString());
-    io.stdout.write(ClearScreen.all.toSequence().toEscapedString());
-
-    // Write the world to the buffer.
-    for (var y = 0; y < height; y++) {
-      for (var x = 0; x < width; x++) {
-        buffer.write(get(world, x, y) ? '█' : ' ');
-      }
-      buffer.writeln();
-    }
-
-    // Write the buffer to the output.
-    out.write(buffer.toString());
+    // Delay.
     await wait();
 
-    // Evolution.
+    // Evolve.
     final next = List.filled(world.length, false);
     for (var y = 0; y < height; y++) {
       for (var x = 0; x < width; x++) {

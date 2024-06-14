@@ -7,7 +7,7 @@ void main() {
   group('Terminal', () {
     test('draws to a buffer', () {
       final backend = TestBackend(5, 5);
-      final terminal = Terminal(backend);
+      final terminal = Terminal.fromBackend(backend);
 
       terminal.draw((frame) {
         frame.draw((buffer) {
