@@ -76,4 +76,7 @@ final class Frame {
 
   /// Returns the next frame in the sequence.
   int get _nextCount => count == _maxInt ? 0 : count + 1;
+
+  /// Returns the next frame in the sequence.
+  Frame next() => Frame(_buffer, _nextCount);
 }
