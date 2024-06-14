@@ -7,7 +7,7 @@ import 'package:meta/meta.dart';
 /// not validated for correctness.
 ///
 /// For example, `ESC[1;2m` is matched, but `ESC[1;2` is not.
-final _csiEscape = RegExp(r'\x1B\[([0-9;]*)([A-Za-z])');
+final _csiEscape = RegExp(r'\x1B\[([\?\d;]*)([A-Za-z])');
 
 /// Represents a sequence of values; a [Literal] or [EscapeSequence].
 @immutable
@@ -22,11 +22,11 @@ sealed class Sequence {
   /// Parses all sequences from the given [string].
   ///
   /// If the [string] is empty, returns an iterable with an empty [Literal].
-  static Iterable<Sequence> parseAll(String string) {
+  static List<Sequence> parseAll(String string) {
     if (string.isEmpty) {
       return const [Literal._('')];
     }
-    return _parseAll(string);
+    return List.of(_parseAll(string));
   }
 
   static Iterable<Sequence> _parseAll(String string) sync* {
@@ -145,10 +145,11 @@ abstract final class EscapeSequence extends Sequence {
   /// the same as the parameters. Must be the same length as [parameters] if
   /// provided.
   factory EscapeSequence(
-    String finalChars, [
+    String finalChars, {
+    String prefix = '',
     Iterable<int> parameters = const [],
     Iterable<int> defaults = const [],
-  ]) {
+  }) {
     if (defaults.isNotEmpty && parameters.length != defaults.length) {
       throw ArgumentError.value(
         defaults,
@@ -156,7 +157,12 @@ abstract final class EscapeSequence extends Sequence {
         'must have the same length as parameters',
       );
     }
-    return _EscapeSequence(finalChars, parameters, defaults);
+    return _EscapeSequence(
+      finalChars,
+      prefix: prefix,
+      parameters: parameters,
+      defaults: defaults,
+    );
   }
 
   /// Creates a new escape sequence without copying or validating the inputs.
@@ -174,10 +180,11 @@ abstract final class EscapeSequence extends Sequence {
   /// }
   @literal
   const factory EscapeSequence.unchecked(
-    String finalBytes, [
+    @mustBeConst String finalBytes, {
+    @mustBeConst String prefix,
     @mustBeConst List<int> parameters,
     @mustBeConst List<int> defaults,
-  ]) = _EscapeSequence.noCopy;
+  }) = _EscapeSequence.noCopy;
 
   const EscapeSequence._();
 
@@ -189,12 +196,28 @@ abstract final class EscapeSequence extends Sequence {
     if (match == null) {
       return null;
     }
-    final params = match.group(1);
+
+    var params = match.group(1);
+    var prefix = '';
+    if (params != null && params.startsWith('?')) {
+      prefix = params[0];
+      params = params.substring(1);
+    }
+    if (params == '') {
+      params = null;
+    }
+
     return _EscapeSequence(
       match.group(2)!,
-      params!.isEmpty ? const [] : params.split(';').map(int.parse),
+      prefix: prefix,
+      parameters: params?.split(';').map(int.parse) ?? const [],
     );
   }
+
+  /// Prefis characters for the escape sequence.
+  ///
+  /// For example, `'?25'` for `ESC[?25h`.
+  String get prefix;
 
   /// Final characters for the escape sequence.
   ///
@@ -215,7 +238,9 @@ abstract final class EscapeSequence extends Sequence {
   @override
   @nonVirtual
   bool operator ==(Object other) {
-    if (other is! EscapeSequence || finalChars != other.finalChars) {
+    if (other is! EscapeSequence ||
+        finalChars != other.finalChars ||
+        prefix != other.prefix) {
       return false;
     }
     if (parameters.length != other.parameters.length) {
@@ -231,7 +256,9 @@ abstract final class EscapeSequence extends Sequence {
 
   @override
   @nonVirtual
-  int get hashCode => Object.hash(finalChars, Object.hashAll(parameters));
+  int get hashCode {
+    return Object.hash(finalChars, prefix, Object.hashAll(parameters));
+  }
 
   @override
   @nonVirtual
@@ -241,12 +268,12 @@ abstract final class EscapeSequence extends Sequence {
       sequence = sequence.toTerse();
     }
     final params = sequence.parameters.join(';');
-    return '\x1B[$params${sequence.finalChars}';
+    return '\x1B[$prefix$params${sequence.finalChars}';
   }
 
   @override
   String toString() {
-    return 'EscapeSequence <${parameters.join(';')}$finalChars>';
+    return 'EscapeSequence <$prefix${parameters.join(';')}$finalChars>';
   }
 
   @override
@@ -264,27 +291,33 @@ abstract final class EscapeSequence extends Sequence {
       }
     }
 
-    return EscapeSequence(finalChars, params);
+    return EscapeSequence(finalChars, prefix: prefix, parameters: params);
   }
 }
 
 final class _EscapeSequence extends EscapeSequence {
   _EscapeSequence(
-    this.finalChars, [
+    this.finalChars, {
+    this.prefix = '',
     Iterable<int> parameters = const [],
-    Iterable<int> defaultParameters = const [],
-  ])  : parameters = List.unmodifiable(parameters),
-        _defaults = List.of(defaultParameters),
+    Iterable<int> defaults = const [],
+  })  : parameters = List.unmodifiable(parameters),
+        _defaults = List.of(defaults),
         super._();
 
   const _EscapeSequence.noCopy(
-    this.finalChars, [
+    this.finalChars, {
+    this.prefix = '',
     this.parameters = const [],
-    this._defaults = const [],
-  ]) : super._(); // coverage:ignore-line
+    List<int> defaults = const [],
+  })  : _defaults = defaults,
+        super._(); // coverage:ignore-line
 
   @override
   final String finalChars;
+
+  @override
+  final String prefix;
 
   @override
   final List<int> parameters;

@@ -1,5 +1,3 @@
-export 'layout.dart';
-
 export 'src/rendering/alignment.dart' show Alignment;
 export 'src/rendering/buffer.dart' show Buffer;
 export 'src/rendering/cell.dart' show Cell;

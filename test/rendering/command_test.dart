@@ -121,8 +121,9 @@ void main() {
       final sequence = command.toSequence();
 
       check(sequence).isA<EscapeSequence>()
-        ..has((a) => a.finalChars, 'finalByte').equals('?25h')
-        ..has((a) => a.parameters, 'parameters').isEmpty();
+        ..has((a) => a.finalChars, 'finalByte').equals('h')
+        ..has((a) => a.prefix, 'prefix').equals('?')
+        ..has((a) => a.parameters, 'parameters').deepEquals([25]);
 
       check(command).equals(Command.tryParse(sequence)!);
     });
@@ -132,8 +133,9 @@ void main() {
       final sequence = command.toSequence();
 
       check(command.toSequence()).isA<EscapeSequence>()
-        ..has((a) => a.finalChars, 'finalByte').equals('?25l')
-        ..has((a) => a.parameters, 'parameters').isEmpty();
+        ..has((a) => a.finalChars, 'finalByte').equals('l')
+        ..has((a) => a.prefix, 'prefix').equals('?')
+        ..has((a) => a.parameters, 'parameters').deepEquals([25]);
 
       check(command).equals(Command.tryParse(sequence)!);
     });
@@ -145,8 +147,9 @@ void main() {
       final sequence = command.toSequence();
 
       check(sequence).isA<EscapeSequence>()
-        ..has((a) => a.finalChars, 'finalByte').equals('?1049h')
-        ..has((a) => a.parameters, 'parameters').isEmpty();
+        ..has((a) => a.finalChars, 'finalByte').equals('h')
+        ..has((a) => a.prefix, 'prefix').equals('?')
+        ..has((a) => a.parameters, 'parameters').deepEquals([1049]);
 
       check(command).equals(Command.tryParse(sequence)!);
     });
@@ -156,8 +159,9 @@ void main() {
       final sequence = command.toSequence();
 
       check(sequence).isA<EscapeSequence>()
-        ..has((a) => a.finalChars, 'finalByte').equals('?1049l')
-        ..has((a) => a.parameters, 'parameters').isEmpty();
+        ..has((a) => a.finalChars, 'finalByte').equals('l')
+        ..has((a) => a.prefix, 'prefix').equals('?')
+        ..has((a) => a.parameters, 'parameters').deepEquals([1049]);
 
       check(command).equals(Command.tryParse(sequence)!);
     });

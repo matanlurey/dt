@@ -161,20 +161,22 @@ enum AnsiColor implements Color {
   static const _dimForegroundOffset = 30;
   static const _brightForegroundOffset = 90;
 
-  @override
-  Command setForeground() {
-    return SetForegroundColor256(
-      index + (isBright ? _brightForegroundOffset : _dimForegroundOffset),
-    );
+  /// The index of this color in a [SetForegroundColor256] command.
+  int get foregroundIndex {
+    return index + (isBright ? _brightForegroundOffset : _dimForegroundOffset);
   }
+
+  @override
+  Command setForeground() => SetForegroundColor256(foregroundIndex);
 
   static const _dimBackgroundOffset = 40;
   static const _brightBackgroundOffset = 100;
 
-  @override
-  Command setBackground() {
-    return SetBackgroundColor256(
-      index + (isBright ? _brightBackgroundOffset : _dimBackgroundOffset),
-    );
+  /// The index of this color in a [SetBackgroundColor256] command.
+  int get backgroundIndex {
+    return index + (isBright ? _brightBackgroundOffset : _dimBackgroundOffset);
   }
+
+  @override
+  Command setBackground() => SetBackgroundColor256(backgroundIndex);
 }

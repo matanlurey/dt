@@ -49,13 +49,13 @@ void main() {
   test('should parse an escape sequence with a single parameter', () {
     final result = Sequence.parse('\x1B[1m');
 
-    check(result).equals(EscapeSequence('m', [1]));
+    check(result).equals(EscapeSequence('m', parameters: [1]));
   });
 
   test('should parse an escape sequence with multiple parameters', () {
     final result = Sequence.parse('\x1B[1;2m');
 
-    check(result).equals(EscapeSequence('m', [1, 2]));
+    check(result).equals(EscapeSequence('m', parameters: [1, 2]));
   });
 
   test('should parse an empty literal from parseAll', () {
@@ -75,7 +75,7 @@ void main() {
 
     check(result).deepEquals([
       Literal('Hello, '),
-      EscapeSequence('m', [1, 2]),
+      EscapeSequence('m', parameters: [1, 2]),
       Literal('World'),
       EscapeSequence('m'),
       Literal('!'),
@@ -90,7 +90,7 @@ void main() {
 
   test('should refuse an escape sequence with invalid defaults', () {
     check(
-      () => EscapeSequence('m', [1], [2, 1]),
+      () => EscapeSequence('m', parameters: [1], defaults: [2, 1]),
     ).throws<ArgumentError>();
   });
 
@@ -101,31 +101,31 @@ void main() {
   });
 
   test('should escape an escape sequence with a single parameter', () {
-    check(EscapeSequence('m', [1]))
+    check(EscapeSequence('m', parameters: [1]))
         .has((p) => p.toEscapedString(), 'toEscapedString')
         .equals('\x1B[1m');
   });
 
   test('should escape an escape sequence with multiple parameters', () {
-    check(EscapeSequence('m', [1, 2]))
+    check(EscapeSequence('m', parameters: [1, 2]))
         .has((p) => p.toEscapedString(), 'toEscapedString')
         .equals('\x1B[1;2m');
   });
 
   test('should escape an escape sequence with a single default parameter', () {
-    check(EscapeSequence('m', [1], [1]))
+    check(EscapeSequence('m', parameters: [1], defaults: [1]))
         .has((p) => p.toEscapedString(), 'toEscapedString')
         .equals('\x1B[m');
   });
 
   test('should escape an escape sequence with multiple default parameters', () {
-    check(EscapeSequence('m', [1, 2], [1, 2]))
+    check(EscapeSequence('m', parameters: [1, 2], defaults: [1, 2]))
         .has((p) => p.toEscapedString(), 'toEscapedString')
         .equals('\x1B[m');
   });
 
   test('should not escape if a trailing default parameter is missing', () {
-    check(EscapeSequence('m', [1, 2], [1, 1]))
+    check(EscapeSequence('m', parameters: [1, 2], defaults: [1, 1]))
         .has((p) => p.toEscapedString(), 'toEscapedString')
         .equals('\x1B[1;2m');
   });
@@ -137,9 +137,9 @@ void main() {
   });
 
   test('should return a terse representation of an escape sequence', () {
-    check(EscapeSequence('m', [2, 1], [1, 1]))
+    check(EscapeSequence('m', parameters: [2, 1], defaults: [1, 1]))
         .has((p) => p.toTerse(), 'toTerse')
-        .equals(EscapeSequence('m', [2]));
+        .equals(EscapeSequence('m', parameters: [2]));
   });
 
   test('should have a blank sequence', () {

@@ -1,3 +1,4 @@
+import 'package:dt/foundation.dart';
 import 'package:meta/meta.dart';
 
 import 'color.dart';
@@ -7,6 +8,9 @@ import 'color.dart';
 final class Style {
   /// Inherit the style from the parent element.
   static const inherit = Style();
+
+  /// Reset the style to the default.
+  static const reset = Style(foreground: Color.reset, background: Color.reset);
 
   /// Creates a new default style.
   const Style({
@@ -50,6 +54,14 @@ final class Style {
 
   @override
   int get hashCode => Object.hash(foreground, background);
+
+  /// Returns ANSI escape sequences for this style.
+  List<Sequence> toSequences() {
+    return [
+      if (foreground != Color.inherit) foreground.setForeground().toSequence(),
+      if (background != Color.inherit) background.setBackground().toSequence(),
+    ];
+  }
 
   @override
   String toString() {

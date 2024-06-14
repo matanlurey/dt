@@ -14,6 +14,21 @@ abstract mixin class Command {
     if (sequence is! EscapeSequence) {
       return null;
     }
+    if (sequence.prefix == '?') {
+      return switch (sequence.finalChars) {
+        'h' => switch (sequence.parameters) {
+            [25] => SetCursorVisibility.visible,
+            [1049] => AlternateScreenBuffer.enter,
+            _ => null,
+          },
+        'l' => switch (sequence.parameters) {
+            [25] => SetCursorVisibility.hidden,
+            [1049] => AlternateScreenBuffer.leave,
+            _ => null,
+          },
+        _ => null,
+      };
+    }
     return switch (sequence.finalChars) {
       'H' => switch (sequence.parameters) {
           [final int row, final int column] => MoveCursorTo(row, column),
@@ -43,10 +58,6 @@ abstract mixin class Command {
           [48, 5, final int color] => SetBackgroundColor256(color),
           _ => null,
         },
-      '?25h' => SetCursorVisibility.visible,
-      '?25l' => SetCursorVisibility.hidden,
-      '?1049h' => AlternateScreenBuffer.enter,
-      '?1049l' => AlternateScreenBuffer.leave,
       _ => null,
     };
   }
@@ -105,7 +116,11 @@ final class MoveCursorTo extends Command {
 
   @override
   Sequence toSequence() {
-    return EscapeSequence('H', [row, column], const [0, 0]);
+    return EscapeSequence(
+      'H',
+      parameters: [row, column],
+      defaults: const [0, 0],
+    );
   }
 
   @override
@@ -130,7 +145,11 @@ final class MoveCursorToColumn extends Command {
 
   @override
   Sequence toSequence() {
-    return EscapeSequence('G', [column], const [0]);
+    return EscapeSequence(
+      'G',
+      parameters: [column],
+      defaults: const [0],
+    );
   }
 
   @override
@@ -143,12 +162,12 @@ final class MoveCursorToColumn extends Command {
 enum SetCursorVisibility implements Command {
   /// Sets the cursor visibility to visible.
   visible(
-    EscapeSequence.unchecked('?25h'),
+    EscapeSequence.unchecked('h', prefix: '?', parameters: [25]),
   ),
 
   /// Sets the cursor visibility to hidden.
   hidden(
-    EscapeSequence.unchecked('?25l'),
+    EscapeSequence.unchecked('l', prefix: '?', parameters: [25]),
   );
 
   const SetCursorVisibility(this._sequence);
@@ -164,32 +183,32 @@ enum SetCursorVisibility implements Command {
 enum ClearScreen implements Command {
   /// Clears the entire screen.
   all(
-    EscapeSequence.unchecked('J', [0], [0]),
+    EscapeSequence.unchecked('J', parameters: [0], defaults: [0]),
   ),
 
   /// Clears the entire screen and the scrollback buffer.
   allAndScrollback(
-    EscapeSequence.unchecked('J', [3], [0]),
+    EscapeSequence.unchecked('J', parameters: [3], defaults: [0]),
   ),
 
   /// Clears the screen from the cursor down.
   fromCursorDown(
-    EscapeSequence.unchecked('J', [1], [0]),
+    EscapeSequence.unchecked('J', parameters: [1], defaults: [0]),
   ),
 
   /// Clears the screen from the cursor up.
   fromCursorUp(
-    EscapeSequence.unchecked('J', [2], [0]),
+    EscapeSequence.unchecked('J', parameters: [2], defaults: [0]),
   ),
 
   /// Clears the current line.
   currentLine(
-    EscapeSequence.unchecked('K', [2], [0]),
+    EscapeSequence.unchecked('K', parameters: [2], defaults: [0]),
   ),
 
   /// Clears the line from the cursor to the end of the line.
   toEndOfLine(
-    EscapeSequence.unchecked('K', [0], [0]),
+    EscapeSequence.unchecked('K', parameters: [0], defaults: [0]),
   );
 
   const ClearScreen(this._sequence);
@@ -203,12 +222,12 @@ enum ClearScreen implements Command {
 enum AlternateScreenBuffer implements Command {
   /// Enters the alternate screen buffer.
   enter(
-    EscapeSequence.unchecked('?1049h'),
+    EscapeSequence.unchecked('h', prefix: '?', parameters: [1049]),
   ),
 
   /// Leaves the alternate screen buffer.
   leave(
-    EscapeSequence.unchecked('?1049l'),
+    EscapeSequence.unchecked('l', prefix: '?', parameters: [1049]),
   );
 
   const AlternateScreenBuffer(this._sequence);
@@ -234,7 +253,7 @@ final class SetForegroundColor256 extends Command {
 
   @override
   Sequence toSequence() {
-    return EscapeSequence('m', [38, 5, color]);
+    return EscapeSequence('m', parameters: [38, 5, color]);
   }
 
   @override
@@ -259,7 +278,7 @@ final class SetBackgroundColor256 extends Command {
 
   @override
   Sequence toSequence() {
-    return EscapeSequence('m', [48, 5, color]);
+    return EscapeSequence('m', parameters: [48, 5, color]);
   }
 
   @override
