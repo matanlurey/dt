@@ -1,5 +1,1 @@
 include: ../tool/analysis_options_strict.yaml
-
-linter:
-  rules:
-    one_member_abstracts: false
