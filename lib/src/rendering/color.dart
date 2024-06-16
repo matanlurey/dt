@@ -34,21 +34,15 @@ final class _InheritedColor extends Color {
   String toString() => 'Color.inherit';
 }
 
-/// Represents just resetting the _color_ (not all styles) to the default.
-///
-/// This is useful when you want to reset the color to the default without
-/// affecting other styles like bold, italic, underline, etc.
-///
-/// See [Color.reset] for a singleton instance of this type.
 final class _ResetColor extends Color {
   @literal
   const _ResetColor();
 
   @override
-  Command setForeground() => const SetForegroundColor256(39);
+  Command setForeground() => SetColor16.resetForeground;
 
   @override
-  Command setBackground() => const SetBackgroundColor256(49);
+  Command setBackground() => SetColor16.resetBackground;
 
   @override
   String toString() => 'Color.reset';
@@ -161,22 +155,22 @@ enum AnsiColor implements Color {
   static const _dimForegroundOffset = 30;
   static const _brightForegroundOffset = 90;
 
-  /// The index of this color in a [SetForegroundColor256] command.
+  /// The index of this color in a [SetColor16] command.
   int get foregroundIndex {
     return index + (isBright ? _brightForegroundOffset : _dimForegroundOffset);
   }
 
   @override
-  Command setForeground() => SetForegroundColor256(foregroundIndex);
+  Command setForeground() => SetColor16(foregroundIndex);
 
   static const _dimBackgroundOffset = 40;
   static const _brightBackgroundOffset = 100;
 
-  /// The index of this color in a [SetBackgroundColor256] command.
+  /// The index of this color in a [SetColor16] command.
   int get backgroundIndex {
     return index + (isBright ? _brightBackgroundOffset : _dimBackgroundOffset);
   }
 
   @override
-  Command setBackground() => SetBackgroundColor256(backgroundIndex);
+  Command setBackground() => SetColor16(backgroundIndex);
 }

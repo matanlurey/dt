@@ -237,12 +237,50 @@ enum AlternateScreenBuffer implements Command {
   Sequence toSequence() => _sequence;
 }
 
+/// Sets either the foreground or background color to one of 16 colors.
+final class SetColor16 extends Command {
+  /// Resets the foreground color to the default color.
+  static const resetForeground = SetColor16(39);
+
+  /// Resets the background color to the default color.
+  static const resetBackground = SetColor16(49);
+
+  /// Resets both colors and all text attributes to the default.
+  static const resetStyle = SetColor16(0);
+
+  /// Creates a set color command.
+  const SetColor16(this.color);
+
+  /// The color code that signifies the layer and color to set.
+  final int color;
+
+  @override
+  Sequence toSequence() {
+    return EscapeSequence('m', parameters: [color]);
+  }
+
+  @override
+  String toString() {
+    return 'SetColor16($color})';
+  }
+}
+
+/// Resets both colors and all text attributes to the default.
+///
+/// An alias for [SetColor16.resetStyle].
+const Command resetStyle = SetColor16.resetStyle;
+
 /// Sets the foreground color to one of the 256 colors.
 ///
 /// This command is compatible with both 4-bit and 8-bit color terminals, where
 /// the [color] is a value between `0` and `255`, inclusive. Any value outside
 /// this range will be clamped to the nearest valid value.
 final class SetForegroundColor256 extends Command {
+  /// Resets the foreground color to the default color.
+  ///
+  /// An alias for [SetColor16.resetForeground].
+  static const Command reset = SetColor16.resetForeground;
+
   /// Creates a set foreground color command.
   ///
   /// The [color] must be between `0` and `255`, inclusive.
@@ -268,6 +306,11 @@ final class SetForegroundColor256 extends Command {
 /// the [color] is a value between `0` and `255`, inclusive. Any value outside
 /// this range will be clamped to the nearest valid value.
 final class SetBackgroundColor256 extends Command {
+  /// Resets the background color to the default color.
+  ///
+  /// An alias for [SetColor16.resetBackground].
+  static const reset = SetColor16.resetBackground;
+
   /// Creates a set background color command.
   ///
   /// The [color] must be between `0` and `255`, inclusive.
