@@ -8,22 +8,6 @@ import 'buffer.dart';
 /// represent the state of the terminal at a single point in time for rendering
 /// widgets and controlling the cursor position.
 final class Frame {
-  /// Continously renders frames using the given [render] function.
-  ///
-  /// This method is useful as part of a render loop:
-  /// ```dart
-  /// await for (final frame in Frame.pump(getBuffer)) {
-  ///   // Render the frame
-  /// }
-  /// ```
-  static Stream<Frame> pump(Buffer Function() render) async* {
-    var frame = Frame(render());
-    while (true) {
-      yield frame;
-      frame = Frame(render(), frame._nextCount);
-    }
-  }
-
   /// Creates a new frame from the given buffer and [count].
   Frame(this._buffer, [this.count = 0]);
   final Buffer _buffer;

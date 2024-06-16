@@ -18,7 +18,7 @@ abstract class Backend {
   /// Creates a new backend that writes to the given [stdout].
   ///
   /// This is the most common backend used for writing to the terminal.
-  factory Backend([io.Stdout? stdout]) {
+  factory Backend.fromStdout([io.Stdout? stdout]) {
     return _StdoutBackend(stdout ?? io.stdout);
   }
 
@@ -191,26 +191,6 @@ final class _TestBackend with AnsiBackend implements TestBackend, Writer {
                 break;
               }
             }
-          }
-        case SetForegroundColor256(:final color):
-          if (color == 39) {
-            style = style.copyWith(foreground: AnsiColor.inherit);
-          } else {
-            style = style.copyWith(
-              foreground: AnsiColor.values.firstWhere(
-                (c) => c.foregroundIndex == color,
-              ),
-            );
-          }
-        case SetBackgroundColor256(:final color):
-          if (color == 49) {
-            style = style.copyWith(background: AnsiColor.inherit);
-          } else {
-            style = style.copyWith(
-              background: AnsiColor.values.firstWhere(
-                (c) => c.backgroundIndex == color,
-              ),
-            );
           }
         case SetCursorVisibility.visible:
           isCursorVisible = true;

@@ -103,7 +103,7 @@ final class _StdioTerminal extends _Terminal {
       ..lineMode = false;
 
     return _StdioTerminal._(
-      Backend(stdout),
+      Backend.fromStdout(stdout),
       Buffer(stdout.terminalColumns, stdout.terminalLines),
       stdin,
       stdout,

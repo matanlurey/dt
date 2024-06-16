@@ -4,15 +4,6 @@ import 'package:dt/rendering.dart';
 import '../prelude.dart';
 
 void main() {
-  test('Frame.pump can pump 10 frames', () async {
-    final buffer = Buffer(4, 2);
-    final frames = await Frame.pump(() => buffer).take(10).toList();
-
-    check(frames.map((f) => f.count)).deepEquals(
-      [0, 1, 2, 3, 4, 5, 6, 7, 8, 9],
-    );
-  });
-
   test('Frame.size returns the size of the buffer', () {
     final buffer = Buffer(4, 2);
     final frame = Frame(buffer);
