@@ -16,4 +16,3 @@ jobs:
       - uses: actions/checkout@v4.1.1
       - uses: dart-lang/setup-dart@v1.6.4
       - run: dart test --reporter github
-      - run: dart test --reporter github example

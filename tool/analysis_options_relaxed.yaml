@@ -1,0 +1,6 @@
+include: analysis_options_strict.yaml
+
+linter:
+  rules:
+    # Useful in lib/, less useful elsewhere
+    unnecessary_raw_strings: false

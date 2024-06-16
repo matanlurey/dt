@@ -1,27 +1,13 @@
 # Examples
 
-## In-Memory Buffers
+## [Hello](./hello.dart)
 
-### [Using `TermninalBuffer`](./memory_terminal_buffer.dart)
+Prints an ASCII art of "Hello".
 
-In-memory emulation of a terminal-like buffer.
+## [Commands](./commands.dart)
 
-### [Using `GridBuffer`](./memory_grid_buffer.dart)
+Uses various `Command`s to manipulate the terminal.
 
-In-memory emulation of a 2D grid-like buffer.
+## [Game of Life](./game_of_life.dart)
 
-## ANSI Escape Codes
-
-### [Controlling a Cursor](./ansi_cursor.dart)
-
-Controlling the cursor position using ANSI escape codes.
-
-### [Controlling the Display](./ansi_display.dart)
-
-Controlling the display using ANSI escape codes.
-
-## Other
-
-### [`Writer` Interface](./writer_interface.dart)
-
-A simple interface for writing to a buffer.
+A simple implementation of Conway's Game of Life.

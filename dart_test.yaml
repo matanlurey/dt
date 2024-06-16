@@ -1,0 +1,8 @@
+# https://github.com/dart-lang/test/blob/master/pkgs/test/doc/configuration.md
+
+presets:
+  coverage:
+    reporter: github
+    paths:
+      - coverage
+      - test

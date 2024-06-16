@@ -6,22 +6,10 @@ A _fun_ and _minimalist_ experiment in crafting terminal UIs with Dart.
 [![Mac Build](https://github.com/matanlurey/dt/actions/workflows/macos.yaml/badge.svg)](https://github.com/matanlurey/dt/actions/workflows/macos.yaml)
 [![Coverage Status](https://coveralls.io/repos/github/matanlurey/dt/badge.svg?branch=main)](https://coveralls.io/github/matanlurey/dt?branch=main)
 
-Inspiration:
-
-- <https://github.com/crossterm-rs/crossterm>
-- <https://github.com/muesli/termenv>
-- <https://github.com/wez/wezterm/tree/main/termwiz>
-- <https://sr.ht/~rockorager/vaxis/>
-- <https://github.com/timsneath/dart_console>
-
-Work-in-progress:
-
-- [x] Canonical terminal with input support (`TerminalBuffer`).
-- [ ] Formatting and styling (`Styled`).
-
-## Overview
+## Key Concepts
 
 > [!NOTE]
+>
 > This project is a work-in-progress and everything is subject to change.
 
 This project aims to provide an intuitive and ergonomic API for building,
@@ -29,185 +17,79 @@ emulating, and interacting with terminal applications in Dart. It's designed to
 be a low-level building block for more complex terminal applications, such as
 text editors, games, and interactive command-line interfaces.
 
-### TerminalBuffer
+### Buffer
 
-A `TerminalBuffer` represents a sequence of lines of text or text-like spans
-that can be written to and read from, and a cursor that can be moved around.
-
-Intended to represent an emulation of terminal output, writing to a terminal replaces all spans after the cursor and moves the cursor accordingly, while clearing the screen either removes content or replaces it with empty spans.
+A `Buffer` is a two-dimensional grid of characters with an associated style. It
+is the primary building block for rendering text-based content to the terminal,
+and it can be used to build more complex UI components. For example, a `Buffer`
+can be used to render text, boxes, and sprites:
 
 ```dart
-import 'package:dt/dt.dart';
+import 'package:dt/rendering.dart';
 
 void main() {
-  final terminal = TerminalBuffer(
-    const StringSpan(), 
-    lines: ['Hello, World!'],
-  );
-
-  // World isn't that impressive, let's replace it with Dart!
-  terminal.cursor.column -= 6;
-  terminal.write('Dart!');
-
-  print(terminal.toDebugString(
-    drawBorder: true,
-    drawCursor: true,
-    includeLineNumbers: true,
-  ));
-}
-```
-
-```shell
-% dart example/terminal.dart
-┌─┬─────────────┐
-│1│Hello, Dart!█│
-└─┴─────────────┘
-```
-
-The major API surface of a `TerminalBuffer` includes:
-
-```mermaid
-classDiagram
-  class TerminalSink~T~
-  <<abstract>> TerminalSink
-    TerminalSink~T~ : +void write(T span)
-    TerminalSink~T~ : +void writeLine(T span)
-
-  class TerminalDriver~T~
-  <<interface>> TerminalDriver
-    TerminalDriver~T~ : +Cursor get cursor
-    TerminalDriver~T~ : +void clearScreen()
-
-  class TerminalView~T~
-  <<abstract>> TerminalView
-    TerminalView~T~ : +Iterable~T~ get lines
-
-  class TerminalBuffer~T~
-  <<abstract>> TerminalBuffer
-    TerminalView~T~ : +CursorBuffer get cursor
+  final buffer = Buffer(10, 3, '#');
+  buffer.print(0, 1, 'Hello, World!');
   
-  TerminalSink~T~ <|-- TerminalBuffer~T~ : Mixes-in
-  TerminalView~T~ <|-- TerminalBuffer~T~ : Mixes-in
-  TerminalDriver~T~ <|-- TerminalBuffer~T~ : Implements
-```
-
-### GridBuffer
-
-A `GridBuffer` is a 2-dimensional buffer of _cells_.
-
-Intended to represent individual pixels, ASCII characters, or code units.
-
-```dart
-import 'package:dt/dt.dart';
-
-void main() {
-  final grid = GridBuffer.filled(3, 3, ' ');
-
-  // An in-progress game of tic-tac-toe.
-  grid.setCell(1, 1, 'X');
-  grid.setCell(0, 0, 'O');
-  grid.setCell(2, 2, 'X');
-
-  print(grid.toDebugString(drawGrid: true));
+  // ##########
+  // Hello, Wor
+  // ##########
+  buffer.rows.forEach((row) => print(row.map((cell) => cell.symbol).join()));
 }
 ```
 
-```shell
-% dart example/grid.dart
-┌───┬───┬───┐
-│ O │   │   │
-├───┼───┼───┤
-│   │ X │   │
-├───┼───┼───┤
-│   │   │ X │
-└───┴───┴───┘
-```
+### Surface
 
-The major API surface of a `GridBuffer` includes:
-
-```mermaid
-classDiagram
-  class GridEditor~T~
-  <<abstract>> GridEditor
-    GridEditor~T~ : +void setCell(int y, int x, T v)
-
-  class GridView~T~
-  <<abstract>> GridView
-    GridView~T~ : +Iterable~T~ get cells
-
-  class GridBuffer~T~
-  <<abstract>> GridBuffer
-  
-  GridEditor~T~ <|-- GridBuffer~T~ : Mixes-in
-  GridView~T~ <|-- GridBuffer~T~ : Mixes-in
-```
-
-### AnsiTerminal
-
-An `AnsiTerminalDriver` is a `TerminalDriver` that emits ANSI escape codes.
-
-So far, the types have been focused on emulating terminal output, but an
-`AnsiTerminalDriver` and the `AnsiTerminal` class provide a way to interact with
-a real terminal.
+A `Surface` is a high-level abstraction for writing `Buffer`s to the terminal:
 
 ```dart
-import 'package:dt/ansi.dart';
+import 'package:dt/terminal.dart';
 
 void main() {
-  final terminal = AnsiTerminal.fromStdout();
+  final surface = Surface.fromStdout();
 
-  terminal.write('Hello, World!');
-  terminal.cursor.moveLeft(6);
-  terminal.write('Dart!');
+  surface.draw((frame) {
+    frame.draw((buffer) {
+      buffer.print(0, 1, 'Hello, World!');
+    });
+  });
 }
 ```
-
-```shell
-% dart example/ansi.dart
-Hello, Dart!
-```
-
-## Benchmarks
-
-While not the primary goal of this project, it's interesting to see how the
-`libc`-based implementation compares to the `dart:io`-based one. The following
-benchmarks were run on an M2 Max MacBook Pro (2021) with 10 CPU cores on Dart
-version 3.4.0:
-
-```shell
-# Redirect stderr to /dev/null to avoid printing junk to the terminal.
-dart run benchmark/stdout_write.dart 2> /dev/null
-```
-
-| Implementation | Time (ms)       |
-| -------------- | --------------- |
-| `dart:io`      |  1203.0025 us   |
-| `libc`         |  752.19175 us   |
-
-📈 The `libc`-based implementation is about **37% faster** than `dart:io`.
-
-> [!TIP]
-> In my tests, an AOT-compiled binary had no noticeable performance impact.
 
 ## Contributing
 
-### CI
+### CI/CD
 
 This package is:
 
 - Formatted with `dart format`.
 - Checked with `dart analyze`.
-- Tested with `dart test`, including with code coverage.
+- Tested with `dart test`, including with code coverage (see
+  [`tool/coverage.dart`](tool/coverage.dart)).
 
-See [`github/workflows/check.yaml`](./.github/workflows/check.yaml) for details.
+### Inspiration
 
-### Coverage
+This package is inspired by a number of libraries, including but not limited to:
 
-To view the coverage report locally (MacOS):
-
-```shell
-brew install lcov
-dart run coverage:test_with_coverage
-genhtml coverage/lcov.info -o coverage/html
-open coverage/html/index.html
-```
+- [crossterm](https://github.com/crossterm-rs/crossterm): A Rust library for
+  cross-platform terminal manipulation.
+- [dart_console](https://github.com/timsneath/dart_console): A Dart library for
+  terminal manipulation.
+- [fortress](https://pub.dev/packages/fortress): A Dart library for building
+  retro-style games.
+- [hex_toolkit](https://pub.dev/packages/hex_toolkit): A Dart library for
+  hexagonal grids.
+- [mini_sprite](https://pub.dev/packages/mini_sprite): A Dart library for
+  sprite-based rendering.
+- [pathxp](https://pub.dev/packages/pathxp) and
+  [pathfinding](https://pub.dev/packages/pathfinding): Dart libraries for
+  pathfinding algorithms.
+- [taffy](https://crates.io/crates/taffy): UI layout library for Rust.
+- [termenv](https://github.com/muesli/termenv): A Go library for terminal
+  feature detection and styling.
+- [termion](https://crates.io/crates/termion): A Rust library for low-level
+  bindless terminal manipulation.
+- [termwiz](ttps://github.com/wez/wezterm/tree/main/termwiz): Another Rust
+  library for building a terminal emulator.
+- [vaxis](https://sr.ht/~rockorager/vaxis/): A Rust library for building
+  terminal UIs.

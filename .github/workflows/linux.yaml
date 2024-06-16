@@ -19,7 +19,6 @@ jobs:
       - run: dart format --output none --set-exit-if-changed .
       - run: dart analyze
       - run: dart run coverage:test_with_coverage -- --reporter github
-      - run: dart test --reporter github example
       - name: Upload coverage
         uses: coverallsapp/github-action@v2.2.3
         with:
