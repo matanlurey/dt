@@ -6,6 +6,58 @@ import 'package:dt/rendering.dart';
 import '../prelude.dart';
 
 void main() {
+  test('an empty buffer', () {
+    check(Buffer.empty()).has((b) => b.cells, 'cells').isEmpty();
+  });
+
+  test('fromCells', () {
+    final cells = [
+      Cell('H'),
+      Cell('e'),
+      Cell('l'),
+      Cell('l'),
+      Cell('o'),
+    ];
+    final buffer = Buffer.fromCells(cells, width: 5);
+
+    check(buffer).has((b) => b.rows, 'rows').deepEquals([
+      [Cell('H'), Cell('e'), Cell('l'), Cell('l'), Cell('o')],
+    ]);
+  });
+
+  test('fromRows', () {
+    final rows = [
+      [Cell('H'), Cell('e'), Cell('l'), Cell('l'), Cell('o')],
+    ];
+    final buffer = Buffer.fromRows(rows);
+
+    check(buffer).has((b) => b.rows, 'rows').deepEquals([
+      [Cell('H'), Cell('e'), Cell('l'), Cell('l'), Cell('o')],
+    ]);
+  });
+
+  test('viewing a buffer', () {
+    final buffer = Buffer(3, 3);
+    final view = Buffer.view(buffer, Rect.fromXYWH(1, 1, 2, 2));
+
+    check(view).has((b) => b.rows, 'rows').deepEquals([
+      [Cell.empty, Cell.empty],
+      [Cell.empty, Cell.empty],
+    ]);
+
+    view.set(0, 0, Cell('H'));
+    check(view).has((b) => b.rows, 'rows').deepEquals([
+      [Cell('H'), Cell.empty],
+      [Cell.empty, Cell.empty],
+    ]);
+
+    check(buffer).has((b) => b.rows, 'rows').deepEquals([
+      [Cell.empty, Cell.empty, Cell.empty],
+      [Cell.empty, Cell('H'), Cell.empty],
+      [Cell.empty, Cell.empty, Cell.empty],
+    ]);
+  });
+
   test('a 4x2 empty buffer', () {
     check(Buffer(4, 2)).has((b) => b.rows, 'rows').deepEquals([
       [Cell.empty, Cell.empty, Cell.empty, Cell.empty],

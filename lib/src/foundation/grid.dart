@@ -45,7 +45,7 @@ abstract mixin class Grid<T> {
   /// Creates a sub-grid view into this grid within the given [bounds].
   ///
   /// The bounds must be within the grid's area.
-  factory Grid.subGrid(Grid<T> grid, Rect bounds) {
+  factory Grid.view(Grid<T> grid, Rect bounds) {
     final area = grid.area();
     if (!area.containsRect(bounds)) {
       throw ArgumentError.value(
@@ -144,7 +144,7 @@ abstract mixin class Grid<T> {
   /// Returns a sub-grid view into this grid within the given [bounds].
   ///
   /// The bounds must be within the grid's area.
-  Grid<T> subGrid(Rect bounds) => Grid.subGrid(this, bounds);
+  Grid<T> subGrid(Rect bounds) => Grid.view(this, bounds);
 }
 
 /// A grid whose internal memory layout is a row-major 1-dimenional [List].

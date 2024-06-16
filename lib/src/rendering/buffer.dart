@@ -15,7 +15,7 @@ import 'style.dart';
 /// a terminal and instead draw their state to an intermediate buffer, which is
 /// a grid where each [Cell] contains a single symbol (grapheme) and an optional
 /// [Style].
-extension type const Buffer._(Grid<Cell> grid) implements Grid<Cell> {
+extension type const Buffer._(Grid<Cell> _grid) implements Grid<Cell> {
   /// Creates a new buffer with the given [width] and [height].
   ///
   /// The buffer is initialized with [fill] cells.
@@ -23,6 +23,16 @@ extension type const Buffer._(Grid<Cell> grid) implements Grid<Cell> {
   /// The [width] and [height] must be non-negative.
   factory Buffer(int width, int height, [Cell fill = Cell.empty]) {
     return Buffer._(Grid(width, height, fill));
+  }
+
+  /// Creates an empty buffer with no cells.
+  factory Buffer.empty() => Buffer._(Grid.empty());
+
+  /// Creates a new buffer from the given [cells] and [width].
+  ///
+  /// The [cells] must have a length that is a multiple of the [width].
+  factory Buffer.fromCells(Iterable<Cell> cells, {required int width}) {
+    return Buffer._(Grid.fromCells(cells, width: width));
   }
 
   /// Creates a new buffer from the given [lines].
@@ -38,6 +48,20 @@ extension type const Buffer._(Grid<Cell> grid) implements Grid<Cell> {
       buffer.setLine(0, y, lines_.elementAt(y));
     }
     return buffer;
+  }
+
+  /// Creates a new grid from the given [rows].
+  ///
+  /// Each row must have the same length.
+  factory Buffer.fromRows(Iterable<Iterable<Cell>> rows) {
+    return Buffer._(Grid.fromRows(rows));
+  }
+
+  /// Creates a sub-buffer view into this grid within the given [bounds].
+  ///
+  /// The bounds must be within the grid's area.
+  factory Buffer.view(Buffer buffer, Rect bounds) {
+    return Buffer._(Grid.view(buffer, bounds));
   }
 
   /// Prints a string, starting at the given [x] and [y] coordinates.
@@ -125,5 +149,5 @@ extension type const Buffer._(Grid<Cell> grid) implements Grid<Cell> {
   ///
   /// The bounds must be within the grid's area.
   @redeclare
-  Buffer subGrid(Rect bounds) => Buffer._(grid.subGrid(bounds));
+  Buffer subGrid(Rect bounds) => Buffer._(_grid.subGrid(bounds));
 }
