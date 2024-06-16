@@ -2,16 +2,17 @@ import 'dart:async';
 import 'dart:io' as io;
 import 'dart:math' as math;
 
+import 'package:dt/foundation.dart';
 import 'package:dt/rendering.dart';
 import 'package:dt/terminal.dart';
 
 /// Simulates Conway's Game of Life in the terminal.
 void main() async {
   final random = math.Random();
-  final width = io.stdout.terminalColumns;
-  final world = List.generate(
-    io.stdout.terminalLines * width,
-    (_) => random.nextBool(),
+  final world = Grid.generate(
+    io.stdout.terminalColumns,
+    io.stdout.terminalLines,
+    (x, y) => random.nextBool(),
   );
 
   final terminal = Terminal.fromStdio();
@@ -19,7 +20,6 @@ void main() async {
     await run(
       terminal,
       world,
-      width: width,
       done: io.ProcessSignal.sigint.watch().first,
     );
   } finally {
@@ -29,19 +29,11 @@ void main() async {
 
 Future<void> run(
   Terminal terminal,
-  List<bool> world, {
-  required int width,
+  Grid<bool> world, {
   required Future<void> done,
   Future<void> Function() wait = _wait250ms,
 }) async {
-  final height = world.length ~/ width;
-
-  bool get(List<bool> world, int x, int y) => world[y * width + x];
-
-  // ignore: avoid_positional_boolean_parameters
-  void set(List<bool> world, int x, int y, bool value) {
-    world[y * width + x] = value;
-  }
+  final Grid(:width, :height) = world;
 
   var running = true;
   unawaited(done.whenComplete(() => running = false));
@@ -52,7 +44,7 @@ Future<void> run(
       frame.draw((buffer) {
         for (var y = 0; y < height; y++) {
           for (var x = 0; x < width; x++) {
-            final cell = get(world, x, y) ? Cell('█') : Cell.empty;
+            final cell = world.get(x, y) ? Cell('█') : Cell.empty;
             buffer.set(x, y, cell);
           }
         }
@@ -63,7 +55,7 @@ Future<void> run(
     await wait();
 
     // Evolve.
-    final next = List.filled(world.length, false);
+    final next = Grid(width, height, false);
     for (var y = 0; y < height; y++) {
       for (var x = 0; x < width; x++) {
         var alive = 0;
@@ -71,10 +63,10 @@ Future<void> run(
           final nx = x + dx;
           final ny = y + dy;
           if (nx >= 0 && nx < width && ny >= 0 && ny < height) {
-            alive += get(world, nx, ny) ? 1 : 0;
+            alive += world.get(nx, ny) ? 1 : 0;
           }
         }
-        set(next, x, y, alive == 3 || (alive == 2 && get(world, x, y)));
+        next.set(x, y, alive == 3 || (alive == 2 && world.get(x, y)));
       }
     }
 

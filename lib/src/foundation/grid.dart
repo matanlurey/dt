@@ -18,10 +18,29 @@ abstract mixin class Grid<T> {
   /// Creates an empty grid with no cells.
   factory Grid.empty() = ListGrid<T>.empty;
 
+  /// Creates a new grid from the given [cells] and [width].
+  ///
+  /// The [cells] must have a length that is a multiple of the [width].
+  factory Grid.fromCells(
+    Iterable<T> cells, {
+    required int width,
+  }) = ListGrid<T>.fromCells;
+
   /// Creates a new grid from the given [rows].
   ///
   /// Each row must have the same length.
   factory Grid.fromRows(Iterable<Iterable<T>> rows) = ListGrid<T>.fromRows;
+
+  /// Creates a new grid with the given [width] and [height].
+  ///
+  /// The grid is filled with the result of calling [generator] for each cell.
+  ///
+  /// The [width] and [height] must be non-negative.
+  factory Grid.generate(
+    int width,
+    int height,
+    T Function(int x, int y) generator,
+  ) = ListGrid<T>.generate;
 
   /// Creates a sub-grid view into this grid within the given [bounds].
   ///
@@ -144,6 +163,23 @@ final class ListGrid<T> with Grid<T> {
   /// Creates an empty grid with no cells.
   factory ListGrid.empty() => ListGrid._([], 0);
 
+  /// Creates a new grid from the given [cells] and [width].
+  ///
+  /// The [cells] must have a length that is a multiple of the [width].
+  factory ListGrid.fromCells(
+    Iterable<T> cells, {
+    required int width,
+  }) {
+    if (cells.length % width != 0) {
+      throw ArgumentError.value(
+        cells,
+        'cells',
+        'The length must be a multiple of the width.',
+      );
+    }
+    return ListGrid._(List.of(cells), width);
+  }
+
   /// Creates a new grid from the given [rows].
   ///
   /// Each row must have the same length.
@@ -166,6 +202,26 @@ final class ListGrid<T> with Grid<T> {
 
     final cells = rows_.expand((row) => row).toList();
     return ListGrid._(cells, width);
+  }
+
+  /// Creates a new grid with the given [width] and [height].
+  ///
+  /// The grid is filled with the result of calling [generator] for each cell.
+  ///
+  /// The [width] and [height] must be non-negative.
+  factory ListGrid.generate(
+    int width,
+    int height,
+    T Function(int x, int y) generator,
+  ) {
+    RangeError.checkNotNegative(width, 'width');
+    RangeError.checkNotNegative(height, 'height');
+    return ListGrid.fromCells(
+      Iterable.generate(height, (y) {
+        return Iterable.generate(width, (x) => generator(x, y));
+      }).expand((row) => row),
+      width: width,
+    );
   }
 
   const ListGrid._(this.cells, this.width);
