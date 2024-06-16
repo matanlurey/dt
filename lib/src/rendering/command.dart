@@ -56,6 +56,7 @@ abstract mixin class Command {
       'm' => switch (sequence.parameters) {
           [38, 5, final int color] => SetForegroundColor256(color),
           [48, 5, final int color] => SetBackgroundColor256(color),
+          [final int color] => SetColor16(color),
           _ => null,
         },
       _ => null,
@@ -261,7 +262,12 @@ final class SetColor16 extends Command {
 
   @override
   String toString() {
-    return 'SetColor16($color})';
+    return 'SetColor16${switch (this) {
+      resetForeground => '.resetForeground',
+      resetBackground => '.resetBackground',
+      resetStyle => '.resetStyle',
+      _ => '($color)',
+    }}';
   }
 }
 

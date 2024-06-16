@@ -235,6 +235,59 @@ void main() {
     });
   });
 
+  group('SetColor16', () {
+    test('== and hashCode', () {
+      final a = SetColor16(1);
+      final b = SetColor16(1);
+      final c = SetColor16(2);
+
+      check(a)
+        ..has((a) => a == b, '== b').isTrue()
+        ..has((a) => a == c, '== c').isFalse()
+        ..has((a) => a.hashCode, 'hashCode').equals(b.hashCode);
+    });
+
+    test('toString', () {
+      check(SetColor16.resetBackground)
+          .has((a) => a.toString(), 'toString()')
+          .equals('SetColor16.resetBackground');
+
+      check(SetColor16.resetForeground)
+          .has((a) => a.toString(), 'toString()')
+          .equals('SetColor16.resetForeground');
+
+      check(SetColor16(1))
+          .has((a) => a.toString(), 'toString()')
+          .equals('SetColor16(1)');
+    });
+
+    test('converts to sequence', () {
+      final command = SetColor16(1);
+
+      check(command.toSequence()).isA<EscapeSequence>()
+        ..has((a) => a.finalChars, 'finalByte').equals('m')
+        ..has((a) => a.parameters, 'parameters').deepEquals([1]);
+    });
+
+    test('converts back to Command', () {
+      final Command zero = SetColor16(0);
+      final Command one = SetColor16(1);
+      final Command two = SetColor16(2);
+
+      check(zero).equals(
+        Command.tryParse(zero.toSequence().toTerse())!,
+      );
+
+      check(one).equals(
+        Command.tryParse(one.toSequence().toTerse())!,
+      );
+
+      check(two).equals(
+        Command.tryParse(two.toSequence().toTerse())!,
+      );
+    });
+  });
+
   group('SetForegroundColor256', () {
     test('== and hashCode', () {
       final a = SetForegroundColor256(1);

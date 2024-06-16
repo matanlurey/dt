@@ -19,10 +19,10 @@ void main() {
           ..has((c) => c.isDim, 'isDim').isTrue()
           ..has((c) => c.isBright, 'isBright').isFalse()
           ..has((c) => c.setForeground(), 'setForeground()').equals(
-            SetForegroundColor256(color.index + 30),
+            SetColor16(color.index + 30),
           )
           ..has((c) => c.setBackground(), 'setBackground()').equals(
-            SetBackgroundColor256(color.index + 40),
+            SetColor16(color.index + 40),
           );
 
         check(color.toBright().toDim()).equals(color);
@@ -46,10 +46,10 @@ void main() {
           ..has((c) => c.isDim, 'isDim').isFalse()
           ..has((c) => c.isBright, 'isBright').isTrue()
           ..has((c) => c.setForeground(), 'setForeground()').equals(
-            SetForegroundColor256(color.index + 90),
+            SetColor16(color.index + 90),
           )
           ..has((c) => c.setBackground(), 'setBackground()').equals(
-            SetBackgroundColor256(color.index + 100),
+            SetColor16(color.index + 100),
           );
 
         check(color.toDim().toBright()).equals(color);
@@ -60,10 +60,10 @@ void main() {
   test('Color.reset is reset', () {
     check(Color.reset)
       ..has((c) => c.setForeground(), 'setForeground()').equals(
-        SetForegroundColor256(39),
+        SetColor16.resetForeground,
       )
       ..has((c) => c.setBackground(), 'setBackground()').equals(
-        SetBackgroundColor256(49),
+        SetColor16.resetBackground,
       )
       ..has((c) => c.toString(), 'toString()').equals('Color.reset');
   });

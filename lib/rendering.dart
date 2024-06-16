@@ -10,8 +10,10 @@ export 'src/rendering/command.dart'
         MoveCursorTo,
         MoveCursorToColumn,
         SetBackgroundColor256,
+        SetColor16,
         SetCursorVisibility,
-        SetForegroundColor256;
+        SetForegroundColor256,
+        resetStyle;
 export 'src/rendering/frame.dart' show Frame;
 export 'src/rendering/line.dart' show Line;
 export 'src/rendering/span.dart' show Span;

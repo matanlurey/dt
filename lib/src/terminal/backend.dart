@@ -175,6 +175,23 @@ final class _TestBackend with AnsiBackend implements TestBackend, Writer {
           cursorPosition = Offset(column, row);
         case ClearScreen.all:
           buffer.fillCells();
+        case SetColor16(:final color):
+          if (color == 39) {
+            style = style.copyWith(foreground: AnsiColor.inherit);
+          } else if (color == 49) {
+            style = style.copyWith(background: AnsiColor.inherit);
+          } else {
+            for (final c in AnsiColor.values) {
+              if (c.foregroundIndex == color) {
+                style = style.copyWith(foreground: c);
+                break;
+              }
+              if (c.backgroundIndex == color) {
+                style = style.copyWith(background: c);
+                break;
+              }
+            }
+          }
         case SetForegroundColor256(:final color):
           if (color == 39) {
             style = style.copyWith(foreground: AnsiColor.inherit);
