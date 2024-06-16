@@ -1,2 +1,3 @@
-export 'src/terminal/backend.dart' show AnsiBackend, Backend, TestBackend;
-export 'src/terminal/terminal.dart' show Terminal;
+export 'src/terminal/backend.dart'
+    show AnsiSurfaceBackend, SurfaceBackend, TestBackend;
+export 'src/terminal/surface.dart' show Surface;

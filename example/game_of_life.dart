@@ -15,7 +15,7 @@ void main() async {
     (x, y) => random.nextBool(),
   );
 
-  final terminal = Terminal.fromStdio();
+  final terminal = Surface.fromStdio();
   try {
     await run(
       terminal,
@@ -28,7 +28,7 @@ void main() async {
 }
 
 Future<void> run(
-  Terminal terminal,
+  Surface terminal,
   Grid<bool> world, {
   required Future<void> done,
   Future<void> Function() wait = _wait250ms,

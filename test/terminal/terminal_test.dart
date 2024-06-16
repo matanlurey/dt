@@ -12,7 +12,7 @@ import '../prelude.dart';
 void main() {
   test('draws to a buffer', () {
     final backend = TestBackend(5, 5);
-    final terminal = Terminal.fromBackend(backend);
+    final terminal = Surface.fromBackend(backend);
 
     terminal.draw((frame) {
       frame.draw((buffer) {
@@ -35,7 +35,7 @@ void main() {
 
   test('shows the cursor', () {
     final backend = TestBackend(5, 5);
-    final terminal = Terminal.fromBackend(backend);
+    final terminal = Surface.fromBackend(backend);
 
     terminal.draw((frame) {
       frame.cursor = const Offset(2, 2);
@@ -54,7 +54,7 @@ void main() {
 
   test('throws after being disposed', () {
     final backend = TestBackend(5, 5);
-    final terminal = Terminal.fromBackend(backend);
+    final terminal = Surface.fromBackend(backend);
 
     terminal.dispose();
 
@@ -66,7 +66,7 @@ void main() {
     final stdin = _FakeStdin();
     final stdout = _FakeStdout();
 
-    final terminal = Terminal.fromStdio(stdout, stdin);
+    final terminal = Surface.fromStdio(stdout, stdin);
     check(stdin)
       ..has((s) => s.echoMode, 'echoMode').equals(false)
       ..has((s) => s.lineMode, 'lineMode').equals(false);
@@ -79,7 +79,7 @@ void main() {
 
   test('enters/exits alt-buffer and hides/shows cursor', () {
     final stdout = _FakeStdout();
-    final terminal = Terminal.fromStdio(stdout, _FakeStdin());
+    final terminal = Surface.fromStdio(stdout, _FakeStdin());
 
     var logs = Sequence.parseAll(stdout.logs.join()).map(Command.tryParse);
     check(logs).deepEquals([

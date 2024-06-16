@@ -112,11 +112,11 @@ void main() {
 
   group('Backend.fromStdout', () {
     late _FakeStdout stdout;
-    late Backend backend;
+    late SurfaceBackend backend;
 
     setUp(() {
       stdout = _FakeStdout();
-      backend = Backend.fromStdout(stdout);
+      backend = SurfaceBackend.fromStdout(stdout);
     });
 
     test('returns terminal size', () {

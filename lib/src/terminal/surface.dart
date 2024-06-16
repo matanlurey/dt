@@ -6,7 +6,7 @@ import 'package:dt/rendering.dart';
 import 'backend.dart';
 
 /// An interface to interact and draw [Frame]s on a terminal.
-abstract final class Terminal {
+abstract final class Surface {
   /// Creates a new terminal that uses [stdout] and [stdin] for I/O.
   ///
   /// If [stdout] or [stdin] are not provided, they default to [io.stdout] and
@@ -14,14 +14,14 @@ abstract final class Terminal {
   /// alternate screen buffer, hide the cursor, and enable raw mode.
   ///
   /// When [dispose] is called, the terminal will switch back.
-  factory Terminal.fromStdio([io.Stdout? stdout, io.Stdin? stdin]) {
+  factory Surface.fromStdio([io.Stdout? stdout, io.Stdin? stdin]) {
     return _StdioTerminal(stdout ?? io.stdout, stdin ?? io.stdin);
   }
 
   /// Creates a new terminal from a [backend].
   ///
   /// This is useful for testing or when a custom backend is needed.
-  factory Terminal.fromBackend(Backend backend) {
+  factory Surface.fromBackend(SurfaceBackend backend) {
     final (width, height) = backend.size;
     return _Terminal(backend, Buffer(width, height));
   }
@@ -37,9 +37,9 @@ abstract final class Terminal {
   void draw(void Function(Frame) render);
 }
 
-final class _Terminal implements Terminal {
+final class _Terminal implements Surface {
   _Terminal(this._backend, this._buffer);
-  final Backend _backend;
+  final SurfaceBackend _backend;
   final Buffer _buffer;
 
   late var _frame = Frame(_buffer);
@@ -103,7 +103,7 @@ final class _StdioTerminal extends _Terminal {
       ..lineMode = false;
 
     return _StdioTerminal._(
-      Backend.fromStdout(stdout),
+      SurfaceBackend.fromStdout(stdout),
       Buffer(stdout.terminalColumns, stdout.terminalLines),
       stdin,
       stdout,

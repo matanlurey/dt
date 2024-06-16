@@ -7,17 +7,17 @@ import 'package:dt/foundation.dart';
 import 'package:dt/rendering.dart';
 import 'package:meta/meta.dart';
 
-import 'terminal.dart';
+import 'surface.dart';
 
-/// Abstraction over accessing lower-level terminal APIs or implementations.
+/// Abstraction over accessing lower-level terminal-like output APIs.
 ///
-/// Most applications will not interact with the [Backend] type directly, and
-/// instead use the higher-level [Terminal] class.
-abstract class Backend {
+/// Most applications will not interact with the [SurfaceBackend] type directly,
+/// and instead use the higher-level [Surface] class to draw to the terminal.
+abstract class SurfaceBackend {
   /// Creates a new backend that writes to the given [stdout].
   ///
   /// This is the most common backend used for writing to the terminal.
-  factory Backend.fromStdout([io.Stdout? stdout]) {
+  factory SurfaceBackend.fromStdout([io.Stdout? stdout]) {
     return _StdoutBackend(stdout ?? io.stdout);
   }
 
@@ -43,8 +43,8 @@ abstract class Backend {
   (int columns, int rows) get size;
 }
 
-/// A partial implementation of [Backend] that writes ANSI escape sequences.
-mixin AnsiBackend implements Backend {
+/// A partial implementation of [SurfaceBackend] that writes ANSI escape sequences.
+mixin AnsiSurfaceBackend implements SurfaceBackend {
   /// The writer used to write UTF-8 encoded ANSI escape sequences.
   @protected
   Writer get writer;
@@ -96,7 +96,7 @@ mixin AnsiBackend implements Backend {
   }
 }
 
-final class _StdoutBackend with AnsiBackend {
+final class _StdoutBackend with AnsiSurfaceBackend {
   _StdoutBackend(
     this.stdout,
   ) : writer = Writer.fromSink(stdout, onFlush: stdout.flush);
@@ -113,7 +113,7 @@ final class _StdoutBackend with AnsiBackend {
 }
 
 /// A backend implementation used for integration testing.
-abstract interface class TestBackend implements Backend {
+abstract interface class TestBackend implements SurfaceBackend {
   factory TestBackend(int width, int height) = _TestBackend;
 
   /// The buffer of cells that represents the terminal screen.
@@ -135,7 +135,9 @@ abstract interface class TestBackend implements Backend {
   void resize(int width, int height);
 }
 
-final class _TestBackend with AnsiBackend implements TestBackend, Writer {
+final class _TestBackend
+    with AnsiSurfaceBackend
+    implements TestBackend, Writer {
   _TestBackend(
     int width,
     int height,
