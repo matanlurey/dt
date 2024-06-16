@@ -35,7 +35,6 @@ void main() {
       [Cell('H'), Cell('e'), Cell('l'), Cell('l'), Cell('o')],
     ]);
   });
-
   test('viewing a buffer', () {
     final buffer = Buffer(3, 3);
     final view = Buffer.view(buffer, Rect.fromXYWH(1, 1, 2, 2));
