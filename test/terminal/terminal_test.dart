@@ -4,7 +4,6 @@ library;
 import 'dart:io' as io;
 
 import 'package:dt/foundation.dart';
-import 'package:dt/layout.dart';
 import 'package:dt/rendering.dart';
 import 'package:dt/terminal.dart';
 

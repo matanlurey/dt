@@ -4,7 +4,6 @@ import 'dart:math' as math;
 
 import 'package:characters/characters.dart';
 import 'package:dt/foundation.dart';
-import 'package:dt/layout.dart';
 import 'package:dt/rendering.dart';
 import 'package:meta/meta.dart';
 

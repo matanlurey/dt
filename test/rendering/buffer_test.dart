@@ -163,7 +163,7 @@ void main() {
 
   test('Buffer.within returns a view into the buffer', () {
     final buffer = Buffer(10, 2);
-    final view = buffer.within(Rect.fromXYWH(1, 1, 6, 1));
+    final view = buffer.subGrid(Rect.fromXYWH(1, 1, 6, 1));
 
     check(view).has((b) => b.rows, 'rows').deepEquals([
       [
@@ -220,7 +220,7 @@ void main() {
     final buffer = Buffer(10, 2);
 
     check(
-      () => buffer.within(Rect.fromXYWH(1, 1, 10, 2)),
+      () => buffer.subGrid(Rect.fromXYWH(1, 1, 10, 2)),
     ).throws<ArgumentError>();
   });
 
@@ -233,11 +233,11 @@ void main() {
     // Create a view of the last 2x2 area.
     // 4 5
     // 7 8
-    final view1 = buffer.within(Rect.fromXYWH(1, 1, 2, 2));
+    final view1 = buffer.subGrid(Rect.fromXYWH(1, 1, 2, 2));
 
     // Create a view of the first 2x1 area.
     // 4 5
-    final view2 = view1.within(Rect.fromXYWH(0, 0, 2, 1));
+    final view2 = view1.subGrid(Rect.fromXYWH(0, 0, 2, 1));
 
     // Draw a character to the inner view.
     view2.set(1, 0, Cell('#'));

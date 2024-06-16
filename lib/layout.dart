@@ -19,7 +19,6 @@
 /// ```
 library layout;
 
-import 'layout.dart';
+import 'foundation.dart';
 
-export 'src/layout/offset.dart' show Offset;
-export 'src/layout/rect.dart' show Rect;
+export 'foundation.dart' show Offset, Rect;

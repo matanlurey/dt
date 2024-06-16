@@ -35,7 +35,7 @@ final class Frame {
   /// If your app listens for a resize event, it should ignore the event for any
   /// calculations that are used to render the current frame and use this value
   /// instead.
-  Rect get size => _buffer.toArea();
+  Rect get size => _buffer.area();
 
   /// Calls the given [render] function with a buffer for drawing.
   ///
@@ -43,7 +43,7 @@ final class Frame {
   void draw(void Function(Buffer) render, [Rect? bounds]) {
     var buffer = _buffer;
     if (bounds != null) {
-      buffer = buffer.within(bounds);
+      buffer = buffer.subGrid(bounds);
     }
     render(buffer);
   }

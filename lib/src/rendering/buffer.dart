@@ -1,7 +1,8 @@
 import 'dart:math' as math;
 
 import 'package:characters/characters.dart';
-import 'package:dt/layout.dart';
+import 'package:dt/foundation.dart';
+import 'package:meta/meta.dart';
 
 import 'cell.dart';
 import 'line.dart';
@@ -14,22 +15,19 @@ import 'style.dart';
 /// a terminal and instead draw their state to an intermediate buffer, which is
 /// a grid where each [Cell] contains a single symbol (grapheme) and an optional
 /// [Style].
-abstract final class Buffer {
+extension type const Buffer._(Grid<Cell> grid) implements Grid<Cell> {
   /// Creates a new buffer with the given [width] and [height].
   ///
   /// The buffer is initialized with [fill] cells.
   ///
   /// The [width] and [height] must be non-negative.
   factory Buffer(int width, int height, [Cell fill = Cell.empty]) {
-    RangeError.checkNotNegative(width, 'width');
-    RangeError.checkNotNegative(height, 'height');
-    return _Buffer(
-      List<Cell>.filled(width * height, fill),
-      width,
-    );
+    return Buffer._(Grid(width, height, fill));
   }
 
   /// Creates a new buffer from the given [lines].
+  ///
+  /// The [width] and [height] must be non-negative.
   factory Buffer.fromLines(Iterable<Line> lines) {
     final lines_ = List.of(lines);
     final height = lines_.length;
@@ -41,60 +39,6 @@ abstract final class Buffer {
     }
     return buffer;
   }
-
-  /// Creates a view into the given [buffer] within the given [bounds].
-  ///
-  /// The bounds must be within the buffer's area.
-  factory Buffer.within(Buffer buffer, Rect bounds) {
-    final area = buffer.toArea();
-    if (!area.containsRect(bounds)) {
-      throw ArgumentError.value(
-        bounds,
-        'bounds',
-        "Must be within the buffer's area: $area",
-      );
-    }
-    return _BoundBuffer(buffer, bounds);
-  }
-
-  const Buffer._();
-
-  /// Individual cells in the buffer from top-left to bottom-right.
-  Iterable<Cell> get cells;
-
-  /// Each row of cells in the buffer from top to bottom.
-  Iterable<Iterable<Cell>> get rows {
-    return Iterable.generate(
-      height,
-      (y) => Iterable.generate(width, (x) => get(x, y)),
-    );
-  }
-
-  /// Width of the buffer.
-  int get width;
-
-  /// Height of the buffer.
-  int get height;
-
-  /// Returns the area of the buffer as a rectangle with an optional [offset].
-  Rect toArea([Offset offset = Offset.zero]) {
-    return Rect.fromXYWH(offset.x, offset.y, width, height);
-  }
-
-  /// Returns the index of the cell at the given [x] and [y] coordinates.
-  ///
-  /// Throws if the coordinates are out of bounds.
-  int _indexOf(int x, int y) => x + y * width;
-
-  /// Returns the cell at the given [x] and [y] coordinates.
-  ///
-  /// Throws if the coordinates are out of bounds.
-  Cell get(int x, int y) => cells.elementAt(_indexOf(x, y));
-
-  /// Sets the cell at the given [x] and [y] coordinates to [cell].
-  ///
-  /// Throws if the coordinates are out of bounds.
-  void set(int x, int y, Cell cell);
 
   /// Prints a string, starting at the given [x] and [y] coordinates.
   ///
@@ -159,7 +103,7 @@ abstract final class Buffer {
 
   /// Fills the buffer with the given [fill] cell.
   void fillCells([Cell fill = Cell.empty, Rect? area]) {
-    area ??= toArea();
+    area ??= this.area();
     for (var y = area.top; y < area.bottom; y++) {
       for (var x = area.left; x < area.right; x++) {
         set(x, y, fill);
@@ -169,7 +113,7 @@ abstract final class Buffer {
 
   /// Sets the style of all cells in the buffer to [style].
   void fillStyle(Style style, [Rect? area]) {
-    area ??= toArea();
+    area ??= this.area();
     for (var y = area.top; y < area.bottom; y++) {
       for (var x = area.left; x < area.right; x++) {
         set(x, y, get(x, y).copyWith(style: style));
@@ -177,72 +121,9 @@ abstract final class Buffer {
     }
   }
 
-  /// Returns a view into the buffer within the given [bounds].
+  /// Returns a sub-buffer view into this grid within the given [bounds].
   ///
-  /// The bounds must be within the buffer's area.
-  Buffer within(Rect bounds) => Buffer.within(this, bounds);
-}
-
-final class _Buffer extends Buffer {
-  _Buffer(this.cells, this.width) : super._();
-
-  @override
-  final List<Cell> cells;
-
-  @override
-  final int width;
-
-  @override
-  int get height => cells.length ~/ width;
-
-  @override
-  void set(int x, int y, Cell cell) {
-    cells[_indexOf(x, y)] = cell;
-  }
-}
-
-final class _BoundBuffer extends Buffer {
-  const _BoundBuffer(this._buffer, this._bounds) : super._();
-
-  /// The delegate buffer.
-  final Buffer _buffer;
-
-  /// The bounds this buffer is drawn within.
-  final Rect _bounds;
-
-  @override
-  Iterable<Cell> get cells {
-    return _bounds.offsets.map((offset) {
-      final Offset(:x, :y) = offset;
-      return _buffer.get(x, y);
-    });
-  }
-
-  @override
-  Iterable<Iterable<Cell>> get rows {
-    return _bounds.rows.map((row) {
-      return row.columns.map((column) {
-        final Offset(:x, :y) = column.topLeft;
-        return _buffer.get(x, y);
-      });
-    });
-  }
-
-  @override
-  int get width => _bounds.width;
-
-  @override
-  int get height => _bounds.height;
-
-  @override
-  Cell get(int x2, int y2) {
-    final Offset(x: x1, y: y1) = _bounds.topLeft;
-    return _buffer.get(x1 + x2, y1 + y2);
-  }
-
-  @override
-  void set(int x2, int y2, Cell cell) {
-    final Offset(x: x1, y: y1) = _bounds.topLeft;
-    _buffer.set(x1 + x2, y1 + y2, cell);
-  }
+  /// The bounds must be within the grid's area.
+  @redeclare
+  Buffer subGrid(Rect bounds) => Buffer._(grid.subGrid(bounds));
 }
