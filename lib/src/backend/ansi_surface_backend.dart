@@ -47,7 +47,21 @@ mixin AnsiSurfaceBackend implements SurfaceBackend {
   }) {
     // Move the cursor to the start position and write a reset sequence.
     moveCursorTo(start.x + 1, start.y + 1);
-    _writeSequences([resetStyle.toSequence()]);
+
+    // TODO: Use dual-buffering instead of this one-off implementation.
+    //
+    // With dual-buffering we could remove the "drawBatch" method entirely, and
+    // stage all changes to the buffer in a separate buffer. Then, when the
+    // "flush" method is called, we would compare the two buffers and only write
+    // the necessary changes to the terminal. This would allow us to avoid
+    // writing the entire buffer to the terminal on every frame, and instead
+    // only write the changes.
+    final buffer = StringBuffer();
+    void writeSeq(Sequence seq) {
+      buffer.write(seq.toEscapedString());
+    }
+
+    writeSeq(resetStyle.toSequence());
 
     // Determine the width of the batch.
     width ??= size.$1 - 1;
@@ -61,24 +75,27 @@ mixin AnsiSurfaceBackend implements SurfaceBackend {
       // If the width has been reached, move to the next line.
       if (count > width) {
         count = 1;
-        _writeSequences(const [], '\n');
+        buffer.writeln();
       } else {
         count++;
       }
 
-// If the style has changed, write a new style sequence.
+      // If the style has changed, write a new style sequence.
       if (cell.style.foreground case final Color color when color != fg) {
         fg = color;
-        _writeSequences([fg.setForeground().toSequence()]);
+        buffer.write(fg.setForeground().toSequence().toEscapedString());
       }
       if (cell.style.background case final Color color when color != bg) {
         bg = color;
-        _writeSequences([bg.setBackground().toSequence()]);
+        buffer.write(bg.setBackground().toSequence().toEscapedString());
       }
 
       // Write the content of the cell.
-      _writeSequences(const [], cell.symbol);
+      buffer.write(cell.symbol);
     }
+
+    // Write the buffer to the terminal.
+    writer.write(utf8.encode(buffer.toString()));
   }
 
   @override
