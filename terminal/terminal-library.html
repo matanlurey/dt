@@ -67,54 +67,47 @@
     </div>
 
     
+<section class="desc markdown">
+  <p>Provides the main interface of this package, <a href="../terminal/Surface-class.html">Surface</a>, and related types.</p>
+<pre class="language-dart"><code class="language-dart">import 'package:dt/terminal.dart';
+
+void main() {
+  final terminal = Surface.fromStdio();
+  terminal.draw((frame) {
+    frame.draw((buffer) {
+      buffer.print(0, 0, 'Hello, World!');
+    });
+  });
+  terminal.dispose();
+}
+</code></pre>
+</section>
 
 
     <section class="summary offset-anchor" id="classes">
       <h2>Classes</h2>
 
       <dl>
+          <dt id="Frame">
+  <span class="name "><a href="../terminal/Frame-class.html">Frame</a></span> 
+
+</dt>
+<dd>
+  A consistent view into a terminal state for rendering a single frame.
+</dd>
+
           <dt id="Surface">
   <span class="name "><a href="../terminal/Surface-class.html">Surface</a></span> 
 
 </dt>
 <dd>
-  An interface to interact and draw <a href="../rendering/Frame-class.html">Frame</a>s on a terminal.
-</dd>
-
-          <dt id="SurfaceBackend">
-  <span class="name "><a href="../terminal/SurfaceBackend-class.html">SurfaceBackend</a></span> 
-
-</dt>
-<dd>
-  Abstraction over accessing lower-level terminal-like output APIs.
-</dd>
-
-          <dt id="TestBackend">
-  <span class="name "><a href="../terminal/TestBackend-class.html">TestBackend</a></span> 
-
-</dt>
-<dd>
-  A backend implementation used for integration testing.
+  An interface to interact and draw <a href="../terminal/Frame-class.html">Frame</a>s on a terminal.
 </dd>
 
       </dl>
     </section>
 
 
-    <section class="summary offset-anchor" id="mixins">
-      <h2>Mixins</h2>
-
-      <dl>
-          <dt id="AnsiSurfaceBackend">
-  <span class="name "><a href="../terminal/AnsiSurfaceBackend-mixin.html">AnsiSurfaceBackend</a></span> 
-
-</dt>
-<dd>
-  A partial implementation of <a href="../terminal/SurfaceBackend-class.html">SurfaceBackend</a> that writes ANSI escape sequences.
-</dd>
-
-      </dl>
-    </section>
 
 
 
@@ -142,6 +135,7 @@
     <h5><span class="package-name">dt</span> <span class="package-kind">package</span></h5>
     <ol>
       <li class="section-title">Libraries</li>
+      <li><a href="../backend/backend-library.html">backend</a></li>
       <li><a href="../foundation/foundation-library.html">foundation</a></li>
       <li><a href="../layout/layout-library.html">layout</a></li>
       <li><a href="../rendering/rendering-library.html">rendering</a></li>

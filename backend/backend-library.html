@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, height=device-height, initial-scale=1, user-scalable=no">
+  <meta name="description" content="backend library API docs, for the Dart programming language.">
+  <title>backend library - Dart API</title>
+
+
+  
+  <link rel="preconnect" href="https://fonts.gstatic.com">
+  <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:ital,wght@0,300;0,400;0,500;0,700;1,400&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" rel="stylesheet">
+  
+  <link rel="stylesheet" href="../static-assets/github.css?v1">
+  <link rel="stylesheet" href="../static-assets/styles.css?v1">
+  <link rel="icon" href="../static-assets/favicon.png?v1">
+
+  
+</head>
+
+
+<body data-base-href="../" data-using-base-href="false" class="light-theme">
+
+<div id="overlay-under-drawer"></div>
+
+<header id="title">
+  <span id="sidenav-left-toggle" class="material-symbols-outlined" role="button" tabindex="0">menu</span>
+  <ol class="breadcrumbs gt-separated dark hidden-xs">
+    <li><a href="../index.html">dt</a></li>
+    <li class="self-crumb">backend.dart</li>
+  </ol>
+  <div class="self-name">backend</div>
+  <form class="search navbar-right" role="search">
+    <input type="text" id="search-box" autocomplete="off" disabled class="form-control typeahead" placeholder="Loading search...">
+  </form>
+  <div class="toggle" id="theme-button" title="Toggle brightness">
+    <label for="theme">
+      <input type="checkbox" id="theme" value="light-theme">
+      <span id="dark-theme-button" class="material-symbols-outlined">
+        dark_mode
+      </span>
+      <span id="light-theme-button" class="material-symbols-outlined">
+        light_mode
+      </span>
+    </label>
+  </div>
+</header>
+<main>
+
+<div
+    id="dartdoc-main-content"
+    class="main-content"
+    data-above-sidebar=""
+    data-below-sidebar="backend&#47;backend-library-sidebar.html">
+  
+    <div>
+      
+
+      <h1>
+        <span class="kind-library">backend</span>
+        library 
+ 
+
+      </h1>
+    </div>
+
+    
+<section class="desc markdown">
+  <p>Provides backend implementations for interacting with terminal APIs.</p>
+<p>It defines the <a href="../backend/SurfaceBackend-class.html">SurfaceBackend</a> interface, which is a low-level interface
+for drawing cells to a terminal-like surface, with a default implementation,
+<a href="../backend/SurfaceBackend/SurfaceBackend.fromStdout.html">SurfaceBackend.fromStdout</a>, that writes to a <a href="https://api.dart.dev/stable/3.4.4/dart-io/Stdout-class.html">io.Stdout</a> stream.</p>
+<p>For building custom backends, or terminal emulators, <a href="../backend/AnsiSurfaceBackend-mixin.html">AnsiSurfaceBackend</a>
+uses ANSI escape sequences to interact with the terminal, and helper types
+such as <a href="../backend/Sequence-class.html">Sequence</a>, <a href="../backend/EscapeSequence-class.html">EscapeSequence</a>, <a href="../backend/Command-class.html">Command</a> and utility extension such
+as <a href="../backend/AnsiEscapedStyle.html">AnsiEscapedStyle</a> are provided.</p>
+</section>
+
+
+    <section class="summary offset-anchor" id="classes">
+      <h2>Classes</h2>
+
+      <dl>
+          <dt id="Command">
+  <span class="name "><a href="../backend/Command-class.html">Command</a></span> 
+
+</dt>
+<dd>
+  An interface for a command that performs an action on a terminal.
+</dd>
+
+          <dt id="EscapeSequence">
+  <span class="name "><a href="../backend/EscapeSequence-class.html">EscapeSequence</a></span> 
+
+</dt>
+<dd>
+  A CSI escape sequence.
+</dd>
+
+          <dt id="Literal">
+  <span class="name "><a href="../backend/Literal-class.html">Literal</a></span> 
+
+</dt>
+<dd>
+  A string literal.
+</dd>
+
+          <dt id="MoveCursorTo">
+  <span class="name "><a href="../backend/MoveCursorTo-class.html">MoveCursorTo</a></span> 
+
+</dt>
+<dd>
+  Moves the terminal cursor to the given position (row, column).
+</dd>
+
+          <dt id="MoveCursorToColumn">
+  <span class="name "><a href="../backend/MoveCursorToColumn-class.html">MoveCursorToColumn</a></span> 
+
+</dt>
+<dd>
+  Moves the terminal cursor to the given column.
+</dd>
+
+          <dt id="Sequence">
+  <span class="name "><a href="../backend/Sequence-class.html">Sequence</a></span> 
+
+</dt>
+<dd>
+  Represents a sequence of values; a <a href="../backend/Literal-class.html">Literal</a> or <a href="../backend/EscapeSequence-class.html">EscapeSequence</a>.
+</dd>
+
+          <dt id="SetBackgroundColor256">
+  <span class="name "><a href="../backend/SetBackgroundColor256-class.html">SetBackgroundColor256</a></span> 
+
+</dt>
+<dd>
+  Sets the background color to one of the 256 colors.
+</dd>
+
+          <dt id="SetColor16">
+  <span class="name "><a href="../backend/SetColor16-class.html">SetColor16</a></span> 
+
+</dt>
+<dd>
+  Sets either the foreground or background color to one of 16 colors.
+</dd>
+
+          <dt id="SetForegroundColor256">
+  <span class="name "><a href="../backend/SetForegroundColor256-class.html">SetForegroundColor256</a></span> 
+
+</dt>
+<dd>
+  Sets the foreground color to one of the 256 colors.
+</dd>
+
+          <dt id="SurfaceBackend">
+  <span class="name "><a href="../backend/SurfaceBackend-class.html">SurfaceBackend</a></span> 
+
+</dt>
+<dd>
+  Abstraction over accessing lower-level terminal-like output APIs.
+</dd>
+
+          <dt id="TestSurfaceBackend">
+  <span class="name "><a href="../backend/TestSurfaceBackend-class.html">TestSurfaceBackend</a></span> 
+
+</dt>
+<dd>
+  A backend implementation used for integration testing.
+</dd>
+
+      </dl>
+    </section>
+
+    <section class="summary offset-anchor" id="enums">
+      <h2>Enums</h2>
+
+      <dl>
+          <dt id="AlternateScreenBuffer">
+  <span class="name "><a href="../backend/AlternateScreenBuffer.html">AlternateScreenBuffer</a></span> 
+
+</dt>
+<dd>
+  Enters or leaves the alternate screen buffer.
+</dd>
+
+          <dt id="ClearScreen">
+  <span class="name "><a href="../backend/ClearScreen.html">ClearScreen</a></span> 
+
+</dt>
+<dd>
+  Clears the terminal screen buffer.
+</dd>
+
+          <dt id="SetCursorVisibility">
+  <span class="name "><a href="../backend/SetCursorVisibility.html">SetCursorVisibility</a></span> 
+
+</dt>
+<dd>
+  Sets the cursor visibility.
+</dd>
+
+          <dt id="SynchronizedUpdate">
+  <span class="name "><a href="../backend/SynchronizedUpdate.html">SynchronizedUpdate</a></span> 
+
+</dt>
+<dd>
+  Instructs the terminal to start or end a synchronized update.
+</dd>
+
+      </dl>
+    </section>
+
+    <section class="summary offset-anchor" id="mixins">
+      <h2>Mixins</h2>
+
+      <dl>
+          <dt id="AnsiSurfaceBackend">
+  <span class="name "><a href="../backend/AnsiSurfaceBackend-mixin.html">AnsiSurfaceBackend</a></span> 
+
+</dt>
+<dd>
+  A partial implementation of <a href="../backend/SurfaceBackend-class.html">SurfaceBackend</a> that writes ANSI sequences.
+</dd>
+
+      </dl>
+    </section>
+
+
+    <section class="summary offset-anchor" id="extensions">
+      <h2>Extensions</h2>
+
+      <dl>
+          <dt id="AnsiEscapedStyle">
+  <span class="name "><a href="../backend/AnsiEscapedStyle.html">AnsiEscapedStyle</a></span>
+  on <a href="../rendering/Style-class.html">Style</a>
+  
+
+</dt>
+<dd>
+  Provides conversion from a <a href="../rendering/Style-class.html">Style</a> to ANSI escape sequences.
+</dd>
+
+
+      </dl>
+    </section>
+
+    <section class="summary offset-anchor" id="constants">
+      <h2>Constants</h2>
+
+      <dl class="properties">
+          <dt id="resetStyle" class="constant">
+    <span class="name "><a href="../backend/resetStyle-constant.html">resetStyle</a></span>
+  <span class="signature">&#8594; const <a href="../backend/Command-class.html">Command</a></span>
+  
+
+</dt>
+<dd>
+  Resets both colors and all text attributes to the default.
+  
+
+</dd>
+
+      </dl>
+    </section>
+
+
+
+
+
+  </div> <!-- /.main-content -->
+
+  <div id="dartdoc-sidebar-left" class="sidebar sidebar-offcanvas-left">
+    <!-- The search input and breadcrumbs below are only responsively visible at low resolutions. -->
+<header id="header-search-sidebar" class="hidden-l">
+  <form class="search-sidebar" role="search">
+    <input type="text" id="search-sidebar" autocomplete="off" disabled class="form-control typeahead" placeholder="Loading search...">
+  </form>
+</header>
+
+<ol class="breadcrumbs gt-separated dark hidden-l" id="sidebar-nav">
+    <li><a href="../index.html">dt</a></li>
+    <li class="self-crumb">backend.dart</li>
+</ol>
+
+
+    <h5><span class="package-name">dt</span> <span class="package-kind">package</span></h5>
+    <ol>
+      <li class="section-title">Libraries</li>
+      <li><a href="../backend/backend-library.html">backend</a></li>
+      <li><a href="../foundation/foundation-library.html">foundation</a></li>
+      <li><a href="../layout/layout-library.html">layout</a></li>
+      <li><a href="../rendering/rendering-library.html">rendering</a></li>
+      <li><a href="../terminal/terminal-library.html">terminal</a></li>
+      <li><a href="../widgets/widgets-library.html">widgets</a></li>
+</ol>
+
+  </div>
+
+  <div id="dartdoc-sidebar-right" class="sidebar sidebar-offcanvas-right">
+    <h5>backend library</h5>
+  </div><!--/sidebar-offcanvas-right-->
+
+</main>
+
+<footer>
+  <span class="no-break">
+    dt
+      0.0.0-unknown
+  </span>
+
+  
+</footer>
+
+
+
+<script src="../static-assets/highlight.pack.js?v1"></script>
+<script src="../static-assets/docs.dart.js"></script>
+
+
+
+</body>
+
+</html>
+

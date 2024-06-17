@@ -67,6 +67,15 @@
     </div>
 
     
+<section class="desc markdown">
+  <p>Provides utilities for rendering text to a terminal-like UI.</p>
+<p>This library provides a set of classes and utilities that does not depend on
+any specific terminal implementation, but rather provide a common interface
+and set of utilities for rendering text and styled grapheme cells.</p>
+<p>Most users will interact with the <a href="../rendering/Buffer-extension-type.html">Buffer</a> class, which provides a 2D grid
+of optionally styled cells, or with the text-oriented classes like <a href="../rendering/Line-class.html">Line</a>,
+<a href="../rendering/Span-class.html">Span</a>, <a href="../rendering/Style-class.html">Style</a>, and <a href="../rendering/Color-class.html">Color</a>.</p>
+</section>
 
 
     <section class="summary offset-anchor" id="classes">
@@ -89,68 +98,12 @@
   A sealed type representing multiple types of colors.
 </dd>
 
-          <dt id="Command">
-  <span class="name "><a href="../rendering/Command-class.html">Command</a></span> 
-
-</dt>
-<dd>
-  An interface for a command that performs an action on a terminal.
-</dd>
-
-          <dt id="Frame">
-  <span class="name "><a href="../rendering/Frame-class.html">Frame</a></span> 
-
-</dt>
-<dd>
-  A consistent view into a terminal state for rendering a single frame.
-</dd>
-
           <dt id="Line">
   <span class="name "><a href="../rendering/Line-class.html">Line</a></span> 
 
 </dt>
 <dd>
   A line of text, consisting of one or more <a href="../rendering/Span-class.html">Span</a>s.
-</dd>
-
-          <dt id="MoveCursorTo">
-  <span class="name "><a href="../rendering/MoveCursorTo-class.html">MoveCursorTo</a></span> 
-
-</dt>
-<dd>
-  Moves the terminal cursor to the given position (row, column).
-</dd>
-
-          <dt id="MoveCursorToColumn">
-  <span class="name "><a href="../rendering/MoveCursorToColumn-class.html">MoveCursorToColumn</a></span> 
-
-</dt>
-<dd>
-  Moves the terminal cursor to the given column.
-</dd>
-
-          <dt id="SetBackgroundColor256">
-  <span class="name "><a href="../rendering/SetBackgroundColor256-class.html">SetBackgroundColor256</a></span> 
-
-</dt>
-<dd>
-  Sets the background color to one of the 256 colors.
-</dd>
-
-          <dt id="SetColor16">
-  <span class="name "><a href="../rendering/SetColor16-class.html">SetColor16</a></span> 
-
-</dt>
-<dd>
-  Sets either the foreground or background color to one of 16 colors.
-</dd>
-
-          <dt id="SetForegroundColor256">
-  <span class="name "><a href="../rendering/SetForegroundColor256-class.html">SetForegroundColor256</a></span> 
-
-</dt>
-<dd>
-  Sets the foreground color to one of the 256 colors.
 </dd>
 
           <dt id="Span">
@@ -184,44 +137,12 @@
   Alignment of text within a container.
 </dd>
 
-          <dt id="AlternateScreenBuffer">
-  <span class="name "><a href="../rendering/AlternateScreenBuffer.html">AlternateScreenBuffer</a></span> 
-
-</dt>
-<dd>
-  Enters or leaves the alternate screen buffer.
-</dd>
-
-          <dt id="AnsiColor">
-  <span class="name "><a href="../rendering/AnsiColor.html">AnsiColor</a></span> 
+          <dt id="Color16">
+  <span class="name "><a href="../rendering/Color16.html">Color16</a></span> 
 
 </dt>
 <dd>
   4-bit ANSI color palette that includes 8 basic colors and 8 bright colors.
-</dd>
-
-          <dt id="ClearScreen">
-  <span class="name "><a href="../rendering/ClearScreen.html">ClearScreen</a></span> 
-
-</dt>
-<dd>
-  Clears the terminal screen buffer.
-</dd>
-
-          <dt id="SetCursorVisibility">
-  <span class="name "><a href="../rendering/SetCursorVisibility.html">SetCursorVisibility</a></span> 
-
-</dt>
-<dd>
-  Sets the cursor visibility.
-</dd>
-
-          <dt id="SynchronizedUpdate">
-  <span class="name "><a href="../rendering/SynchronizedUpdate.html">SynchronizedUpdate</a></span> 
-
-</dt>
-<dd>
-  Instructs the terminal to start or end a synchronized update.
 </dd>
 
       </dl>
@@ -245,24 +166,6 @@
     </section>
 
 
-    <section class="summary offset-anchor" id="constants">
-      <h2>Constants</h2>
-
-      <dl class="properties">
-          <dt id="resetStyle" class="constant">
-    <span class="name "><a href="../rendering/resetStyle-constant.html">resetStyle</a></span>
-  <span class="signature">&#8594; const <a href="../rendering/Command-class.html">Command</a></span>
-  
-
-</dt>
-<dd>
-  Resets both colors and all text attributes to the default.
-  
-
-</dd>
-
-      </dl>
-    </section>
 
 
 
@@ -287,6 +190,7 @@
     <h5><span class="package-name">dt</span> <span class="package-kind">package</span></h5>
     <ol>
       <li class="section-title">Libraries</li>
+      <li><a href="../backend/backend-library.html">backend</a></li>
       <li><a href="../foundation/foundation-library.html">foundation</a></li>
       <li><a href="../layout/layout-library.html">layout</a></li>
       <li><a href="../rendering/rendering-library.html">rendering</a></li>

@@ -64,7 +64,7 @@
       
       <span class="name ">Line</span>(<wbr><ol class="parameter-list"><li><span class="parameter" id="-param-spans"><span class="type-annotation"><a href="https://api.dart.dev/stable/3.4.4/dart-core/Iterable-class.html">Iterable</a><span class="signature">&lt;<wbr><span class="type-parameter"><a href="../../rendering/Span-class.html">Span</a></span>&gt;</span></span> <span class="parameter-name">spans</span>, </span></li>
 <li><span class="parameter" id="-param-style">{<span class="type-annotation"><a href="../../rendering/Style-class.html">Style</a></span> <span class="parameter-name">style</span> = <span class="default-value">Style.inherit</span>, </span></li>
-<li><span class="parameter" id="-param-alignment"><span class="type-annotation"><a href="../../rendering/Alignment.html">Alignment</a></span> <span class="parameter-name">alignment</span> = <span class="default-value">Alignment.inherit</span>}</span></li>
+<li><span class="parameter" id="-param-alignment"><span class="type-annotation"><a href="../../rendering/Alignment.html">Alignment</a></span> <span class="parameter-name">alignment</span> = <span class="default-value">Alignment.left</span>}</span></li>
 </ol>)
     </section>
 
@@ -83,7 +83,7 @@ element.</p>
   <pre class="language-dart"><code class="language-dart">Line(
   Iterable&lt;Span&gt; spans, {
   Style style = Style.inherit,
-  Alignment alignment = Alignment.inherit,
+  Alignment alignment = Alignment.left,
 }) : this._(List.unmodifiable(spans), style, alignment);</code></pre>
 </section>
 
