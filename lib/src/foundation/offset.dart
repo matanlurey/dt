@@ -49,6 +49,16 @@ final class Offset implements Comparable<Offset> {
     return other is Offset && other.x == x && other.y == y;
   }
 
+  /// Returns this offset incremented by the provided [other] offset.
+  Offset operator +(Offset other) {
+    return Offset(x + other.x, y + other.y);
+  }
+
+  /// Returns this offset decremented by the provided [other] offset.
+  Offset operator -(Offset other) {
+    return Offset(x - other.x, y - other.y);
+  }
+
   @override
   int get hashCode => Object.hash(x, y);
 

@@ -89,6 +89,9 @@ abstract class BufferedKeys {
   /// Returns whether _any_ key code is currently pressed.
   bool get isAnyPressed;
 
+  /// All currently pressed key code combinations.
+  Iterable<List<int>> get pressed;
+
   /// Closes the buffered keys and releases any resources.
   ///
   /// After calling this method, any further calls to [isPressed] will return
@@ -134,6 +137,20 @@ final class _SyncBufferedKeys extends BufferedKeys {
     int code6 = 0,
   ]) {
     return _buffer.contains((code1, code2, code3, code4, code5, code6));
+  }
+
+  @override
+  Iterable<List<int>> get pressed {
+    return _buffer.map(
+      (keys) => [
+        keys.$1,
+        if (keys.$2 != 0) keys.$2,
+        if (keys.$3 != 0) keys.$3,
+        if (keys.$4 != 0) keys.$4,
+        if (keys.$5 != 0) keys.$5,
+        if (keys.$6 != 0) keys.$6,
+      ],
+    );
   }
 
   @override

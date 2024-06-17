@@ -42,11 +42,6 @@ void main(List<String> arguments) async {
   }
 }
 
-const _qKey = 0x51;
-const _fKey = 0x66;
-const _sKey = 0x73;
-const _ctrlKey = 0x1D;
-
 final class EditorState {
   /// Loads the editor state from the provided [fileName].
   static Future<EditorState> open(String fileName) async {
@@ -88,64 +83,124 @@ Future<void> run(
     }),
   );
   while (running) {
-    // Process keys.
-    if (input.isPressed(_ctrlKey, _qKey)) {}
-    if (input.isPressed(_ctrlKey, _sKey)) {}
-    if (input.isPressed(_ctrlKey, _fKey)) {}
+    for (final keys in input.pressed) {
+      final Offset(:x, :y) = state.cursor;
+      final lines = state.lines;
+      switch (keys) {
+        // Option-Q.
+        case [0xc5, 0x93]:
+          return;
+        // Option-S.
+        case [0xc3, 0x93]:
+          break;
+        // Option-F.
+        case [0xc6, 0x92]:
+          break;
+        // Backspace.
+        case [0x7f]:
+          if (x == 0 && y == 0) {
+            break;
+          }
+          if (x == 0) {
+            final line = lines.removeAt(y);
+            lines[y - 1] += line;
+            state.cursor = Offset(lines[y - 1].length, y - 1);
+          } else {
+            lines[y] = lines[y].replaceRange(x - 1, x, '');
+            state.cursor = Offset(x - 1, y);
+          }
+        // Enter.
+        case [0xa]:
+          lines.insert(state.cursor.y + 1, '');
+          state.cursor = Offset(0, state.cursor.y + 1);
+        // Arrow-up
+        case [0x1b, 0x5b, 0x41]:
+          state.cursor = Offset(x, math.max(0, y - 1));
+        // Arrow-down
+        case [0x1b, 0x5b, 0x42]:
+          state.cursor = Offset(x, math.min(lines.length - 1, y + 1));
+        // Arrow-left
+        case [0x1b, 0x5b, 0x44]:
+          state.cursor = Offset(math.max(0, x - 1), y);
+        // Arrow-right
+        case [0x1b, 0x5b, 0x43]:
+          state.cursor = Offset(math.min(lines[y].length, x + 1), y);
+        // Key press.
+        case [final code]:
+          final char = String.fromCharCode(code);
+          if (lines.isEmpty) {
+            lines.add('');
+            state.cursor = Offset(x + 1, y);
+          }
+          lines[y] += char;
+          state.cursor = Offset(x + 1, y);
+      }
+    }
 
     // Draw the frame.
     await terminal.draw((frame) {
       frame.draw((buffer) {
-        // Determine how many lines to render.
-        final renderLines = buffer.height - 2;
-
-        // Render the cursor.
+        _drawContent(state, buffer);
+        _drawFooter(state, buffer);
         frame.cursor = state.cursor;
-
-        // Render the lines.
-        final renderOffset = math.max(0, state.cursor.y - renderLines ~/ 2);
-
-        // Render the lines, and the remaining lines as `~`.
-        for (var y = 0; y < renderLines; y++) {
-          final Widget widget;
-          if (y + renderOffset < state.lines.length) {
-            widget = Text(state.lines[y + renderOffset]);
-          } else {
-            widget = Text('~');
-          }
-          widget.draw(buffer.subGrid(Rect.fromLTWH(0, y, buffer.width, 1)));
-        }
-
-        // Render the status bar.
-        final status = Text.fromLine(
-          Line(
-            [
-              state.fileName ?? '[No name]',
-              ' - ${state.lines.length} lines',
-            ],
-            style: Style(
-              background: Color16.white,
-              foreground: Color16.black,
-            ),
-          ),
-        );
-        status.draw(
-          buffer.subGrid(Rect.fromLTWH(0, buffer.height - 2, buffer.width, 1)),
-        );
-
-        // Render the command bar.
-        final command = Text(
-          'HELP: Ctrl-S = save | Ctrl-Q = quit | Ctrl-F = find',
-        );
-        command.draw(
-          buffer.subGrid(Rect.fromLTWH(0, buffer.height - 1, buffer.width, 1)),
-        );
       });
     });
 
     input.clear();
     await nextFrame();
   }
+}
+
+void _drawContent(EditorState state, Buffer buffer) {
+  // Determine how many lines to render.
+  final renderLines = buffer.height - 2;
+
+  // Render the lines.
+  final renderOffset = math.max(0, state.cursor.y - renderLines ~/ 2);
+
+  // Render the lines, and the remaining lines as `~`.
+  for (var y = 0; y < renderLines; y++) {
+    final Widget widget;
+    if (y + renderOffset < state.lines.length) {
+      widget = Text.fromLine(Line([state.lines[y + renderOffset]]));
+    } else {
+      widget = Text.fromLine(Line(['~']));
+    }
+    widget.draw(buffer.subGrid(Rect.fromLTWH(0, y, buffer.width, 1)));
+  }
+}
+
+void _drawFooter(EditorState state, Buffer buffer) {
+  final status = Text.fromLine(
+    Line(
+      [
+        state.fileName ?? '[No name]',
+        ' - ${state.lines.length} lines',
+      ],
+      style: Style(
+        background: Color16.white,
+        foreground: Color16.black,
+      ),
+    ),
+  );
+  status.draw(
+    buffer.subGrid(Rect.fromLTWH(0, buffer.height - 2, buffer.width, 1)),
+  );
+
+  // Render command bar.
+  final command = Text.fromLine(
+    Line(
+      [
+        'HELP: ',
+        'Option-Q: Quit | ',
+        'Option-S: Save | ',
+        'Option-F: Find',
+      ],
+    ),
+  );
+  command.draw(
+    buffer.subGrid(Rect.fromLTWH(0, buffer.height - 1, buffer.width, 1)),
+  );
 }
 
 const _fps60 = Duration(milliseconds: 1000 ~/ 60);

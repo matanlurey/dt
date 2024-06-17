@@ -21,8 +21,7 @@ void main() {
           [Cell(' '), Cell(' '), Cell(' ')],
         ])
         ..has((b) => b.isCursorVisible, 'isCursorVisible').equals(true)
-        ..has((b) => b.cursorPosition, 'cursorPosition')
-            .equals(const Offset(1, 1))
+        ..has((b) => b.cursorPosition, 'cursorPosition').equals(Offset.zero)
         ..has((b) => b.size, 'size').equals((3, 3));
     });
 
@@ -75,10 +74,10 @@ void main() {
     test('sets, moves, checks, and hides the cursor', () {
       final backend = TestSurfaceBackend(3, 3);
 
-      backend.moveCursorTo(1, 1);
+      backend.moveCursorTo(0, 0);
       check(backend)
           .has((b) => b.cursorPosition, 'cursorPosition')
-          .equals(const Offset(1, 1));
+          .equals(Offset.zero);
 
       backend.hideCursor();
       check(backend)

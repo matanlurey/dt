@@ -29,7 +29,7 @@ mixin AnsiSurfaceBackend implements SurfaceBackend {
   @nonVirtual
   void draw(int x, int y, Cell cell) {
     // Move the cursor to the cell position.
-    moveCursorTo(x + 1, y + 1);
+    moveCursorTo(x, y);
 
     // Write the cell's content and style.
     _writeSequences(cell.style.toSequences(), cell.symbol);
@@ -46,7 +46,7 @@ mixin AnsiSurfaceBackend implements SurfaceBackend {
     int? width,
   }) {
     // Move the cursor to the start position and write a reset sequence.
-    moveCursorTo(start.x + 1, start.y + 1);
+    moveCursorTo(start.x, start.y);
 
     // TODO: Use dual-buffering instead of this one-off implementation.
     //
@@ -122,7 +122,7 @@ mixin AnsiSurfaceBackend implements SurfaceBackend {
   @override
   @nonVirtual
   void moveCursorTo(int x, int y) {
-    _writeSequences([MoveCursorTo(y, x).toSequence()]);
+    _writeSequences([MoveCursorTo(y + 1, x + 1).toSequence()]);
   }
 
   @override

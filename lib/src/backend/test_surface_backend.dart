@@ -25,7 +25,7 @@ abstract interface class TestSurfaceBackend implements SurfaceBackend {
   /// Defaults to `true`.
   bool get isCursorVisible;
 
-  /// Position of the terminal cursor.
+  /// Position of the terminal cursor, starting at `(0, 0)`.
   ///
   /// The cursor position is relative to the top-left corner of the terminal.
   Offset get cursorPosition;
@@ -52,7 +52,7 @@ final class _TestSurfaceBackend
   var isCursorVisible = true;
 
   @override
-  var cursorPosition = const Offset(1, 1);
+  var cursorPosition = Offset.zero;
 
   @override
   Future<void> flush() async {}
@@ -69,18 +69,18 @@ final class _TestSurfaceBackend
         case Print(:final text):
           for (final char in text.characters) {
             if (char == '\n') {
-              cursorPosition = Offset(1, cursorPosition.y + 1);
+              cursorPosition = Offset(0, cursorPosition.y + 1);
             } else {
               buffer.set(
-                cursorPosition.x - 1,
-                cursorPosition.y - 1,
+                cursorPosition.x,
+                cursorPosition.y,
                 Cell(char, style),
               );
-              cursorPosition = Offset(cursorPosition.x + 1, cursorPosition.y);
+              cursorPosition += const Offset(1, 0);
             }
           }
         case MoveCursorTo(:final row, :final column):
-          cursorPosition = Offset(column, row);
+          cursorPosition = Offset(column - 1, row - 1);
         case ClearScreen.all:
           buffer.fillCells();
         case SetColor16(:final color):
