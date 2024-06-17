@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:io' as io;
 import 'dart:math' as math;
 
+import 'package:dt/backend.dart';
 import 'package:dt/foundation.dart';
 import 'package:dt/rendering.dart';
 import 'package:dt/terminal.dart';
@@ -17,19 +18,29 @@ void main() async {
   );
 
   final terminal = Surface.fromStdio();
+  final keyboard = BufferedKeys.fromStream(io.stdin);
+  final closed = Completer<void>();
+  final sigint = io.ProcessSignal.sigint.watch().listen((_) {
+    if (!closed.isCompleted) {
+      closed.complete();
+    }
+  });
   try {
     await run(
       terminal,
+      keyboard,
       world,
-      done: io.ProcessSignal.sigint.watch().first,
+      done: closed.future,
     );
   } finally {
     terminal.close();
+    await (sigint.cancel(), keyboard.close()).wait;
   }
 }
 
 Future<void> run(
   Surface terminal,
+  BufferedKeys input,
   Grid<bool> world, {
   required Future<void> done,
   Future<void> Function() wait = _wait250ms,
@@ -40,12 +51,16 @@ Future<void> run(
   unawaited(done.whenComplete(() => running = false));
 
   while (running) {
+    if (input.isAnyPressed) {
+      break;
+    }
+
     // Render.
-    terminal.draw((frame) {
+    await terminal.draw((frame) {
       frame.draw((buffer) {
         Footer(
           main: _WorldWidget(world),
-          footer: Text('Press Ctrl+C to exit.'),
+          footer: Text('Press any key to exit.'),
           height: 1,
         ).draw(buffer);
       });

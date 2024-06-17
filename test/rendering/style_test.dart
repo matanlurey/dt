@@ -3,8 +3,10 @@ import 'package:dt/rendering.dart';
 import '../prelude.dart';
 
 void main() {
-  test('defaults to an inherited style', () {
-    check(Style.inherit).equals(Style());
+  test('defaults to a reset style', () {
+    check(Style.reset).equals(
+      Style(foreground: Color.reset, background: Color.reset),
+    );
   });
 
   test('copyWith returns a new style with the given properties', () {
@@ -24,10 +26,10 @@ void main() {
     check(newStyle).equals(style);
   });
 
-  test('toString returns "Style.inherit"', () {
-    check(Style.inherit)
+  test('toString returns "Style.reset"', () {
+    check(Style.reset)
         .has((s) => s.toString(), 'toString()')
-        .equals('Style.inherit');
+        .equals('Style.reset');
   });
 
   test('toString returns "Style(...)"', () {

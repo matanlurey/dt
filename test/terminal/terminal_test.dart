@@ -11,11 +11,11 @@ import 'package:dt/terminal.dart';
 import '../prelude.dart';
 
 void main() {
-  test('draws to a buffer', () {
+  test('draws to a buffer', () async {
     final backend = TestSurfaceBackend(5, 5);
     final terminal = Surface.fromBackend(backend);
 
-    terminal.draw((frame) {
+    await terminal.draw((frame) {
       frame.draw((buffer) {
         buffer.print(0, 0, 'Hello');
         buffer.print(0, 1, 'World');
@@ -34,11 +34,11 @@ void main() {
     ]);
   });
 
-  test('shows the cursor', () {
+  test('shows the cursor', () async {
     final backend = TestSurfaceBackend(5, 5);
     final terminal = Surface.fromBackend(backend);
 
-    terminal.draw((frame) {
+    await terminal.draw((frame) {
       frame.cursor = const Offset(2, 2);
     });
 
@@ -53,7 +53,7 @@ void main() {
       ).equals(const Offset(2, 2));
   });
 
-  test('throws after being disposed', () {
+  test('throws after being disposed', () async {
     final backend = TestSurfaceBackend(5, 5);
     final terminal = Surface.fromBackend(backend);
 
@@ -98,11 +98,11 @@ void main() {
     ]);
   });
 
-  test('e2e rendering test of "Hello World"', () {
+  test('e2e rendering test of "Hello World"', () async {
     final backend = TestSurfaceBackend(80, 24);
     final surface = Surface.fromBackend(backend);
 
-    surface.draw((frame) {
+    await surface.draw((frame) {
       frame.draw((buffer) {
         buffer.print(0, 0, 'Hello');
       });

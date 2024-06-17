@@ -74,7 +74,7 @@ extension type const Buffer._(Grid<Cell> _grid) implements Grid<Cell> {
     int x,
     int y,
     String string, {
-    Style style = Style.inherit,
+    Style style = Style.reset,
     int? maxWidth,
   }) {
     maxWidth ??= width - x;
@@ -120,7 +120,13 @@ extension type const Buffer._(Grid<Cell> _grid) implements Grid<Cell> {
     for (final span in line.spans) {
       final content = span.content;
       final style = span.style;
-      print(x + i, y, content, maxWidth: width - x - i, style: style);
+      print(
+        x + i,
+        y,
+        content,
+        maxWidth: width - x - i,
+        style: line.style.overrideWith(style),
+      );
       i += content.characters.length;
     }
   }

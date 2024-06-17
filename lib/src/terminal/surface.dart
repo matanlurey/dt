@@ -35,7 +35,7 @@ abstract final class Surface {
   /// Synchronizes terminal size, calls [render], and flushes the frame.
   ///
   /// This is the main entry point for drawing to the terminal.
-  void draw(void Function(Frame) render);
+  Future<void> draw(void Function(Frame) render);
 }
 
 final class _Surface implements Surface {
@@ -59,37 +59,34 @@ final class _Surface implements Surface {
   }
 
   @override
-  void draw(void Function(Frame) render) {
+  Future<void> draw(void Function(Frame) render) {
     _checkNotDisposed();
 
     // Get a frame.
     final frame = _frame;
     try {
       _backend.startSynchronizedUpdate();
+      _backend.hideCursor();
       render(frame);
     } finally {
-      _backend.endSynchronizedUpdate();
-    }
+      // Draw the buffer to the terminal.
+      _backend.drawBatch(_buffer.cells);
 
-    // Draw the buffer to the terminal.
-    for (var y = 0; y < frame.size.height; y++) {
-      for (var x = 0; x < frame.size.width; x++) {
-        final cell = _buffer.get(x, y);
-        _backend.draw(x, y, cell);
+      // Check if we have a cursor to render.
+      switch (frame.cursor) {
+        case Offset(:final x, :final y):
+          _backend.moveCursorTo(x, y);
+          _backend.showCursor();
       }
-    }
 
-    // Check if we have a cursor to render.
-    switch (frame.cursor) {
-      case null:
-        _backend.hideCursor();
-      case Offset(:final x, :final y):
-        _backend.moveCursorTo(x, y);
-        _backend.showCursor();
+      _backend.endSynchronizedUpdate();
     }
 
     // Increment the frame count.
     _frame = frame.next();
+
+    // Flush the frame.
+    return _backend.flush();
   }
 }
 

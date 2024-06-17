@@ -15,7 +15,7 @@ void main() {
   });
 
   test('toString returns "Span(content, style)"', () {
-    check(Span('Hello').toString()).equals('Span("Hello", Style.inherit)');
+    check(Span('Hello').toString()).equals('Span("Hello", Style.reset)');
   });
 
   test('copyWith returns a new span with the given content and style', () {

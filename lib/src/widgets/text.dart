@@ -13,7 +13,7 @@ abstract final class Text extends Widget {
   /// For more complex text, consider using [Text.fromSpan] or [Text.fromLine].
   factory Text(
     String text, {
-    Style style = Style.inherit,
+    Style style = Style.reset,
   }) {
     return Text.fromSpan(Span(text, style));
   }
@@ -46,9 +46,34 @@ final class _LineText extends Text {
       Alignment.center => (buffer.width - _line.width) ~/ 2,
       Alignment.right => buffer.width - _line.width,
     };
+
+    // Add spaces to the left of the text.
+    final leftSpacing = ' ' * x;
+    buffer.print(
+      0,
+      0,
+      leftSpacing,
+      style: _line.style,
+    );
+
+    // Draw the spans.
     for (final span in _line.spans) {
-      buffer.printSpan(x, 0, span);
+      buffer.print(
+        x,
+        0,
+        span.content,
+        style: _line.style.overrideWith(span.style),
+      );
       x += span.width;
     }
+
+    // Add spaces to the right of the text.
+    final rightSpacing = ' ' * (buffer.width - x);
+    buffer.print(
+      x,
+      0,
+      rightSpacing,
+      style: _line.style,
+    );
   }
 }

@@ -107,7 +107,7 @@ final class Literal extends Sequence {
   int get hashCode => value.hashCode;
 
   @override
-  String toString() => value;
+  String toString() => 'Literal($value)';
 
   @override
   Sequence toTerse() => this;

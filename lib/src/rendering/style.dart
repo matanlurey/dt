@@ -5,27 +5,30 @@ import 'color.dart';
 /// Control over the visual appearance of displayed elements.
 @immutable
 final class Style {
-  /// Inherit the style from the parent element.
-  static const inherit = Style();
+  /// No style is applied.
+  static const none = Style();
 
   /// Reset the style to the default.
-  static const reset = Style(foreground: Color.reset, background: Color.reset);
+  static const reset = Style(
+    foreground: Color.reset,
+    background: Color.reset,
+  );
 
   /// Creates a new default style.
   const Style({
-    this.foreground = Color.inherit,
-    this.background = Color.inherit,
+    this.foreground,
+    this.background,
   });
 
   /// Which color to use the foreground.
   ///
   /// If `null`, the color will be inherited from the parent element.
-  final Color foreground;
+  final Color? foreground;
 
   /// Which color to use the background.
   ///
   /// If `null`, the color will be inherited from the parent element.
-  final Color background;
+  final Color? background;
 
   /// Returns a copy of this style with the given properties.
   ///
@@ -37,6 +40,14 @@ final class Style {
     return Style(
       foreground: foreground ?? this.foreground,
       background: background ?? this.background,
+    );
+  }
+
+  /// Returns a new style with the properties of [other] overriding this style.
+  Style overrideWith(Style other) {
+    return copyWith(
+      foreground: other.foreground,
+      background: other.background,
     );
   }
 
@@ -56,8 +67,11 @@ final class Style {
 
   @override
   String toString() {
-    if (this == inherit) {
-      return 'Style.inherit';
+    if (this == none) {
+      return 'Style.none';
+    }
+    if (this == reset) {
+      return 'Style.reset';
     }
     return 'Style(foreground: $foreground, background: $background)';
   }

@@ -8,18 +8,37 @@ import 'style.dart';
 @immutable
 final class Line {
   /// An empty line with no spans, inheriting style and alignment.
-  static const empty = Line._([], Style.inherit, Alignment.left);
+  static const empty = Line._([], Style.reset, Alignment.left);
+
+  /// Creates a new line of text with the given text content.
+  ///
+  /// Optionally, a [style] and [alignment] can be provided to set, otherwise
+  /// a default style and alignment will be used by inheriting from the parent
+  /// element.
+  Line(
+    Iterable<String> spans, {
+    Style style = Style.reset,
+    Alignment alignment = Alignment.left,
+  }) : this.fromSpans(
+          spans.map((span) => Span(span, Style.none)),
+          style: style,
+          alignment: alignment,
+        );
 
   /// Creates a new line of text with the given [spans].
   ///
   /// Optionally, a [style] and [alignment] can be provided to set, otherwise
   /// a default style and alignment will be used by inheriting from the parent
   /// element.
-  Line(
+  Line.fromSpans(
     Iterable<Span> spans, {
-    Style style = Style.inherit,
+    Style style = Style.reset,
     Alignment alignment = Alignment.left,
-  }) : this._(List.unmodifiable(spans), style, alignment);
+  }) : this._(
+          List.unmodifiable(spans),
+          style,
+          alignment,
+        );
 
   const Line._(this.spans, this.style, this.alignment);
 
@@ -48,7 +67,7 @@ final class Line {
     Style? style,
     Alignment? alignment,
   }) {
-    return Line(
+    return Line.fromSpans(
       spans ?? this.spans,
       style: style ?? this.style,
       alignment: alignment ?? this.alignment,
@@ -61,7 +80,7 @@ final class Line {
   /// Returns a new line with [span] appended to the end.
   @useResult
   Line append(Span span) {
-    return Line(
+    return Line.fromSpans(
       [...spans, span],
       style: style,
       alignment: alignment,

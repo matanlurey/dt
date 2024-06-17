@@ -23,7 +23,7 @@ void main() {
       ..equals(b)
       ..equals(a)
       ..has((p) => p.hashCode, 'hashCode').equals(b.hashCode)
-      ..has((p) => p.toString(), 'toString').equals('Hello, World!')
+      ..has((p) => p.toString(), 'toString').equals('Literal(Hello, World!)')
       ..has((p) => p.toEscapedString(), 'toEscapedString')
           .equals('Hello, World!');
   });

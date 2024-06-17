@@ -18,6 +18,7 @@ export 'src/backend/ansi_escaped_color.dart'
     show AnsiEscapedColor, AnsiEscapedColor16;
 export 'src/backend/ansi_escaped_style.dart' show AnsiEscapedStyle;
 export 'src/backend/ansi_surface_backend.dart' show AnsiSurfaceBackend;
+export 'src/backend/buffered_keys.dart' show BufferedKeys;
 export 'src/backend/command.dart'
     show
         AlternateScreenBuffer,
@@ -25,6 +26,7 @@ export 'src/backend/command.dart'
         Command,
         MoveCursorTo,
         MoveCursorToColumn,
+        Print,
         SetBackgroundColor256,
         SetColor16,
         SetCursorVisibility,

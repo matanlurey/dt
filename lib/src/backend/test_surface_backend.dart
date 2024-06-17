@@ -52,7 +52,10 @@ final class _TestSurfaceBackend
   var isCursorVisible = true;
 
   @override
-  var cursorPosition = Offset.zero;
+  var cursorPosition = const Offset(1, 1);
+
+  @override
+  Future<void> flush() async {}
 
   @override
   int write(List<int> bytes, [int offset = 0, int? length]) {
@@ -60,30 +63,31 @@ final class _TestSurfaceBackend
     final content = utf8.decode(bytes.sublist(offset, length));
 
     // Decode the content as ANSI escape sequences.
-    var style = Style.inherit;
+    var style = Style.reset;
     for (final sequence in Sequence.parseAll(content)) {
-      if (sequence is Literal) {
-        // Writes the literal content to the buffer.
-        for (final char in sequence.value.characters) {
-          buffer.set(
-            cursorPosition.x - 1,
-            cursorPosition.y - 1,
-            Cell(char, style),
-          );
-        }
-        continue;
-      }
-
       switch (Command.tryParse(sequence)) {
-        case MoveCursorTo(:final column, :final row):
+        case Print(:final text):
+          for (final char in text.characters) {
+            if (char == '\n') {
+              cursorPosition = Offset(1, cursorPosition.y + 1);
+            } else {
+              buffer.set(
+                cursorPosition.x - 1,
+                cursorPosition.y - 1,
+                Cell(char, style),
+              );
+              cursorPosition = Offset(cursorPosition.x + 1, cursorPosition.y);
+            }
+          }
+        case MoveCursorTo(:final row, :final column):
           cursorPosition = Offset(column, row);
         case ClearScreen.all:
           buffer.fillCells();
         case SetColor16(:final color):
           if (color == 39) {
-            style = style.copyWith(foreground: Color16.inherit);
+            style = style.copyWith(foreground: Color16.reset);
           } else if (color == 49) {
-            style = style.copyWith(background: Color16.inherit);
+            style = style.copyWith(background: Color16.reset);
           } else {
             for (final c in Color16.values) {
               if (c.foregroundIndex == color) {
