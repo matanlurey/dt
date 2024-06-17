@@ -21,12 +21,12 @@ void main(List<String> args) async {
       help: 'Generates the documentation.',
       defaultsTo: true,
     )
-    ..addFlag(
+    ..addOption(
       'preview',
       abbr: 'p',
       help: 'Opens the generated documentation in a browser.',
-      negatable: false,
-      defaultsTo: !isCI,
+      allowed: ['none', 'listen', 'listen-open-browser'],
+      defaultsTo: isCI ? 'none' : 'listen-open-browser',
     );
   final results = parser.parse(args);
 
@@ -35,7 +35,7 @@ void main(List<String> args) async {
     return;
   }
 
-  final preview = results['preview'] as bool;
+  final preview = results['preview'] as String;
   final generate = results['generate'] as bool;
 
   if (generate) {
@@ -50,7 +50,7 @@ void main(List<String> args) async {
     }
   }
 
-  if (preview) {
+  if (preview != 'none') {
     final handler = createStaticHandler('doc/api');
     final server = await shelf_io.serve(handler, 'localhost', 8080);
 
@@ -58,6 +58,21 @@ void main(List<String> args) async {
       'Serving documentation on http://localhost:8080/index.html',
     );
     io.stdout.writeln('Press Ctrl+C to exit.');
+
+    if (preview == 'listen-open-browser') {
+      final process = await io.Process.start(
+        'open',
+        ['http://localhost:8080/index.html'],
+      );
+
+      process.stdout.listen(io.stdout.add);
+      process.stderr.listen(io.stderr.add);
+
+      final exitCode = await process.exitCode;
+      if (exitCode != 0) {
+        throw Exception('Failed to open browser: $exitCode');
+      }
+    }
 
     await io.ProcessSignal.sigint.watch().first;
     await server.close(force: true);
