@@ -40,6 +40,16 @@ final class Style {
     );
   }
 
+  /// Returns a new style with the properties of [other] overriding this style.
+  ///
+  /// `other.*.inherit` is ignored and the current value is used instead.
+  Style overrideWith(Style other) {
+    return copyWith(
+      foreground: other.foreground == Color.inherit ? null : other.foreground,
+      background: other.background == Color.inherit ? null : other.background,
+    );
+  }
+
   @override
   bool operator ==(Object other) {
     if (other is! Style) {

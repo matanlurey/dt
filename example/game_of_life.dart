@@ -56,7 +56,7 @@ Future<void> run(
     }
 
     // Render.
-    terminal.draw((frame) {
+    await terminal.draw((frame) {
       frame.draw((buffer) {
         Footer(
           main: _WorldWidget(world),

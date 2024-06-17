@@ -46,9 +46,34 @@ final class _LineText extends Text {
       Alignment.center => (buffer.width - _line.width) ~/ 2,
       Alignment.right => buffer.width - _line.width,
     };
+
+    // Add spaces to the left of the text.
+    final leftSpacing = ' ' * x;
+    buffer.print(
+      0,
+      0,
+      leftSpacing,
+      style: _line.style,
+    );
+
+    // Draw the spans.
     for (final span in _line.spans) {
-      buffer.printSpan(x, 0, span);
+      buffer.print(
+        x,
+        0,
+        span.content,
+        style: _line.style.overrideWith(span.style),
+      );
       x += span.width;
     }
+
+    // Add spaces to the right of the text.
+    final rightSpacing = ' ' * (buffer.width - x);
+    buffer.print(
+      x,
+      0,
+      rightSpacing,
+      style: _line.style,
+    );
   }
 }

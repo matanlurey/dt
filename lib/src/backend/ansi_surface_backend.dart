@@ -40,7 +40,6 @@ mixin AnsiSurfaceBackend implements SurfaceBackend {
   }
 
   @override
-  @nonVirtual
   Future<void> flush() => writer.flush();
 
   @override

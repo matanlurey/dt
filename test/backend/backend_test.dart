@@ -1,5 +1,3 @@
-// ignore_for_file: avoid_redundant_argument_values
-
 @TestOn('vm')
 library;
 

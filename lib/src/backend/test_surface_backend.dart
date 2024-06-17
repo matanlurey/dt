@@ -55,6 +55,9 @@ final class _TestSurfaceBackend
   var cursorPosition = Offset.zero;
 
   @override
+  Future<void> flush() async {}
+
+  @override
   int write(List<int> bytes, [int offset = 0, int? length]) {
     // Decode the bytes as UTF-8.
     final content = utf8.decode(bytes.sublist(offset, length));
