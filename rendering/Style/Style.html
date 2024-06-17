@@ -62,8 +62,8 @@
 
     <section class="multi-line-signature">
       const
-      <span class="name ">Style</span>(<wbr><ol class="parameter-list"><li><span class="parameter" id="-param-foreground">{<span class="type-annotation"><a href="../../rendering/Color-class.html">Color</a></span> <span class="parameter-name">foreground</span> = <span class="default-value">Color.inherit</span>, </span></li>
-<li><span class="parameter" id="-param-background"><span class="type-annotation"><a href="../../rendering/Color-class.html">Color</a></span> <span class="parameter-name">background</span> = <span class="default-value">Color.inherit</span>}</span></li>
+      <span class="name ">Style</span>(<wbr><ol class="parameter-list"><li><span class="parameter" id="-param-foreground">{<span class="type-annotation"><a href="../../rendering/Color-class.html">Color</a>?</span> <span class="parameter-name">foreground</span>, </span></li>
+<li><span class="parameter" id="-param-background"><span class="type-annotation"><a href="../../rendering/Color-class.html">Color</a>?</span> <span class="parameter-name">background</span>}</span></li>
 </ol>)
     </section>
 
@@ -77,8 +77,8 @@
 <section class="summary source-code" id="source">
   <h2><span>Implementation</span></h2>
   <pre class="language-dart"><code class="language-dart">const Style({
-  this.foreground = Color.inherit,
-  this.background = Color.inherit,
+  this.foreground,
+  this.background,
 });</code></pre>
 </section>
 

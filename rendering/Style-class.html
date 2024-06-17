@@ -98,7 +98,7 @@
 
     <dl class="constructor-summary-list">
         <dt id="Style" class="callable">
-          <span class="name"><a href="../rendering/Style/Style.html">Style</a></span><span class="signature">(<span class="parameter" id="-param-foreground">{<span class="type-annotation"><a href="../rendering/Color-class.html">Color</a></span> <span class="parameter-name">foreground</span> = <span class="default-value">Color.inherit</span>, </span><span class="parameter" id="-param-background"><span class="type-annotation"><a href="../rendering/Color-class.html">Color</a></span> <span class="parameter-name">background</span> = <span class="default-value">Color.inherit</span>}</span>)</span>
+          <span class="name"><a href="../rendering/Style/Style.html">Style</a></span><span class="signature">(<span class="parameter" id="-param-foreground">{<span class="type-annotation"><a href="../rendering/Color-class.html">Color</a>?</span> <span class="parameter-name">foreground</span>, </span><span class="parameter" id="-param-background"><span class="type-annotation"><a href="../rendering/Color-class.html">Color</a>?</span> <span class="parameter-name">background</span>}</span>)</span>
         </dt>
         <dd>
           Creates a new default style.
@@ -114,7 +114,7 @@
     <dl class="properties">
         <dt id="background" class="property">
   <span class="name"><a href="../rendering/Style/background.html">background</a></span>
-  <span class="signature">&#8594; <a href="../rendering/Color-class.html">Color</a></span>
+  <span class="signature">&#8594; <a href="../rendering/Color-class.html">Color</a>?</span>
   
 
 </dt>
@@ -126,7 +126,7 @@
 
         <dt id="foreground" class="property">
   <span class="name"><a href="../rendering/Style/foreground.html">foreground</a></span>
-  <span class="signature">&#8594; <a href="../rendering/Color-class.html">Color</a></span>
+  <span class="signature">&#8594; <a href="../rendering/Color-class.html">Color</a>?</span>
   
 
 </dt>
@@ -194,6 +194,19 @@
 
 </dd>
 
+        <dt id="overrideWith" class="callable">
+  <span class="name"><a href="../rendering/Style/overrideWith.html">overrideWith</a></span><span class="signature">(<wbr><span class="parameter" id="overrideWith-param-other"><span class="type-annotation"><a href="../rendering/Style-class.html">Style</a></span> <span class="parameter-name">other</span></span>)
+    <span class="returntype parameter">&#8594; <a href="../rendering/Style-class.html">Style</a></span>
+  </span>
+  
+
+</dt>
+<dd>
+  Returns a new style with the properties of <code>other</code> overriding this style.
+  
+
+</dd>
+
         <dt id="toString" class="callable">
   <span class="name"><a href="../rendering/Style/toString.html">toString</a></span><span class="signature">(<wbr>)
     <span class="returntype parameter">&#8594; <a href="https://api.dart.dev/stable/3.4.4/dart-core/String-class.html">String</a></span>
@@ -238,14 +251,14 @@
     <h2>Constants</h2>
 
     <dl class="properties">
-        <dt id="inherit" class="constant">
-    <span class="name "><a href="../rendering/Style/inherit-constant.html">inherit</a></span>
+        <dt id="none" class="constant">
+    <span class="name "><a href="../rendering/Style/none-constant.html">none</a></span>
   <span class="signature">&#8594; const <a href="../rendering/Style-class.html">Style</a></span>
   
 
 </dt>
 <dd>
-  Inherit the style from the parent element.
+  No style is applied.
   
 
 </dd>

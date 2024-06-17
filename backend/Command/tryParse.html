@@ -81,6 +81,9 @@
   <h2><span>Implementation</span></h2>
   <pre class="language-dart"><code class="language-dart">static Command? tryParse(Sequence sequence) {
   if (sequence is! EscapeSequence) {
+    if (sequence is Literal) {
+      return Print(sequence.value);
+    }
     return null;
   }
   if (sequence.prefix == &#39;?&#39;) {

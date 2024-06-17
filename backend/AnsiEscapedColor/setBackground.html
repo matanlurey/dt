@@ -80,8 +80,6 @@
   <h2><span>Implementation</span></h2>
   <pre class="language-dart"><code class="language-dart">Command setBackground() {
   switch (this) {
-    case Color.inherit:
-      return Command.none;
     case Color.reset:
       return SetColor16.resetBackground;
     case final Color16 c:

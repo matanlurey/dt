@@ -89,6 +89,10 @@
   <h2><span>Implementation</span></h2>
   <pre class="language-dart"><code class="language-dart">@override
 void set(int x, int y, T cell) {
+  assert(
+    x &gt;= 0 &amp;&amp; x &lt; width &amp;&amp; y &gt;= 0 &amp;&amp; y &lt; height,
+    &#39;($x, $y) is out of bounds ($width, $height) = $cell&#39;,
+  );
   cells[_indexOf(x, y)] = cell;
 }</code></pre>
 </section>

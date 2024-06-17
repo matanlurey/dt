@@ -87,7 +87,7 @@
   Style? style,
   Alignment? alignment,
 }) {
-  return Line(
+  return Line.fromSpans(
     spans ?? this.spans,
     style: style ?? this.style,
     alignment: alignment ?? this.alignment,

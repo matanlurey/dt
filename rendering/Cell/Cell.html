@@ -63,7 +63,7 @@
     <section class="multi-line-signature">
       
       <span class="name ">Cell</span>(<wbr><ol class="parameter-list"><li><span class="parameter" id="-param-symbol">[<span class="type-annotation"><a href="https://api.dart.dev/stable/3.4.4/dart-core/String-class.html">String</a></span> <span class="parameter-name">symbol</span> = <span class="default-value">&#39; &#39;</span>, </span></li>
-<li><span class="parameter" id="-param-style"><span class="type-annotation"><a href="../../rendering/Style-class.html">Style</a></span> <span class="parameter-name">style</span> = <span class="default-value">Style.inherit</span>]</span></li>
+<li><span class="parameter" id="-param-style"><span class="type-annotation"><a href="../../rendering/Style-class.html">Style</a></span> <span class="parameter-name">style</span> = <span class="default-value">Style.reset</span>]</span></li>
 </ol>)
     </section>
 
@@ -78,7 +78,7 @@
     
 <section class="summary source-code" id="source">
   <h2><span>Implementation</span></h2>
-  <pre class="language-dart"><code class="language-dart">factory Cell([String symbol = &#39; &#39;, Style style = Style.inherit]) {
+  <pre class="language-dart"><code class="language-dart">factory Cell([String symbol = &#39; &#39;, Style style = Style.reset]) {
   if (symbol.length != 1 &amp;&amp; symbol.characters.length != 1) {
     throw ArgumentError.value(
       symbol,

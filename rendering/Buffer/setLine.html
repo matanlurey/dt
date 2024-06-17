@@ -91,7 +91,13 @@ buffer's width, which otherwise defaults to the buffer's width if omitted.</p>
   for (final span in line.spans) {
     final content = span.content;
     final style = span.style;
-    print(x + i, y, content, maxWidth: width - x - i, style: style);
+    print(
+      x + i,
+      y,
+      content,
+      maxWidth: width - x - i,
+      style: line.style.overrideWith(style),
+    );
     i += content.characters.length;
   }
 }</code></pre>

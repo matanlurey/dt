@@ -94,8 +94,11 @@ mainly for debugging or logging.</p>
   <h2><span>Implementation</span></h2>
   <pre class="language-dart"><code class="language-dart">@override
 String toString() {
-  if (this == inherit) {
-    return &#39;Style.inherit&#39;;
+  if (this == none) {
+    return &#39;Style.none&#39;;
+  }
+  if (this == reset) {
+    return &#39;Style.reset&#39;;
   }
   return &#39;Style(foreground: $foreground, background: $background)&#39;;
 }</code></pre>

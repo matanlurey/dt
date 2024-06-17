@@ -63,7 +63,7 @@
     <section class="multi-line-signature">
       
       <span class="name ">Text</span>(<wbr><ol class="parameter-list"><li><span class="parameter" id="-param-text"><span class="type-annotation"><a href="https://api.dart.dev/stable/3.4.4/dart-core/String-class.html">String</a></span> <span class="parameter-name">text</span>, </span></li>
-<li><span class="parameter" id="-param-style">{<span class="type-annotation"><a href="../../rendering/Style-class.html">Style</a></span> <span class="parameter-name">style</span> = <span class="default-value">Style.inherit</span>}</span></li>
+<li><span class="parameter" id="-param-style">{<span class="type-annotation"><a href="../../rendering/Style-class.html">Style</a></span> <span class="parameter-name">style</span> = <span class="default-value">Style.reset</span>}</span></li>
 </ol>)
     </section>
 
@@ -80,7 +80,7 @@
   <h2><span>Implementation</span></h2>
   <pre class="language-dart"><code class="language-dart">factory Text(
   String text, {
-  Style style = Style.inherit,
+  Style style = Style.reset,
 }) {
   return Text.fromSpan(Span(text, style));
 }</code></pre>

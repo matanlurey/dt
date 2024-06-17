@@ -97,6 +97,9 @@ String toString() {
   if (this == empty) {
     return &#39;Cell.empty&#39;;
   }
+  if (style == Style.reset) {
+    return &#39;Cell(&quot;$symbol&quot;)&#39;;
+  }
   return &#39;Cell(&quot;$symbol&quot;, $style)&#39;;
 }</code></pre>
 </section>

@@ -86,7 +86,7 @@
   <h2><span>Implementation</span></h2>
   <pre class="language-dart"><code class="language-dart">@useResult
 Line append(Span span) {
-  return Line(
+  return Line.fromSpans(
     [...spans, span],
     style: style,
     alignment: alignment,

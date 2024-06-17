@@ -80,8 +80,8 @@
   <h2><span>Implementation</span></h2>
   <pre class="language-dart"><code class="language-dart">List&lt;Sequence&gt; toSequences() {
   return [
-    if (foreground != Color.inherit) foreground.setForeground().toSequence(),
-    if (background != Color.inherit) background.setBackground().toSequence(),
+    if (foreground case final Color fg) fg.setForeground().toSequence(),
+    if (background case final Color bg) bg.setBackground().toSequence(),
   ];
 }</code></pre>
 </section>

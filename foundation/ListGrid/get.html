@@ -88,6 +88,10 @@
   <h2><span>Implementation</span></h2>
   <pre class="language-dart"><code class="language-dart">@override
 T get(int x, int y) {
+  assert(
+    x &gt;= 0 &amp;&amp; x &lt; width &amp;&amp; y &gt;= 0 &amp;&amp; y &lt; height,
+    &#39;($x, $y) is out of bounds ($width, $height)&#39;,
+  );
   return cells[_indexOf(x, y)];
 }</code></pre>
 </section>
