@@ -1,6 +1,6 @@
 // ignore_for_file: non_const_call_to_literal_constructor
 
-import 'package:dt/layout.dart';
+import 'package:dt/foundation.dart';
 
 import '../prelude.dart';
 
