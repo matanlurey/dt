@@ -5,16 +5,16 @@ library;
 
 import 'dart:io' as io;
 
+import 'package:dt/backend.dart';
 import 'package:dt/layout.dart';
 import 'package:dt/rendering.dart';
-import 'package:dt/terminal.dart';
 
 import '../prelude.dart';
 
 void main() {
   group('TestBackend', () {
     test('starts with an empty buffer', () {
-      final backend = TestBackend(3, 3);
+      final backend = TestSurfaceBackend(3, 3);
 
       check(backend)
         ..has((b) => b.buffer.rows, 'buffer.rows').deepEquals([
@@ -28,7 +28,7 @@ void main() {
     });
 
     test('draws to and then resizes an existing buffer', () {
-      final backend = TestBackend(2, 2);
+      final backend = TestSurfaceBackend(2, 2);
 
       backend
         ..draw(0, 0, Cell('#'))
@@ -51,14 +51,14 @@ void main() {
     });
 
     test('draws a red/green cell with 4-bit colors', () {
-      final backend = TestBackend(2, 1);
+      final backend = TestSurfaceBackend(2, 1);
 
       backend.draw(
         0,
         0,
         Cell(
           ' ',
-          Style(foreground: AnsiColor.red, background: AnsiColor.green),
+          Style(foreground: Color16.red, background: Color16.green),
         ),
       );
 
@@ -66,7 +66,7 @@ void main() {
         [
           Cell(
             ' ',
-            Style(foreground: AnsiColor.red, background: AnsiColor.green),
+            Style(foreground: Color16.red, background: Color16.green),
           ),
           Cell(' '),
         ],
@@ -74,7 +74,7 @@ void main() {
     });
 
     test('sets, moves, checks, and hides the cursor', () {
-      final backend = TestBackend(3, 3);
+      final backend = TestSurfaceBackend(3, 3);
 
       backend.moveCursorTo(1, 1);
       check(backend)
@@ -93,7 +93,7 @@ void main() {
     });
 
     test('clears the screen', () {
-      final backend = TestBackend(3, 3);
+      final backend = TestSurfaceBackend(3, 3);
 
       backend
         ..draw(0, 0, Cell('#'))

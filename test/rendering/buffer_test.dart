@@ -171,7 +171,7 @@ void main() {
 
   test('fill an entire buffer with a style', () {
     final buffer = Buffer(10, 2);
-    final style = Style(background: AnsiColor.red);
+    final style = Style(background: Color16.red);
     buffer.fillStyle(style);
 
     final expected = Cell(' ', style);
@@ -180,7 +180,7 @@ void main() {
 
   test('fill part of a buffer with a style', () {
     final buffer = Buffer(10, 2);
-    final style = Style(background: AnsiColor.red);
+    final style = Style(background: Color16.red);
     buffer.fillStyle(style, Rect.fromLTWH(1, 1, 6, 1));
 
     final expected = Cell(' ', style);

@@ -10,11 +10,11 @@ void main() {
   test('copyWith returns a new style with the given properties', () {
     final style = Style();
     final newStyle = style.copyWith(
-      foreground: AnsiColor.black,
-      background: AnsiColor.white,
+      foreground: Color16.black,
+      background: Color16.white,
     );
     check(newStyle).equals(
-      Style(foreground: AnsiColor.black, background: AnsiColor.white),
+      Style(foreground: Color16.black, background: Color16.white),
     );
   });
 
@@ -31,10 +31,10 @@ void main() {
   });
 
   test('toString returns "Style(...)"', () {
-    check(Style(foreground: AnsiColor.black, background: AnsiColor.white))
+    check(Style(foreground: Color16.black, background: Color16.white))
         .has((s) => s.toString(), 'toString()')
         .equals(
-          'Style(foreground: AnsiColor.black, background: AnsiColor.white)',
+          'Style(foreground: Color16.black, background: Color16.white)',
         );
   });
 }

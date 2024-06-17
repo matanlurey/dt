@@ -1,9 +1,10 @@
 import 'dart:io' as io;
 
+import 'package:dt/backend.dart';
 import 'package:dt/layout.dart';
 import 'package:dt/rendering.dart';
 
-import 'surface_backend.dart';
+import 'frame.dart';
 
 /// An interface to interact and draw [Frame]s on a terminal.
 abstract final class Surface {

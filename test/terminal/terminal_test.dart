@@ -3,6 +3,7 @@ library;
 
 import 'dart:io' as io;
 
+import 'package:dt/backend.dart';
 import 'package:dt/foundation.dart';
 import 'package:dt/rendering.dart';
 import 'package:dt/terminal.dart';
@@ -11,7 +12,7 @@ import '../prelude.dart';
 
 void main() {
   test('draws to a buffer', () {
-    final backend = TestBackend(5, 5);
+    final backend = TestSurfaceBackend(5, 5);
     final terminal = Surface.fromBackend(backend);
 
     terminal.draw((frame) {
@@ -34,7 +35,7 @@ void main() {
   });
 
   test('shows the cursor', () {
-    final backend = TestBackend(5, 5);
+    final backend = TestSurfaceBackend(5, 5);
     final terminal = Surface.fromBackend(backend);
 
     terminal.draw((frame) {
@@ -53,7 +54,7 @@ void main() {
   });
 
   test('throws after being disposed', () {
-    final backend = TestBackend(5, 5);
+    final backend = TestSurfaceBackend(5, 5);
     final terminal = Surface.fromBackend(backend);
 
     terminal.dispose();
@@ -98,7 +99,7 @@ void main() {
   });
 
   test('e2e rendering test of "Hello World"', () {
-    final backend = TestBackend(80, 24);
+    final backend = TestSurfaceBackend(80, 24);
     final surface = Surface.fromBackend(backend);
 
     surface.draw((frame) {

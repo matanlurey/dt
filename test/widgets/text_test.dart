@@ -36,7 +36,12 @@ void main() {
     final buffer = Buffer(10, 1);
 
     // Create a text widget that draws a string at the center of the buffer.
-    final text = Text('Hello', align: TextAlign.center);
+    final text = Text.fromLine(
+      Line(
+        [Span('Hello')],
+        alignment: Alignment.center,
+      ),
+    );
 
     // Draw the text on the buffer.
     text.draw(buffer);
@@ -63,7 +68,12 @@ void main() {
     final buffer = Buffer(10, 1);
 
     // Create a text widget that draws a string at the right of the buffer.
-    final text = Text('Hello', align: TextAlign.right);
+    final text = Text.fromLine(
+      Line(
+        [Span('Hello')],
+        alignment: Alignment.right,
+      ),
+    );
 
     // Draw the text on the buffer.
     text.draw(buffer);
