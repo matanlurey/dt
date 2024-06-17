@@ -3,6 +3,7 @@ library;
 
 import 'dart:io' as io;
 
+import 'package:dt/backend.dart';
 import 'package:dt/foundation.dart';
 import 'package:dt/rendering.dart';
 import 'package:dt/terminal.dart';

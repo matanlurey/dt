@@ -4,12 +4,11 @@ import 'package:dt/foundation.dart';
 import 'package:dt/rendering.dart';
 
 import 'ansi_surface_backend.dart';
-import 'surface.dart';
 
 /// Abstraction over accessing lower-level terminal-like output APIs.
 ///
 /// Most applications will not interact with the [SurfaceBackend] type directly,
-/// and instead use the higher-level [Surface] class to draw to the terminal.
+/// and instead use the higher-level `Surface` API.
 abstract class SurfaceBackend {
   /// Creates a new backend that writes to the given [stdout].
   ///

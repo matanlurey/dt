@@ -1,20 +1,21 @@
-export 'src/terminal/ansi_escaped_style.dart' show AnsiEscapedStyle;
-export 'src/terminal/ansi_surface_backend.dart' show AnsiSurfaceBackend;
-export 'src/terminal/command.dart'
-    show
-        AlternateScreenBuffer,
-        ClearScreen,
-        Command,
-        MoveCursorTo,
-        MoveCursorToColumn,
-        SetBackgroundColor256,
-        SetColor16,
-        SetCursorVisibility,
-        SetForegroundColor256,
-        SynchronizedUpdate,
-        resetStyle;
+/// Provides the main interface of this package, [Surface], and related types.
+///
+/// ```dart
+/// import 'package:dt/terminal.dart';
+///
+/// void main() {
+///   final terminal = Surface.fromStdio();
+///   terminal.draw((frame) {
+///     frame.draw((buffer) {
+///       buffer.print(0, 0, 'Hello, World!');
+///     });
+///   });
+///   terminal.dispose();
+/// }
+/// ```
+library;
+
+import 'terminal.dart';
+
 export 'src/terminal/frame.dart' show Frame;
-export 'src/terminal/sequence.dart' show EscapeSequence, Literal, Sequence;
 export 'src/terminal/surface.dart' show Surface;
-export 'src/terminal/surface_backend.dart' show SurfaceBackend;
-export 'src/terminal/test_surface_backend.dart' show TestSurfaceBackend;

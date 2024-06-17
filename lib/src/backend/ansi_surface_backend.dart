@@ -2,7 +2,7 @@ import 'dart:convert';
 
 import 'package:dt/foundation.dart';
 import 'package:dt/rendering.dart';
-import 'package:dt/src/terminal/ansi_escaped_style.dart';
+import 'package:dt/src/backend/ansi_escaped_style.dart';
 import 'package:meta/meta.dart';
 
 import 'command.dart';

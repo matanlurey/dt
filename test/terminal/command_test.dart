@@ -1,4 +1,4 @@
-import 'package:dt/terminal.dart';
+import 'package:dt/backend.dart';
 
 import '../prelude.dart';
 

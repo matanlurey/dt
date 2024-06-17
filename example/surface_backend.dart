@@ -1,5 +1,5 @@
+import 'package:dt/backend.dart';
 import 'package:dt/rendering.dart';
-import 'package:dt/terminal.dart';
 
 void main() async {
   final backend = SurfaceBackend.fromStdout();
