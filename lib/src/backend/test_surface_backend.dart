@@ -52,7 +52,7 @@ final class _TestSurfaceBackend
   var isCursorVisible = true;
 
   @override
-  var cursorPosition = Offset.zero;
+  var cursorPosition = const Offset(1, 1);
 
   @override
   Future<void> flush() async {}
@@ -69,7 +69,7 @@ final class _TestSurfaceBackend
         case Print(:final text):
           for (final char in text.characters) {
             if (char == '\n') {
-              cursorPosition = Offset(0, cursorPosition.y + 1);
+              cursorPosition = Offset(1, cursorPosition.y + 1);
             } else {
               buffer.set(
                 cursorPosition.x - 1,
@@ -79,7 +79,7 @@ final class _TestSurfaceBackend
               cursorPosition = Offset(cursorPosition.x + 1, cursorPosition.y);
             }
           }
-        case MoveCursorTo(:final column, :final row):
+        case MoveCursorTo(:final row, :final column):
           cursorPosition = Offset(column, row);
         case ClearScreen.all:
           buffer.fillCells();

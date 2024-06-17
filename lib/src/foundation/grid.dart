@@ -239,11 +239,19 @@ final class ListGrid<T> with Grid<T> {
 
   @override
   T get(int x, int y) {
+    assert(
+      x >= 0 && x < width && y >= 0 && y < height,
+      '($x, $y) is out of bounds ($width, $height)',
+    );
     return cells[_indexOf(x, y)];
   }
 
   @override
   void set(int x, int y, T cell) {
+    assert(
+      x >= 0 && x < width && y >= 0 && y < height,
+      '($x, $y) is out of bounds ($width, $height) = $cell',
+    );
     cells[_indexOf(x, y)] = cell;
   }
 }

@@ -54,12 +54,16 @@ mixin AnsiSurfaceBackend implements SurfaceBackend {
 
     var fg = Color.reset;
     var bg = Color.reset;
-    var ending = width;
-    for (final cell in cells) {
-      // If we have reached the end of the line, add a newline.
-      if (ending == -1) {
-        ending = width;
+    var count = 0;
+
+    final list = List.of(cells);
+    for (final cell in list) {
+      // If the width has been reached, move to the next line.
+      if (count > width) {
+        count = 1;
         _writeSequences(const [], '\n');
+      } else {
+        count++;
       }
 
       // If the style has changed, write a new style sequence.
@@ -74,7 +78,6 @@ mixin AnsiSurfaceBackend implements SurfaceBackend {
 
       // Write the content of the cell.
       _writeSequences(const [], cell.symbol);
-      ending--;
     }
   }
 

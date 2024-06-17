@@ -21,7 +21,8 @@ void main() {
           [Cell(' '), Cell(' '), Cell(' ')],
         ])
         ..has((b) => b.isCursorVisible, 'isCursorVisible').equals(true)
-        ..has((b) => b.cursorPosition, 'cursorPosition').equals(Offset.zero)
+        ..has((b) => b.cursorPosition, 'cursorPosition')
+            .equals(const Offset(1, 1))
         ..has((b) => b.size, 'size').equals((3, 3));
     });
 

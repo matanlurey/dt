@@ -59,6 +59,9 @@ final class Cell {
     if (this == empty) {
       return 'Cell.empty';
     }
+    if (style == Style.reset) {
+      return 'Cell("$symbol")';
+    }
     return 'Cell("$symbol", $style)';
   }
 }

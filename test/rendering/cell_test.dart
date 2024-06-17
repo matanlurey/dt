@@ -15,9 +15,7 @@ void main() {
   });
 
   test('toString returns "Cell(content, style)"', () {
-    check(Cell('H'))
-        .has((c) => c.toString(), 'toString')
-        .equals('Cell("H", Style.reset)');
+    check(Cell('H')).has((c) => c.toString(), 'toString').equals('Cell("H")');
   });
 
   test('toString returns Cell.empty', () {
