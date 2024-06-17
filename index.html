@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, height=device-height, initial-scale=1, user-scalable=no">
+  <meta name="description" content="dt API docs, for the Dart programming language.">
+  <title>dt - Dart API docs</title>
+
+
+  
+  <link rel="preconnect" href="https://fonts.gstatic.com">
+  <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:ital,wght@0,300;0,400;0,500;0,700;1,400&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" rel="stylesheet">
+  
+  <link rel="stylesheet" href="static-assets/github.css?v1">
+  <link rel="stylesheet" href="static-assets/styles.css?v1">
+  <link rel="icon" href="static-assets/favicon.png?v1">
+
+  
+</head>
+
+
+<body data-base-href="" data-using-base-href="false" class="light-theme">
+
+<div id="overlay-under-drawer"></div>
+
+<header id="title">
+  <span id="sidenav-left-toggle" class="material-symbols-outlined" role="button" tabindex="0">menu</span>
+  <ol class="breadcrumbs gt-separated dark hidden-xs">
+    <li class="self-crumb">dt package</li>
+  </ol>
+  <div class="self-name">dt</div>
+  <form class="search navbar-right" role="search">
+    <input type="text" id="search-box" autocomplete="off" disabled class="form-control typeahead" placeholder="Loading search...">
+  </form>
+  <div class="toggle" id="theme-button" title="Toggle brightness">
+    <label for="theme">
+      <input type="checkbox" id="theme" value="light-theme">
+      <span id="dark-theme-button" class="material-symbols-outlined">
+        dark_mode
+      </span>
+      <span id="light-theme-button" class="material-symbols-outlined">
+        light_mode
+      </span>
+    </label>
+  </div>
+</header>
+<main>
+
+  <div id="dartdoc-main-content" class="main-content">
+      
+<section class="desc markdown">
+  <h1 id="dart-terminal">Dart Terminal</h1>
+<p>A <em>fun</em> and <em>minimalist</em> experiment in crafting terminal UIs with Dart.</p>
+<p><a href="https://github.com/matanlurey/dt/actions/workflows/linux.yaml"><img src="https://github.com/matanlurey/dt/actions/workflows/linux.yaml/badge.svg" alt="Linux Build"></a>
+<a href="https://github.com/matanlurey/dt/actions/workflows/macos.yaml"><img src="https://github.com/matanlurey/dt/actions/workflows/macos.yaml/badge.svg" alt="Mac Build"></a>
+<a href="https://coveralls.io/github/matanlurey/dt?branch=main"><img src="https://coveralls.io/repos/github/matanlurey/dt/badge.svg?branch=main" alt="Coverage Status"></a></p>
+<h2 id="key-concepts">Key Concepts</h2>
+<div class="markdown-alert markdown-alert-note">
+<p class="markdown-alert-title">Note</p>
+<p>This project is a work-in-progress and everything is subject to change.</p>
+</div>
+<p>This project aims to provide an intuitive and ergonomic API for building,
+emulating, and interacting with terminal applications in Dart. It's designed to
+be a low-level building block for more complex terminal applications, such as
+text editors, games, and interactive command-line interfaces.</p>
+<h3 id="buffer">Buffer</h3>
+<p>A <code>Buffer</code> is a two-dimensional grid of characters with an associated style. It
+is the primary building block for rendering text-based content to the terminal,
+and it can be used to build more complex UI components. For example, a <code>Buffer</code>
+can be used to render text, boxes, and sprites:</p>
+<pre class="language-dart"><code class="language-dart">import 'package:dt/rendering.dart';
+
+void main() {
+  final buffer = Buffer(10, 3, '#');
+  buffer.print(0, 1, 'Hello, World!');
+  
+  // ##########
+  // Hello, Wor
+  // ##########
+  buffer.rows.forEach((row) =&gt; print(row.map((cell) =&gt; cell.symbol).join()));
+}
+</code></pre>
+<h3 id="surface">Surface</h3>
+<p>A <code>Surface</code> is a high-level abstraction for writing <code>Buffer</code>s to the terminal:</p>
+<pre class="language-dart"><code class="language-dart">import 'package:dt/terminal.dart';
+
+void main() {
+  final surface = Surface.fromStdout();
+
+  surface.draw((frame) {
+    frame.draw((buffer) {
+      buffer.print(0, 1, 'Hello, World!');
+    });
+  });
+}
+</code></pre>
+<h2 id="contributing">Contributing</h2>
+<h3 id="cicd">CI/CD</h3>
+<p>This package is:</p>
+<ul>
+<li>Formatted with <code>dart format</code>.</li>
+<li>Checked with <code>dart analyze</code>.</li>
+<li>Tested with <code>dart test</code>, including with code coverage (see
+<a href="tool/coverage.dart"><code>tool/coverage.dart</code></a>).</li>
+</ul>
+<h3 id="inspiration">Inspiration</h3>
+<p>This package is inspired by a number of libraries, including but not limited to:</p>
+<ul>
+<li><a href="https://github.com/crossterm-rs/crossterm">crossterm</a>: A Rust library for
+cross-platform terminal manipulation.</li>
+<li><a href="https://github.com/timsneath/dart_console">dart_console</a>: A Dart library for
+terminal manipulation.</li>
+<li><a href="https://pub.dev/packages/fortress">fortress</a>: A Dart library for building
+retro-style games.</li>
+<li><a href="https://pub.dev/packages/hex_toolkit">hex_toolkit</a>: A Dart library for
+hexagonal grids.</li>
+<li><a href="https://pub.dev/packages/mini_sprite">mini_sprite</a>: A Dart library for
+sprite-based rendering.</li>
+<li><a href="https://pub.dev/packages/pathxp">pathxp</a> and
+<a href="https://pub.dev/packages/pathfinding">pathfinding</a>: Dart libraries for
+pathfinding algorithms.</li>
+<li><a href="https://crates.io/crates/ratatui">ratatui</a>: A Rust library for building
+terminal UIs.</li>
+<li><a href="https://crates.io/crates/taffy">taffy</a>: UI layout library for Rust.</li>
+<li><a href="https://github.com/muesli/termenv">termenv</a>: A Go library for terminal
+feature detection and styling.</li>
+<li><a href="https://crates.io/crates/termion">termion</a>: A Rust library for low-level
+bindless terminal manipulation.</li>
+<li><a href="https://github.com/wez/wezterm/tree/main/termwiz">termwiz</a>: Another Rust
+library for building a terminal emulator.</li>
+<li><a href="https://sr.ht/~rockorager/vaxis/">vaxis</a>: A Rust library for building
+terminal UIs.</li>
+</ul>
+</section>
+
+
+      <section class="summary">
+          <h2>Libraries</h2>
+        <dl>
+          <dt id="foundation">
+  <span class="name"><a href="foundation/foundation-library.html">foundation</a></span> 
+
+</dt>
+<dd>Building blocks and framework primitives for the rest of the library.
+</dd>
+
+          <dt id="layout">
+  <span class="name"><a href="layout/layout-library.html">layout</a></span> 
+
+</dt>
+<dd>Layout definitions, computations, and utilities.
+</dd>
+
+          <dt id="rendering">
+  <span class="name"><a href="rendering/rendering-library.html">rendering</a></span> 
+
+</dt>
+<dd>
+</dd>
+
+          <dt id="terminal">
+  <span class="name"><a href="terminal/terminal-library.html">terminal</a></span> 
+
+</dt>
+<dd>
+</dd>
+
+          <dt id="widgets">
+  <span class="name"><a href="widgets/widgets-library.html">widgets</a></span> 
+
+</dt>
+<dd>A collection of built-in types that implement <a href="widgets/Widget-class.html">Widget</a>.
+</dd>
+
+        </dl>
+      </section>
+
+  </div> <!-- /.main-content -->
+
+  <div id="dartdoc-sidebar-left" class="sidebar sidebar-offcanvas-left">
+    <!-- The search input and breadcrumbs below are only responsively visible at low resolutions. -->
+<header id="header-search-sidebar" class="hidden-l">
+  <form class="search-sidebar" role="search">
+    <input type="text" id="search-sidebar" autocomplete="off" disabled class="form-control typeahead" placeholder="Loading search...">
+  </form>
+</header>
+
+<ol class="breadcrumbs gt-separated dark hidden-l" id="sidebar-nav">
+    <li class="self-crumb">dt package</li>
+</ol>
+
+
+    <h5 class="hidden-xs"><span class="package-name">dt</span> <span class="package-kind">package</span></h5>
+    <ol>
+      <li class="section-title">Libraries</li>
+      <li><a href="foundation/foundation-library.html">foundation</a></li>
+      <li><a href="layout/layout-library.html">layout</a></li>
+      <li><a href="rendering/rendering-library.html">rendering</a></li>
+      <li><a href="terminal/terminal-library.html">terminal</a></li>
+      <li><a href="widgets/widgets-library.html">widgets</a></li>
+</ol>
+
+  </div>
+
+  <div id="dartdoc-sidebar-right" class="sidebar sidebar-offcanvas-right">
+  </div>
+
+</main>
+
+<footer>
+  <span class="no-break">
+    dt
+      0.0.0-unknown
+  </span>
+
+  
+</footer>
+
+
+
+<script src="static-assets/highlight.pack.js?v1"></script>
+<script src="static-assets/docs.dart.js"></script>
+
+
+
+</body>
+
+</html>
+

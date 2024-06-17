@@ -1,7 +1,0 @@
-# https://dart.dev/tools/analysis#the-analysis-options-file
-
-include: tool/analysis_options_relaxed.yaml
-
-analyzer:
-  exclude:
-    - coverage/all_test.dart
