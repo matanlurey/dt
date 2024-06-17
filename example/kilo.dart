@@ -69,8 +69,6 @@ final class EditorState {
   List<String> lines;
 }
 
-var _wasBackspaced = false;
-
 Future<void> run(
   Surface terminal,
   BufferedKeys input,
@@ -111,7 +109,6 @@ Future<void> run(
             lines[y] = lines[y].replaceRange(x - 1, x, '');
             state.cursor = Offset(x - 1, y);
           }
-          _wasBackspaced = true;
         // Enter.
         case [0xa]:
           lines.insert(state.cursor.y + 1, '');
