@@ -17,14 +17,27 @@ void main() async {
   );
 
   final terminal = Surface.fromStdio();
+
+  final closed = Completer<void>();
+  final keyboard = io.stdin.listen((_) {
+    if (!closed.isCompleted) {
+      closed.complete();
+    }
+  });
+  final sigint = io.ProcessSignal.sigint.watch().listen((_) {
+    if (!closed.isCompleted) {
+      closed.complete();
+    }
+  });
   try {
     await run(
       terminal,
       world,
-      done: io.ProcessSignal.sigint.watch().first,
+      done: closed.future,
     );
   } finally {
     terminal.close();
+    await (keyboard.cancel(), sigint.cancel()).wait;
   }
 }
 
@@ -45,7 +58,7 @@ Future<void> run(
       frame.draw((buffer) {
         Footer(
           main: _WorldWidget(world),
-          footer: Text('Press Ctrl+C to exit.'),
+          footer: Text('Press any key to exit.'),
           height: 1,
         ).draw(buffer);
       });
