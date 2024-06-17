@@ -66,13 +66,13 @@ mixin AnsiSurfaceBackend implements SurfaceBackend {
         count++;
       }
 
-      // If the style has changed, write a new style sequence.
-      if (cell.style.foreground != fg) {
-        fg = cell.style.foreground;
+// If the style has changed, write a new style sequence.
+      if (cell.style.foreground case final Color color when color != fg) {
+        fg = color;
         _writeSequences([fg.setForeground().toSequence()]);
       }
-      if (cell.style.background != bg) {
-        bg = cell.style.background;
+      if (cell.style.background case final Color color when color != bg) {
+        bg = color;
         _writeSequences([bg.setBackground().toSequence()]);
       }
 

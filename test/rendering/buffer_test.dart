@@ -73,8 +73,8 @@ void main() {
 
   test('a 4x2 buffer made from lines', () {
     final lines = [
-      Line([Span('Hello')]),
-      Line([Span('World')]),
+      Line(['Hello']),
+      Line(['World']),
     ];
     final buffer = Buffer.fromLines(lines);
 
@@ -86,8 +86,8 @@ void main() {
 
   test('cells are in row-major order', () {
     final buffer = Buffer.fromLines([
-      Line([Span('Hello')]),
-      Line([Span('World')]),
+      Line(['Hello']),
+      Line(['World']),
     ]);
 
     check(buffer).has((b) => b.cells, 'cells').deepEquals([

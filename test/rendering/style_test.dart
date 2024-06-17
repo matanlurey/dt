@@ -4,7 +4,9 @@ import '../prelude.dart';
 
 void main() {
   test('defaults to a reset style', () {
-    check(Style.reset).equals(Style());
+    check(Style.reset).equals(
+      Style(foreground: Color.reset, background: Color.reset),
+    );
   });
 
   test('copyWith returns a new style with the given properties', () {

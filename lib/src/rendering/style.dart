@@ -5,24 +5,30 @@ import 'color.dart';
 /// Control over the visual appearance of displayed elements.
 @immutable
 final class Style {
+  /// No style is applied.
+  static const none = Style();
+
   /// Reset the style to the default.
-  static const reset = Style();
+  static const reset = Style(
+    foreground: Color.reset,
+    background: Color.reset,
+  );
 
   /// Creates a new default style.
   const Style({
-    this.foreground = Color.reset,
-    this.background = Color.reset,
+    this.foreground,
+    this.background,
   });
 
   /// Which color to use the foreground.
   ///
   /// If `null`, the color will be inherited from the parent element.
-  final Color foreground;
+  final Color? foreground;
 
   /// Which color to use the background.
   ///
   /// If `null`, the color will be inherited from the parent element.
-  final Color background;
+  final Color? background;
 
   /// Returns a copy of this style with the given properties.
   ///
@@ -61,6 +67,9 @@ final class Style {
 
   @override
   String toString() {
+    if (this == none) {
+      return 'Style.none';
+    }
     if (this == reset) {
       return 'Style.reset';
     }

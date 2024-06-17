@@ -120,8 +120,8 @@ Future<void> run(
         final status = Text.fromLine(
           Line(
             [
-              Span(state.fileName ?? '[No name]'),
-              Span(' - ${state.lines.length} lines'),
+              state.fileName ?? '[No name]',
+              ' - ${state.lines.length} lines',
             ],
             style: Style(
               background: Color16.white,
