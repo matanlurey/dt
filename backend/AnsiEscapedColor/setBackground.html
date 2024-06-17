@@ -4,8 +4,8 @@
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, height=device-height, initial-scale=1, user-scalable=no">
-  <meta name="description" content="API docs for the Surface.fromStdio constructor from Class Surface from the terminal library, for the Dart programming language.">
-  <title>Surface.fromStdio constructor - Surface - terminal library - Dart API</title>
+  <meta name="description" content="API docs for the setBackground method from the AnsiEscapedColor extension, for the Dart programming language.">
+  <title>setBackground method - AnsiEscapedColor extension - backend library - Dart API</title>
 
 
   
@@ -29,11 +29,11 @@
   <span id="sidenav-left-toggle" class="material-symbols-outlined" role="button" tabindex="0">menu</span>
   <ol class="breadcrumbs gt-separated dark hidden-xs">
     <li><a href="../../index.html">dt</a></li>
-    <li><a href="../../terminal/terminal-library.html">terminal.dart</a></li>
-    <li><a href="../../terminal/Surface-class.html">Surface</a></li>
-    <li class="self-crumb">Surface.fromStdio factory constructor</li>
+    <li><a href="../../backend/backend-library.html">backend.dart</a></li>
+    <li><a href="../../backend/AnsiEscapedColor.html">AnsiEscapedColor</a></li>
+    <li class="self-crumb">setBackground method</li>
   </ol>
-  <div class="self-name">Surface.fromStdio</div>
+  <div class="self-name">setBackground</div>
   <form class="search navbar-right" role="search">
     <input type="text" id="search-box" autocomplete="off" disabled class="form-control typeahead" placeholder="Loading search...">
   </form>
@@ -51,37 +51,44 @@
 </header>
 <main>
 
-  <div
-      id="dartdoc-main-content"
-      class="main-content"
-      data-above-sidebar="terminal&#47;Surface-class-sidebar.html"
-      data-below-sidebar="">
-      <div>
-<h1><span class="kind-constructor">Surface.fromStdio</span> constructor 
+<div
+    id="dartdoc-main-content"
+    class="main-content"
+    data-above-sidebar="backend&#47;AnsiEscapedColor-extension-sidebar.html"
+    data-below-sidebar="">
+    <div>
+<h1><span class="kind-method">setBackground</span> method 
 </h1></div>
 
     <section class="multi-line-signature">
       
-      <span class="name ">Surface.fromStdio</span>(<wbr><ol class="parameter-list"><li><span class="parameter" id="fromStdio-param-stdout">[<span class="type-annotation"><a href="https://api.dart.dev/stable/3.4.4/dart-io/Stdout-class.html">Stdout</a>?</span> <span class="parameter-name">stdout</span>, </span></li>
-<li><span class="parameter" id="fromStdio-param-stdin"><span class="type-annotation"><a href="https://api.dart.dev/stable/3.4.4/dart-io/Stdin-class.html">Stdin</a>?</span> <span class="parameter-name">stdin</span>]</span></li>
-</ol>)
-    </section>
 
+<span class="returntype"><a href="../../backend/Command-class.html">Command</a></span>
+<span class="name ">setBackground</span>(<wbr>)
+
+      
+
+    </section>
     
 <section class="desc markdown">
-  <p>Creates a new terminal that uses <code>stdout</code> and <code>stdin</code> for I/O.</p>
-<p>If <code>stdout</code> or <code>stdin</code> are not provided, they default to <a href="https://api.dart.dev/stable/3.4.4/dart-io/stdout.html">io.stdout</a> and
-<a href="https://api.dart.dev/stable/3.4.4/dart-io/stdin.html">io.stdin</a> respectively. Upon creation, the terminal will switch to the
-alternate screen buffer, hide the cursor, and enable raw mode.</p>
-<p>When <a href="../../terminal/Surface/close.html">close</a> is called, the terminal will switch back.</p>
+  <p>Returns a command that represents setting the background color to <code>this</code>.</p>
 </section>
 
 
     
 <section class="summary source-code" id="source">
   <h2><span>Implementation</span></h2>
-  <pre class="language-dart"><code class="language-dart">factory Surface.fromStdio([io.Stdout? stdout, io.Stdin? stdin]) {
-  return _StdioSurface(stdout ?? io.stdout, stdin ?? io.stdin);
+  <pre class="language-dart"><code class="language-dart">Command setBackground() {
+  switch (this) {
+    case Color.inherit:
+      return Command.none;
+    case Color.reset:
+      return SetColor16.resetBackground;
+    case final Color16 c:
+      return SetColor16(c.backgroundIndex);
+    default:
+      return Command.none;
+  }
 }</code></pre>
 </section>
 
@@ -98,18 +105,18 @@ alternate screen buffer, hide the cursor, and enable raw mode.</p>
 
 <ol class="breadcrumbs gt-separated dark hidden-l" id="sidebar-nav">
     <li><a href="../../index.html">dt</a></li>
-    <li><a href="../../terminal/terminal-library.html">terminal</a></li>
-    <li><a href="../../terminal/Surface-class.html">Surface</a></li>
-    <li class="self-crumb">Surface.fromStdio factory constructor</li>
+    <li><a href="../../backend/backend-library.html">backend</a></li>
+    <li><a href="../../backend/AnsiEscapedColor.html">AnsiEscapedColor</a></li>
+    <li class="self-crumb">setBackground method</li>
 </ol>
 
 
-    <h5>Surface class</h5>
+    <h5>AnsiEscapedColor extension on <a href="../../rendering/Color-class.html">Color</a></h5>
     <div id="dartdoc-sidebar-left-content"></div>
-  </div><!--/.sidebar-offcanvas-left-->
+  </div><!--/.sidebar-offcanvas-->
 
   <div id="dartdoc-sidebar-right" class="sidebar sidebar-offcanvas-right">
-  </div><!--/.sidebar-offcanvas-->
+</div><!--/.sidebar-offcanvas-->
 
 </main>
 

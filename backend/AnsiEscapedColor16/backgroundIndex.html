@@ -4,8 +4,8 @@
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, height=device-height, initial-scale=1, user-scalable=no">
-  <meta name="description" content="API docs for the Surface.fromBackend constructor from Class Surface from the terminal library, for the Dart programming language.">
-  <title>Surface.fromBackend constructor - Surface - terminal library - Dart API</title>
+  <meta name="description" content="API docs for the backgroundIndex property from the AnsiEscapedColor16 extension, for the Dart programming language.">
+  <title>backgroundIndex property - AnsiEscapedColor16 extension - backend library - Dart API</title>
 
 
   
@@ -29,11 +29,11 @@
   <span id="sidenav-left-toggle" class="material-symbols-outlined" role="button" tabindex="0">menu</span>
   <ol class="breadcrumbs gt-separated dark hidden-xs">
     <li><a href="../../index.html">dt</a></li>
-    <li><a href="../../terminal/terminal-library.html">terminal.dart</a></li>
-    <li><a href="../../terminal/Surface-class.html">Surface</a></li>
-    <li class="self-crumb">Surface.fromBackend factory constructor</li>
+    <li><a href="../../backend/backend-library.html">backend.dart</a></li>
+    <li><a href="../../backend/AnsiEscapedColor16.html">AnsiEscapedColor16</a></li>
+    <li class="self-crumb">backgroundIndex property</li>
   </ol>
-  <div class="self-name">Surface.fromBackend</div>
+  <div class="self-name">backgroundIndex</div>
   <form class="search navbar-right" role="search">
     <input type="text" id="search-box" autocomplete="off" disabled class="form-control typeahead" placeholder="Loading search...">
   </form>
@@ -51,42 +51,45 @@
 </header>
 <main>
 
-  <div
-      id="dartdoc-main-content"
-      class="main-content"
-      data-above-sidebar="terminal&#47;Surface-class-sidebar.html"
-      data-below-sidebar="">
-      <div>
-<h1><span class="kind-constructor">Surface.fromBackend</span> constructor 
+<div
+    id="dartdoc-main-content"
+    class="main-content"
+    data-above-sidebar="backend&#47;AnsiEscapedColor16-extension-sidebar.html"
+    data-below-sidebar="">
+    <div>
+<h1><span class="kind-property">backgroundIndex</span> property 
 </h1></div>
+
+
+        
+  <section id="getter">
 
     <section class="multi-line-signature">
       
-      <span class="name ">Surface.fromBackend</span>(<wbr><ol class="parameter-list"><li><span class="parameter" id="fromBackend-param-backend"><span class="type-annotation"><a href="../../backend/SurfaceBackend-class.html">SurfaceBackend</a></span> <span class="parameter-name">backend</span></span></li>
-</ol>)
+      <span class="returntype"><a href="https://api.dart.dev/stable/3.4.4/dart-core/int-class.html">int</a></span>
+      <span class="name ">backgroundIndex</span>
+      
+
     </section>
 
     
 <section class="desc markdown">
-  <p>Creates a new terminal from a <code>backend</code>.</p>
-<p>This is useful for testing or when a custom backend is needed.</p>
+  <p>Returns the ANSI index for the background color.</p>
 </section>
-
 
     
 <section class="summary source-code" id="source">
   <h2><span>Implementation</span></h2>
-  <pre class="language-dart"><code class="language-dart">factory Surface.fromBackend(SurfaceBackend backend) {
-  final (width, height) = backend.size;
-  return _Surface(backend, Buffer(width, height));
-}</code></pre>
+  <pre class="language-dart"><code class="language-dart">int get backgroundIndex =&gt; isBright ? index - 8 + 100 : index + 40;</code></pre>
 </section>
 
+  </section>
 
-  </div> <!-- /.main-content -->
 
-  <div id="dartdoc-sidebar-left" class="sidebar sidebar-offcanvas-left">
-    <!-- The search input and breadcrumbs below are only responsively visible at low resolutions. -->
+</div> <!-- /.main-content -->
+
+<div id="dartdoc-sidebar-left" class="sidebar sidebar-offcanvas-left">
+  <!-- The search input and breadcrumbs below are only responsively visible at low resolutions. -->
 <header id="header-search-sidebar" class="hidden-l">
   <form class="search-sidebar" role="search">
     <input type="text" id="search-sidebar" autocomplete="off" disabled class="form-control typeahead" placeholder="Loading search...">
@@ -95,18 +98,18 @@
 
 <ol class="breadcrumbs gt-separated dark hidden-l" id="sidebar-nav">
     <li><a href="../../index.html">dt</a></li>
-    <li><a href="../../terminal/terminal-library.html">terminal</a></li>
-    <li><a href="../../terminal/Surface-class.html">Surface</a></li>
-    <li class="self-crumb">Surface.fromBackend factory constructor</li>
+    <li><a href="../../backend/backend-library.html">backend</a></li>
+    <li><a href="../../backend/AnsiEscapedColor16.html">AnsiEscapedColor16</a></li>
+    <li class="self-crumb">backgroundIndex property</li>
 </ol>
 
 
-    <h5>Surface class</h5>
-    <div id="dartdoc-sidebar-left-content"></div>
-  </div><!--/.sidebar-offcanvas-left-->
+  <h5>AnsiEscapedColor16 extension on <a href="../../rendering/Color16.html">Color16</a></h5>
+  <div id="dartdoc-sidebar-left-content"></div>
+</div><!--/.sidebar-offcanvas-->
 
-  <div id="dartdoc-sidebar-right" class="sidebar sidebar-offcanvas-right">
-  </div><!--/.sidebar-offcanvas-->
+<div id="dartdoc-sidebar-right" class="sidebar sidebar-offcanvas-right">
+</div><!--/.sidebar-offcanvas-->
 
 </main>
 
