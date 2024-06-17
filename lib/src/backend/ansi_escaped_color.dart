@@ -36,8 +36,8 @@ extension AnsiEscapedColor on Color {
 /// Provides utilities for working with 16-color ANSI escape sequences.
 extension AnsiEscapedColor16 on Color16 {
   /// Returns the ANSI index for the foreground color.
-  int get foregroundIndex => isBright ? index + 90 : index + 30;
+  int get foregroundIndex => isBright ? index - 8 + 90 : index + 30;
 
   /// Returns the ANSI index for the background color.
-  int get backgroundIndex => isBright ? index + 100 : index + 40;
+  int get backgroundIndex => isBright ? index - 8 + 100 : index + 40;
 }

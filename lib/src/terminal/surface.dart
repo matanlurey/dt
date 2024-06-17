@@ -14,9 +14,9 @@ abstract final class Surface {
   /// [io.stdin] respectively. Upon creation, the terminal will switch to the
   /// alternate screen buffer, hide the cursor, and enable raw mode.
   ///
-  /// When [dispose] is called, the terminal will switch back.
+  /// When [close] is called, the terminal will switch back.
   factory Surface.fromStdio([io.Stdout? stdout, io.Stdin? stdin]) {
-    return _StdioTerminal(stdout ?? io.stdout, stdin ?? io.stdin);
+    return _StdioSurface(stdout ?? io.stdout, stdin ?? io.stdin);
   }
 
   /// Creates a new terminal from a [backend].
@@ -24,13 +24,13 @@ abstract final class Surface {
   /// This is useful for testing or when a custom backend is needed.
   factory Surface.fromBackend(SurfaceBackend backend) {
     final (width, height) = backend.size;
-    return _Terminal(backend, Buffer(width, height));
+    return _Surface(backend, Buffer(width, height));
   }
 
   /// Disposes of the terminal.
   ///
   /// This should be called when the terminal is no longer needed.
-  void dispose();
+  void close();
 
   /// Synchronizes terminal size, calls [render], and flushes the frame.
   ///
@@ -38,8 +38,8 @@ abstract final class Surface {
   void draw(void Function(Frame) render);
 }
 
-final class _Terminal implements Surface {
-  _Terminal(this._backend, this._buffer);
+final class _Surface implements Surface {
+  _Surface(this._backend, this._buffer);
   final SurfaceBackend _backend;
   final Buffer _buffer;
 
@@ -53,7 +53,7 @@ final class _Terminal implements Surface {
   }
 
   @override
-  void dispose() {
+  void close() {
     _checkNotDisposed();
     _disposed = true;
   }
@@ -93,8 +93,8 @@ final class _Terminal implements Surface {
   }
 }
 
-final class _StdioTerminal extends _Terminal {
-  factory _StdioTerminal(io.Stdout stdout, io.Stdin stdin) {
+final class _StdioSurface extends _Surface {
+  factory _StdioSurface(io.Stdout stdout, io.Stdin stdin) {
     // Switch to the alternate screen buffer.
     stdout.write(AlternateScreenBuffer.enter.toSequence().toEscapedString());
 
@@ -106,7 +106,7 @@ final class _StdioTerminal extends _Terminal {
       ..echoMode = false
       ..lineMode = false;
 
-    return _StdioTerminal._(
+    return _StdioSurface._(
       SurfaceBackend.fromStdout(stdout),
       Buffer(stdout.terminalColumns, stdout.terminalLines),
       stdin,
@@ -114,7 +114,7 @@ final class _StdioTerminal extends _Terminal {
     );
   }
 
-  _StdioTerminal._(
+  _StdioSurface._(
     super._backend,
     super._buffer,
     this._stdin,
@@ -125,8 +125,8 @@ final class _StdioTerminal extends _Terminal {
   final io.Stdout _stdout;
 
   @override
-  void dispose() {
-    super.dispose();
+  void close() {
+    super.close();
 
     // Disable raw mode.
     _stdin

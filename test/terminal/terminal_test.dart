@@ -57,9 +57,9 @@ void main() {
     final backend = TestSurfaceBackend(5, 5);
     final terminal = Surface.fromBackend(backend);
 
-    terminal.dispose();
+    terminal.close();
 
-    check(terminal.dispose).throws<StateError>();
+    check(terminal.close).throws<StateError>();
     check(() => terminal.draw((frame) {})).throws<StateError>();
   });
 
@@ -72,7 +72,7 @@ void main() {
       ..has((s) => s.echoMode, 'echoMode').equals(false)
       ..has((s) => s.lineMode, 'lineMode').equals(false);
 
-    terminal.dispose();
+    terminal.close();
     check(stdin)
       ..has((s) => s.echoMode, 'echoMode').equals(true)
       ..has((s) => s.lineMode, 'lineMode').equals(true);
@@ -89,7 +89,7 @@ void main() {
     ]);
 
     stdout.logs.clear();
-    terminal.dispose();
+    terminal.close();
 
     logs = Sequence.parseAll(stdout.logs.join()).map(Command.tryParse);
     check(logs).deepEquals([
