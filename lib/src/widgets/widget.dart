@@ -1,4 +1,5 @@
 import 'package:characters/characters.dart';
+import 'package:dt/foundation.dart';
 import 'package:dt/rendering.dart';
 
 /// A widget is a type that can be drawn on a [Buffer].
@@ -17,6 +18,7 @@ final class Text extends Widget {
     this.text, {
     this.style = Style.inherit,
     this.align = TextAlign.left,
+    this.offset = Offset.zero,
   });
 
   /// The text to draw.
@@ -27,6 +29,9 @@ final class Text extends Widget {
 
   /// The alignment of the text.
   final TextAlign align;
+
+  /// The position of the text.
+  final Offset offset;
 
   @override
   void draw(Buffer buffer) {
@@ -42,7 +47,7 @@ final class Text extends Widget {
         x = buffer.width - width;
     }
 
-    buffer.print(x, 0, text, style: style);
+    buffer.print(offset.x + x, offset.y, text, style: style);
   }
 }
 

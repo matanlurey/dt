@@ -255,7 +255,7 @@ packages:
     source: hosted
     version: "2.1.4"
   shelf:
-    dependency: transitive
+    dependency: "direct dev"
     description:
       name: shelf
       sha256: ad29c505aee705f41a4d8963641f91ac4cee3c8fad5947e033390a7bd8180fa4
@@ -271,7 +271,7 @@ packages:
     source: hosted
     version: "3.0.2"
   shelf_static:
-    dependency: transitive
+    dependency: "direct dev"
     description:
       name: shelf_static
       sha256: a41d3f53c4adf0f57480578c1d61d90342cd617de7fc8077b1304643c2d85c1e
