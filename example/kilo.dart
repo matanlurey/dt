@@ -56,7 +56,7 @@ final class EditorState {
   EditorState.from(
     this.lines, {
     this.fileName,
-    this.cursor = const Offset(1, 1),
+    this.cursor = Offset.zero,
   });
 
   /// Current cursor position.
@@ -68,6 +68,8 @@ final class EditorState {
   /// Lines of text in the editor.
   List<String> lines;
 }
+
+var _wasBackspaced = false;
 
 Future<void> run(
   Surface terminal,
@@ -98,11 +100,34 @@ Future<void> run(
           break;
         // Backspace.
         case [0x7f]:
-          break;
+          if (x == 0 && y == 0) {
+            break;
+          }
+          if (x == 0) {
+            final line = lines.removeAt(y);
+            lines[y - 1] += line;
+            state.cursor = Offset(lines[y - 1].length, y - 1);
+          } else {
+            lines[y] = lines[y].replaceRange(x - 1, x, '');
+            state.cursor = Offset(x - 1, y);
+          }
+          _wasBackspaced = true;
         // Enter.
         case [0xa]:
-          lines.insert(state.cursor.y, '');
-          state.cursor = Offset(1, state.cursor.y + 1);
+          lines.insert(state.cursor.y + 1, '');
+          state.cursor = Offset(0, state.cursor.y + 1);
+        // Arrow-up
+        case [0x1b, 0x5b, 0x41]:
+          state.cursor = Offset(x, math.max(0, y - 1));
+        // Arrow-down
+        case [0x1b, 0x5b, 0x42]:
+          state.cursor = Offset(x, math.min(lines.length - 1, y + 1));
+        // Arrow-left
+        case [0x1b, 0x5b, 0x44]:
+          state.cursor = Offset(math.max(0, x - 1), y);
+        // Arrow-right
+        case [0x1b, 0x5b, 0x43]:
+          state.cursor = Offset(math.min(lines[y].length, x + 1), y);
         // Key press.
         case [final code]:
           final char = String.fromCharCode(code);
@@ -140,9 +165,9 @@ void _drawContent(EditorState state, Buffer buffer) {
   for (var y = 0; y < renderLines; y++) {
     final Widget widget;
     if (y + renderOffset < state.lines.length) {
-      widget = Text(state.lines[y + renderOffset]);
+      widget = Text.fromLine(Line([state.lines[y + renderOffset]]));
     } else {
-      widget = Text('~');
+      widget = Text.fromLine(Line(['~']));
     }
     widget.draw(buffer.subGrid(Rect.fromLTWH(0, y, buffer.width, 1)));
   }
