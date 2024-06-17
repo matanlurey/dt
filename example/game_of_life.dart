@@ -24,7 +24,7 @@ void main() async {
       done: io.ProcessSignal.sigint.watch().first,
     );
   } finally {
-    terminal.dispose();
+    terminal.close();
   }
 }
 

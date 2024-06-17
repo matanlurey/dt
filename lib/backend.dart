@@ -14,6 +14,8 @@ import 'dart:io' as io;
 
 import 'backend.dart';
 
+export 'src/backend/ansi_escaped_color.dart'
+    show AnsiEscapedColor, AnsiEscapedColor16;
 export 'src/backend/ansi_escaped_style.dart' show AnsiEscapedStyle;
 export 'src/backend/ansi_surface_backend.dart' show AnsiSurfaceBackend;
 export 'src/backend/command.dart'

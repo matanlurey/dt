@@ -8,6 +8,14 @@ Prints an ASCII art of "Hello".
 
 Uses various `Command`s to manipulate the terminal.
 
+## [Color Palettes](./color_palettes.dart)
+
+Prints all available color palettes.
+
+## [Surface Backend](./surface_backend.dart)
+
+An example of using a `SurfaceBackend` directly.
+
 ## [Render Widget](./render_widget.dart)
 
 Renders a simple `Widget` tree to the terminal.
