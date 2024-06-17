@@ -68,11 +68,16 @@ final class _TestSurfaceBackend
       switch (Command.tryParse(sequence)) {
         case Print(:final text):
           for (final char in text.characters) {
-            buffer.set(
-              cursorPosition.x - 1,
-              cursorPosition.y - 1,
-              Cell(char, style),
-            );
+            if (char == '\n') {
+              cursorPosition = Offset(0, cursorPosition.y + 1);
+            } else {
+              buffer.set(
+                cursorPosition.x - 1,
+                cursorPosition.y - 1,
+                Cell(char, style),
+              );
+              cursorPosition = Offset(cursorPosition.x + 1, cursorPosition.y);
+            }
           }
         case MoveCursorTo(:final column, :final row):
           cursorPosition = Offset(column, row);
