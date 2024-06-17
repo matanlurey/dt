@@ -100,16 +100,16 @@ final class _NullCommand extends Command {
 
 /// Moves the terminal cursor to the given position (row, column).
 ///
-/// The top-left cell is represented as `(0, 0)`.
+/// The top-left cell is represented as `(1, 1)`.
 final class MoveCursorTo extends Command {
   /// Creates a move cursor to command.
   ///
-  /// The [row] and [column] must be non-negative.
+  /// The [row] and [column] must be positive.
   const MoveCursorTo([
-    int row = 0,
-    int column = 0,
-  ])  : row = row < 0 ? 0 : row,
-        column = column < 0 ? 0 : column;
+    int row = 1,
+    int column = 1,
+  ])  : row = row < 1 ? 1 : row,
+        column = column < 1 ? 1 : column;
 
   /// The row to move the cursor to.
   final int row;
@@ -122,7 +122,7 @@ final class MoveCursorTo extends Command {
     return EscapeSequence(
       'H',
       parameters: [row, column],
-      defaults: const [0, 0],
+      defaults: const [1, 1],
     );
   }
 
@@ -138,10 +138,10 @@ final class MoveCursorTo extends Command {
 final class MoveCursorToColumn extends Command {
   /// Creates a move cursor to column command.
   ///
-  /// The [column] must be non-negative.
+  /// The [column] must be positive.
   const MoveCursorToColumn([
-    int column = 0,
-  ]) : column = column < 0 ? 0 : column;
+    int column = 1,
+  ]) : column = column < 1 ? 1 : column;
 
   /// The column to move the cursor to.
   final int column;
@@ -151,7 +151,7 @@ final class MoveCursorToColumn extends Command {
     return EscapeSequence(
       'G',
       parameters: [column],
-      defaults: const [0],
+      defaults: const [1],
     );
   }
 

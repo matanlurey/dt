@@ -37,7 +37,7 @@ void main() {
   });
   test('viewing a buffer', () {
     final buffer = Buffer(3, 3);
-    final view = Buffer.view(buffer, Rect.fromXYWH(1, 1, 2, 2));
+    final view = Buffer.view(buffer, Rect.fromLTWH(1, 1, 2, 2));
 
     check(view).has((b) => b.rows, 'rows').deepEquals([
       [Cell.empty, Cell.empty],
@@ -181,7 +181,7 @@ void main() {
   test('fill part of a buffer with a style', () {
     final buffer = Buffer(10, 2);
     final style = Style(background: AnsiColor.red);
-    buffer.fillStyle(style, Rect.fromXYWH(1, 1, 6, 1));
+    buffer.fillStyle(style, Rect.fromLTWH(1, 1, 6, 1));
 
     final expected = Cell(' ', style);
     check(buffer).has((b) => b.rows, 'rows').deepEquals([
@@ -214,7 +214,7 @@ void main() {
 
   test('Buffer.within returns a view into the buffer', () {
     final buffer = Buffer(10, 2);
-    final view = buffer.subGrid(Rect.fromXYWH(1, 1, 6, 1));
+    final view = buffer.subGrid(Rect.fromLTWH(1, 1, 6, 1));
 
     check(view).has((b) => b.rows, 'rows').deepEquals([
       [
@@ -267,11 +267,66 @@ void main() {
     ]);
   });
 
+  test('Buffer.within with print', () {
+    // Create a two row buffer.
+    final buffer = Buffer(10, 2);
+
+    // Create a view into the second row.
+    final view = buffer.subGrid(Rect.fromLTWH(0, 1, 10, 1));
+
+    // Print a string to the view.
+    view.print(0, 0, 'Hello, World!');
+
+    // The view should have the string.
+    check(view).has((b) => b.rows, 'rows').deepEquals([
+      [
+        Cell('H'),
+        Cell('e'),
+        Cell('l'),
+        Cell('l'),
+        Cell('o'),
+        Cell(','),
+        Cell(' '),
+        Cell('W'),
+        Cell('o'),
+        Cell('r'),
+      ],
+    ]);
+
+    // The original buffer should have the string.
+    check(buffer).has((b) => b.rows, 'rows').deepEquals([
+      [
+        Cell.empty,
+        Cell.empty,
+        Cell.empty,
+        Cell.empty,
+        Cell.empty,
+        Cell.empty,
+        Cell.empty,
+        Cell.empty,
+        Cell.empty,
+        Cell.empty,
+      ],
+      [
+        Cell('H'),
+        Cell('e'),
+        Cell('l'),
+        Cell('l'),
+        Cell('o'),
+        Cell(','),
+        Cell(' '),
+        Cell('W'),
+        Cell('o'),
+        Cell('r'),
+      ],
+    ]);
+  });
+
   test('Buffer.within outside the buffer throws an error', () {
     final buffer = Buffer(10, 2);
 
     check(
-      () => buffer.subGrid(Rect.fromXYWH(1, 1, 10, 2)),
+      () => buffer.subGrid(Rect.fromLTWH(1, 1, 10, 2)),
     ).throws<ArgumentError>();
   });
 
@@ -284,11 +339,11 @@ void main() {
     // Create a view of the last 2x2 area.
     // 4 5
     // 7 8
-    final view1 = buffer.subGrid(Rect.fromXYWH(1, 1, 2, 2));
+    final view1 = buffer.subGrid(Rect.fromLTWH(1, 1, 2, 2));
 
     // Create a view of the first 2x1 area.
     // 4 5
-    final view2 = view1.subGrid(Rect.fromXYWH(0, 0, 2, 1));
+    final view2 = view1.subGrid(Rect.fromLTWH(0, 0, 2, 1));
 
     // Draw a character to the inner view.
     view2.set(1, 0, Cell('#'));

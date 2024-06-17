@@ -96,6 +96,21 @@ void main() {
       AlternateScreenBuffer.leave,
     ]);
   });
+
+  test('e2e rendering test of "Hello World"', () {
+    final backend = TestBackend(80, 24);
+    final surface = Surface.fromBackend(backend);
+
+    surface.draw((frame) {
+      frame.draw((buffer) {
+        buffer.print(0, 0, 'Hello');
+      });
+    });
+
+    check(backend)
+        .has((b) => b.buffer.rows.first.take(5), 'buffer.rows.first.take(5)')
+        .deepEquals([Cell('H'), Cell('e'), Cell('l'), Cell('l'), Cell('o')]);
+  });
 }
 
 final class _FakeStdin implements io.Stdin {

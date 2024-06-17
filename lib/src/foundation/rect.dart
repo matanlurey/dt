@@ -12,13 +12,13 @@ import 'offset.dart';
 @immutable
 final class Rect {
   /// A zero-sized rectangle at the origin.
-  static const zero = Rect.fromXYWH(0, 0, 0, 0);
+  static const zero = Rect.fromLTWH(0, 0, 0, 0);
 
   /// Creates a new rectangle.
   ///
   /// If either [width] or [height] is negative, they are clamped to zero.
   @literal
-  const Rect.fromXYWH(
+  const Rect.fromLTWH(
     this.x,
     this.y,
     int width,
@@ -94,7 +94,7 @@ final class Rect {
     int? width,
     int? height,
   }) {
-    return Rect.fromXYWH(
+    return Rect.fromLTWH(
       x ?? this.x,
       y ?? this.y,
       width ?? this.width,
@@ -104,7 +104,7 @@ final class Rect {
 
   /// Returns a rectangle with a new [offset] without modifying its size.
   Rect withOffset(Offset offset) {
-    return Rect.fromXYWH(offset.x, offset.y, width, height);
+    return Rect.fromLTWH(offset.x, offset.y, width, height);
   }
 
   /// Returns a rectangle that contains both this rectangle and [other].
@@ -113,7 +113,7 @@ final class Rect {
     final y1 = math.min(y, other.y);
     final x2 = math.max(right, other.right);
     final y2 = math.max(bottom, other.bottom);
-    return Rect.fromXYWH(x1, y1, x2 - x1, y2 - y1);
+    return Rect.fromLTWH(x1, y1, x2 - x1, y2 - y1);
   }
 
   /// Returns a union of this rectangle and [other].
@@ -129,7 +129,7 @@ final class Rect {
     final y1 = math.max(y, other.y);
     final x2 = math.min(right, other.right);
     final y2 = math.min(bottom, other.bottom);
-    return Rect.fromXYWH(x1, y1, math.max(0, x2 - x1), math.max(0, y2 - y1));
+    return Rect.fromLTWH(x1, y1, math.max(0, x2 - x1), math.max(0, y2 - y1));
   }
 
   /// Returns an intersection of this rectangle and [other].
@@ -170,7 +170,7 @@ final class Rect {
     final y = math.max(this.y, bounds.y);
     final right = math.min(this.right, bounds.right);
     final bottom = math.min(this.bottom, bounds.bottom);
-    return Rect.fromXYWH(x, y, right - x, bottom - y);
+    return Rect.fromLTWH(x, y, right - x, bottom - y);
   }
 
   /// Iterable of all offsets within this rectangle.
@@ -281,7 +281,7 @@ final class _RectRowsIterator implements Iterator<Rect> {
     }
 
     final y = _rect.y + _index;
-    _current = Rect.fromXYWH(_rect.x, y, _rect.width, 1);
+    _current = Rect.fromLTWH(_rect.x, y, _rect.width, 1);
     _index++;
     return true;
   }
@@ -318,7 +318,7 @@ final class _RectColumnsIterator implements Iterator<Rect> {
     }
 
     final x = _rect.x + _index;
-    _current = Rect.fromXYWH(x, _rect.y, 1, _rect.height);
+    _current = Rect.fromLTWH(x, _rect.y, 1, _rect.height);
     _index++;
     return true;
   }

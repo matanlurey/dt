@@ -16,20 +16,20 @@ void main() {
         ..has((a) => a.hashCode, 'hashCode').equals(b.hashCode);
     });
 
-    test('defaults to (0, 0)', () {
+    test('defaults to (1, 1)', () {
       final command = MoveCursorTo();
 
       check(command)
-        ..has((a) => a.row, 'row').equals(0)
-        ..has((a) => a.column, 'column').equals(0);
+        ..has((a) => a.row, 'row').equals(1)
+        ..has((a) => a.column, 'column').equals(1);
     });
 
     test('clamps negative row and column', () {
       final command = MoveCursorTo(-1, -1);
 
       check(command)
-        ..has((a) => a.row, 'row').equals(0)
-        ..has((a) => a.column, 'column').equals(0);
+        ..has((a) => a.row, 'row').equals(1)
+        ..has((a) => a.column, 'column').equals(1);
     });
 
     test('includes row and column in toString', () {
@@ -74,16 +74,16 @@ void main() {
   });
 
   group('MoveCursorToColumn', () {
-    test('defaults to 0', () {
+    test('defaults to 1', () {
       final command = MoveCursorToColumn();
 
-      check(command).has((a) => a.column, 'column').equals(0);
+      check(command).has((a) => a.column, 'column').equals(1);
     });
 
     test('clamps negative column', () {
       final command = MoveCursorToColumn(-1);
 
-      check(command).has((a) => a.column, 'column').equals(0);
+      check(command).has((a) => a.column, 'column').equals(1);
     });
 
     test('includes column in toString', () {

@@ -5,13 +5,14 @@ import 'dart:math' as math;
 import 'package:dt/foundation.dart';
 import 'package:dt/rendering.dart';
 import 'package:dt/terminal.dart';
+import 'package:dt/widgets.dart';
 
 /// Simulates Conway's Game of Life in the terminal.
 void main() async {
   final random = math.Random();
   final world = Grid.generate(
     io.stdout.terminalColumns,
-    io.stdout.terminalLines,
+    io.stdout.terminalLines - 1,
     (x, y) => random.nextBool(),
   );
 
@@ -42,12 +43,11 @@ Future<void> run(
     // Render.
     terminal.draw((frame) {
       frame.draw((buffer) {
-        for (var y = 0; y < height; y++) {
-          for (var x = 0; x < width; x++) {
-            final cell = world.get(x, y) ? Cell('█') : Cell.empty;
-            buffer.set(x, y, cell);
-          }
-        }
+        Footer(
+          main: _WorldWidget(world),
+          footer: Text('Press Ctrl+C to exit.'),
+          height: 1,
+        ).draw(buffer);
       });
     });
 
@@ -82,4 +82,19 @@ final _neighbors = [
 
 Future<void> _wait250ms() async {
   await Future<void>.delayed(const Duration(milliseconds: 250));
+}
+
+final class _WorldWidget extends Widget {
+  const _WorldWidget(this._world);
+  final Grid<bool> _world;
+
+  @override
+  void draw(Buffer output) {
+    for (var y = 0; y < _world.height; y++) {
+      for (var x = 0; x < _world.width; x++) {
+        final cell = _world.get(x, y) ? Cell('█') : Cell.empty;
+        output.set(x, y, cell);
+      }
+    }
+  }
 }

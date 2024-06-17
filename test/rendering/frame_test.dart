@@ -8,7 +8,7 @@ void main() {
     final buffer = Buffer(4, 2);
     final frame = Frame(buffer);
 
-    check(frame.size).equals(const Rect.fromXYWH(0, 0, 4, 2));
+    check(frame.size).equals(const Rect.fromLTWH(0, 0, 4, 2));
   });
 
   test('Frame.draw defaults to the entire buffer', () {
@@ -33,7 +33,7 @@ void main() {
       (b) {
         b.set(0, 0, Cell('#'));
       },
-      const Rect.fromXYWH(1, 0, 2, 1),
+      const Rect.fromLTWH(1, 0, 2, 1),
     );
 
     check(buffer.rows.map((r) => r.map((c) => c.symbol))).deepEquals([

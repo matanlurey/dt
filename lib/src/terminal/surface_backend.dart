@@ -64,7 +64,7 @@ mixin AnsiSurfaceBackend implements SurfaceBackend {
   @nonVirtual
   void draw(int x, int y, Cell cell) {
     // Move the cursor to the cell position.
-    moveCursorTo(x, y);
+    moveCursorTo(x + 1, y + 1);
 
     // Write the cell's content and style.
     _writeSequences(cell.style.toSequences(), cell.symbol);
@@ -184,7 +184,11 @@ final class _TestBackend
       if (sequence is Literal) {
         // Writes the literal content to the buffer.
         for (final char in sequence.value.characters) {
-          buffer.set(cursorPosition.x, cursorPosition.y, Cell(char, style));
+          buffer.set(
+            cursorPosition.x - 1,
+            cursorPosition.y - 1,
+            Cell(char, style),
+          );
         }
         continue;
       }
