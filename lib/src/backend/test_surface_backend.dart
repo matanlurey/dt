@@ -76,7 +76,7 @@ final class _TestSurfaceBackend
                 cursorPosition.y,
                 Cell(char, style),
               );
-              cursorPosition = Offset(cursorPosition.x + 1, cursorPosition.y);
+              cursorPosition += const Offset(1, 0);
             }
           }
         case MoveCursorTo(:final row, :final column):
