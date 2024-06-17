@@ -4,8 +4,8 @@
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, height=device-height, initial-scale=1, user-scalable=no">
-  <meta name="description" content="API docs for the draw method from the AnsiSurfaceBackend mixin, for the Dart programming language.">
-  <title>draw method - AnsiSurfaceBackend mixin - backend library - Dart API</title>
+  <meta name="description" content="API docs for the operator - method from the Offset class, for the Dart programming language.">
+  <title>operator - method - Offset class - foundation library - Dart API</title>
 
 
   
@@ -29,11 +29,11 @@
   <span id="sidenav-left-toggle" class="material-symbols-outlined" role="button" tabindex="0">menu</span>
   <ol class="breadcrumbs gt-separated dark hidden-xs">
     <li><a href="../../index.html">dt</a></li>
-    <li><a href="../../backend/backend-library.html">backend.dart</a></li>
-    <li><a href="../../backend/AnsiSurfaceBackend-mixin.html">AnsiSurfaceBackend</a></li>
-    <li class="self-crumb">draw method</li>
+    <li><a href="../../foundation/foundation-library.html">foundation.dart</a></li>
+    <li><a href="../../foundation/Offset-class.html">Offset</a></li>
+    <li class="self-crumb">operator - method</li>
   </ol>
-  <div class="self-name">draw</div>
+  <div class="self-name">operator -</div>
   <form class="search navbar-right" role="search">
     <input type="text" id="search-box" autocomplete="off" disabled class="form-control typeahead" placeholder="Loading search...">
   </form>
@@ -54,53 +54,33 @@
 <div
     id="dartdoc-main-content"
     class="main-content"
-    data-above-sidebar="backend&#47;AnsiSurfaceBackend-mixin-sidebar.html"
+    data-above-sidebar="foundation&#47;Offset-class-sidebar.html"
     data-below-sidebar="">
     <div>
-<h1><span class="kind-method">draw</span> method 
+<h1><span class="kind-method">operator -</span> method 
 </h1></div>
 
     <section class="multi-line-signature">
       
-  <div>
-    <ol class="annotation-list">
-        <li>@<a href="https://api.dart.dev/stable/3.4.4/dart-core/override-constant.html">override</a></li>
-        <li>@<a href="https://pub.dev/documentation/meta/1.15.0/meta/nonVirtual-constant.html">nonVirtual</a></li>
-    </ol>
-  </div>
 
-<span class="returntype">void</span>
-<span class="name ">draw</span>(<wbr><ol class="parameter-list"><li><span class="parameter" id="draw-param-x"><span class="type-annotation"><a href="https://api.dart.dev/stable/3.4.4/dart-core/int-class.html">int</a></span> <span class="parameter-name">x</span>, </span></li>
-<li><span class="parameter" id="draw-param-y"><span class="type-annotation"><a href="https://api.dart.dev/stable/3.4.4/dart-core/int-class.html">int</a></span> <span class="parameter-name">y</span>, </span></li>
-<li><span class="parameter" id="draw-param-cell"><span class="type-annotation"><a href="../../rendering/Cell-class.html">Cell</a></span> <span class="parameter-name">cell</span></span></li>
+<span class="returntype"><a href="../../foundation/Offset-class.html">Offset</a></span>
+<span class="name ">operator -</span>(<wbr><ol class="parameter-list"><li><span class="parameter" id="--param-other"><span class="type-annotation"><a href="../../foundation/Offset-class.html">Offset</a></span> <span class="parameter-name">other</span></span></li>
 </ol>)
 
-      <div class="features"><span class="feature">override</span></div>
+      
 
     </section>
     
 <section class="desc markdown">
-  <p>Draws a <code>cell</code> at the given <code>x</code> and <code>y</code> position.</p>
-<p>This method is provided as a convenience for drawing a single cell, and
-as a default implementation for the <a href="../../backend/AnsiSurfaceBackend/drawBatch.html">drawBatch</a> method, but should not be
-used for drawing multiple cells, as it may be less efficient.</p>
+  <p>Returns this offset decremented by the provided <code>other</code> offset.</p>
 </section>
 
 
     
 <section class="summary source-code" id="source">
   <h2><span>Implementation</span></h2>
-  <pre class="language-dart"><code class="language-dart">@override
-@nonVirtual
-void draw(int x, int y, Cell cell) {
-  &#47;&#47; Move the cursor to the cell position.
-  moveCursorTo(x, y);
-
-  &#47;&#47; Write the cell&#39;s content and style.
-  _writeSequences(cell.style.toSequences(), cell.symbol);
-
-  &#47;&#47; Reset the style to the default.
-  _writeSequences(Style.reset.toSequences());
+  <pre class="language-dart"><code class="language-dart">Offset operator -(Offset other) {
+  return Offset(x - other.x, y - other.y);
 }</code></pre>
 </section>
 
@@ -117,13 +97,13 @@ void draw(int x, int y, Cell cell) {
 
 <ol class="breadcrumbs gt-separated dark hidden-l" id="sidebar-nav">
     <li><a href="../../index.html">dt</a></li>
-    <li><a href="../../backend/backend-library.html">backend</a></li>
-    <li><a href="../../backend/AnsiSurfaceBackend-mixin.html">AnsiSurfaceBackend</a></li>
-    <li class="self-crumb">draw method</li>
+    <li><a href="../../foundation/foundation-library.html">foundation</a></li>
+    <li><a href="../../foundation/Offset-class.html">Offset</a></li>
+    <li class="self-crumb">operator - method</li>
 </ol>
 
 
-    <h5>AnsiSurfaceBackend mixin</h5>
+    <h5>Offset class</h5>
     <div id="dartdoc-sidebar-left-content"></div>
   </div><!--/.sidebar-offcanvas-->
 

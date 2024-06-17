@@ -89,7 +89,7 @@
   <pre class="language-dart"><code class="language-dart">@override
 @nonVirtual
 void moveCursorTo(int x, int y) {
-  _writeSequences([MoveCursorTo(y, x).toSequence()]);
+  _writeSequences([MoveCursorTo(y + 1, x + 1).toSequence()]);
 }</code></pre>
 </section>
 

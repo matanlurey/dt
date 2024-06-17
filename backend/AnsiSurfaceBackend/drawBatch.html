@@ -99,7 +99,7 @@ void drawBatch(
   int? width,
 }) {
   &#47;&#47; Move the cursor to the start position and write a reset sequence.
-  moveCursorTo(start.x + 1, start.y + 1);
+  moveCursorTo(start.x, start.y);
 
   &#47;&#47; TODO: Use dual-buffering instead of this one-off implementation.
   &#47;&#47;
