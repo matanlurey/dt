@@ -28,6 +28,15 @@ final class Rect {
         height = height < 0 ? 0 : height;
   // coverage:ignore-end
 
+  /// Creates a new rectangle of [width] and [height] with a default origin.
+  ///
+  /// If either [width] or [height] is negative, they are clamped to zero.
+  @literal
+  const Rect.fromSize(
+    int width,
+    int height,
+  ) : this.fromLTWH(0, 0, width, height);
+
   /// X-coordinate of the top-left corner of this rectangle.
   final int x;
 
@@ -192,23 +201,12 @@ final class Rect {
   /// ```
   Iterable<Offset> get offsets => _RectOffsets(this);
 
-  /// Iterable of all rows within this rectangle.
-  ///
-  /// Each row is a rectangle with the same width as this rectangle.
-  ///
-  /// The rows are ordered from top to bottom.
-  Iterable<Rect> get rows => _RectRows(this);
-
-  /// Iterable of all columns within this rectangle.
-  ///
-  /// Each column is a rectangle with the same height as this rectangle.
-  ///
-  /// The columns are ordered from left to right.
-  Iterable<Rect> get columns => _RectColumns(this);
-
   @override
   String toString() {
-    return 'Rect.fromXYWH($x, $y, $width, $height)';
+    if (x == 0 && y == 0) {
+      return 'Rect.fromSize($width, $height)';
+    }
+    return 'Rect.fromLTWH($x, $y, $width, $height)';
   }
 }
 
@@ -245,80 +243,6 @@ final class _RectOffsetsIterator implements Iterator<Offset> {
     final x = _rect.x + _index % _rect.width;
     final y = _rect.y + _index ~/ _rect.width;
     _current = Offset(x, y);
-    _index++;
-    return true;
-  }
-}
-
-final class _RectRows extends Iterable<Rect> {
-  final Rect rect;
-
-  _RectRows(this.rect);
-
-  @override
-  Iterator<Rect> get iterator => _RectRowsIterator(rect);
-}
-
-final class _RectRowsIterator implements Iterator<Rect> {
-  final Rect _rect;
-  final int _length;
-
-  Rect? _current;
-  var _index = 0;
-
-  _RectRowsIterator(this._rect) : _length = _rect.height;
-
-  @override
-  Rect get current {
-    return _current ?? (throw StateError('No row'));
-  }
-
-  @override
-  bool moveNext() {
-    if (_index >= _length) {
-      _current = null;
-      return false;
-    }
-
-    final y = _rect.y + _index;
-    _current = Rect.fromLTWH(_rect.x, y, _rect.width, 1);
-    _index++;
-    return true;
-  }
-}
-
-final class _RectColumns extends Iterable<Rect> {
-  final Rect rect;
-
-  _RectColumns(this.rect);
-
-  @override
-  Iterator<Rect> get iterator => _RectColumnsIterator(rect);
-}
-
-final class _RectColumnsIterator implements Iterator<Rect> {
-  final Rect _rect;
-  final int _length;
-
-  Rect? _current;
-  var _index = 0;
-
-  _RectColumnsIterator(this._rect) : _length = _rect.width;
-
-  @override
-  Rect get current {
-    return _current ?? (throw StateError('No column'));
-  }
-
-  @override
-  bool moveNext() {
-    if (_index >= _length) {
-      _current = null;
-      return false;
-    }
-
-    final x = _rect.x + _index;
-    _current = Rect.fromLTWH(x, _rect.y, 1, _rect.height);
     _index++;
     return true;
   }

@@ -71,20 +71,6 @@ void main() {
     ]);
   });
 
-  test('columns returns all columns in the rectangle', () {
-    check(Rect.fromLTWH(1, 1, 2, 2).columns).deepEquals([
-      Rect.fromLTWH(1, 1, 1, 2),
-      Rect.fromLTWH(2, 1, 1, 2),
-    ]);
-  });
-
-  test('rows returns all rows in the rectangle', () {
-    check(Rect.fromLTWH(1, 1, 2, 2).rows).deepEquals([
-      Rect.fromLTWH(1, 1, 2, 1),
-      Rect.fromLTWH(1, 2, 2, 1),
-    ]);
-  });
-
   test('area is width * height', () {
     check(Rect.fromLTWH(1, 2, 3, 4)).has((r) => r.area, 'area').equals(12);
   });
