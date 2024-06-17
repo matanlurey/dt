@@ -87,6 +87,14 @@ void main() {
           )
           .isTrue();
     });
+
+    test('pressed', () {
+      buffer.add((1, 2, 3, 4, 5, 6));
+
+      check(keys).has((k) => k.pressed, 'pressed').deepEquals([
+        [1, 2, 3, 4, 5, 6],
+      ]);
+    });
   });
 
   group('BufferedKeys.fromStream', () {

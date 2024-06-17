@@ -46,6 +46,14 @@ void main() {
         .equals(const Offset(1, 2).hashCode);
   });
 
+  test('Offset(1, 2) + Offset(2, 3)', () {
+    check(const Offset(1, 2) + const Offset(2, 3)).equals(const Offset(3, 5));
+  });
+
+  test('Offset(2, 3) - Offset(1, 2)', () {
+    check(const Offset(2, 3) - const Offset(1, 2)).equals(const Offset(1, 1));
+  });
+
   test('toPair returns (1, 2)', () {
     check(const Offset(1, 2).toPair()).equals((1, 2));
   });

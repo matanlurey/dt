@@ -33,6 +33,22 @@ void main() {
         Rect.fromLTWH(2, 0, 2, 5),
       ]);
     });
+
+    test('== and hashCode and toString', () {
+      final layout1 = FixedWidthColumns(width: 2);
+      final layout2 = FixedWidthColumns(width: 2);
+      final layout3 = FixedWidthColumns(width: 3);
+
+      check(layout1)
+        ..has((l) => l == layout1, '== layout1').isTrue()
+        ..has((l) => l == layout2, '== layout2').isTrue()
+        ..has((l) => l == layout3, '== layout3').isFalse()
+        ..has((l) => l.hashCode, 'hashCode').equals(layout2.hashCode)
+        ..has(
+          (l) => l.toString(),
+          'toString',
+        ).equals('FixedWidthColumns(width: 2)');
+    });
   });
 
   group('FixedHeightRows', () {
@@ -64,6 +80,22 @@ void main() {
         Rect.fromLTWH(0, 0, 5, 2),
         Rect.fromLTWH(0, 2, 5, 2),
       ]);
+    });
+
+    test('== and hashCode and toString', () {
+      final layout1 = FixedHeightRows(height: 2);
+      final layout2 = FixedHeightRows(height: 2);
+      final layout3 = FixedHeightRows(height: 3);
+
+      check(layout1)
+        ..has((l) => l == layout1, '== layout1').isTrue()
+        ..has((l) => l == layout2, '== layout2').isTrue()
+        ..has((l) => l == layout3, '== layout3').isFalse()
+        ..has((l) => l.hashCode, 'hashCode').equals(layout2.hashCode)
+        ..has(
+          (l) => l.toString(),
+          'toString',
+        ).equals('FixedHeightRows(height: 2)');
     });
   });
 }

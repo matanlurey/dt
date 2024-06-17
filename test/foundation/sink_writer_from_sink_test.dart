@@ -12,6 +12,16 @@ import 'package:dt/foundation.dart';
 import '../prelude.dart';
 
 void main() {
+  group('Writer.fromSink', () {
+    _runTests((sink) => Writer.fromSink(sink, onFlush: sink.flush));
+  });
+
+  group('Writer.fromStringSink', () {
+    _runTests((pipe) => Writer.fromStringSink(pipe, onFlush: pipe.flush));
+  });
+}
+
+void _runTests(Writer Function(io.WritePipe) createWriter) {
   late Future<void> Function() close;
 
   late Writer writer;
@@ -20,7 +30,7 @@ void main() {
   setUp(() async {
     final pipe = await io.Pipe.create();
     close = pipe.write.close;
-    writer = Writer.fromSink(pipe.write, onFlush: pipe.write.flush);
+    writer = createWriter(pipe.write);
     output = pipe.read.transform(const Utf8Decoder());
   });
 
