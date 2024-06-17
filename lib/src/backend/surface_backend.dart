@@ -9,7 +9,7 @@ import 'ansi_surface_backend.dart';
 ///
 /// Most applications will not interact with the [SurfaceBackend] type directly,
 /// and instead use the higher-level `Surface` API.
-abstract class SurfaceBackend {
+abstract mixin class SurfaceBackend {
   /// Creates a new backend that writes to the given [stdout].
   ///
   /// This is the most common backend used for writing to the terminal.

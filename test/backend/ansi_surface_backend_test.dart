@@ -11,7 +11,7 @@ void main() {
     final backend = _TestBackend(writer, (5, 2));
 
     backend.drawBatch([
-      Cell('H'),
+      Cell('H', Style(foreground: Color16.red, background: Color16.blue)),
       Cell('e'),
       Cell('l'),
       Cell('l'),
@@ -27,7 +27,12 @@ void main() {
     check(commands).deepEquals([
       MoveCursorTo(),
       resetStyle,
-      Print('Hello\nWorld'),
+      SetColor16(Color16.red.foregroundIndex),
+      SetColor16(Color16.blue.backgroundIndex),
+      Print('H'),
+      SetColor16.resetForeground,
+      SetColor16.resetBackground,
+      Print('ello\nWorld'),
     ]);
   });
 }

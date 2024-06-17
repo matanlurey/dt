@@ -22,4 +22,6 @@ library layout;
 import 'foundation.dart';
 
 export 'foundation.dart' show Offset, Rect;
+export 'src/layout/layout.dart'
+    show FixedHeightRows, FixedWidthColumns, LayoutRect, LayoutSpec;
 export 'src/layout/spacing.dart' show Spacing;

@@ -73,6 +73,12 @@ final class Style {
     if (this == reset) {
       return 'Style.reset';
     }
-    return 'Style(foreground: $foreground, background: $background)';
+    if (foreground == null) {
+      return 'Style(background: $background)';
+    } else if (background == null) {
+      return 'Style(foreground: $foreground)';
+    } else {
+      return 'Style(foreground: $foreground, background: $background)';
+    }
   }
 }

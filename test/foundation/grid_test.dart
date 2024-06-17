@@ -3,6 +3,18 @@ import 'package:dt/foundation.dart';
 import '../prelude.dart';
 
 void main() {
+  test('get throws an assertion', () {
+    final grid = Grid.generate(3, 3, (x, y) => (x, y));
+
+    check(() => grid.get(3, 3)).throws<AssertionError>();
+  });
+
+  test('set throws an assertion', () {
+    final grid = Grid.generate(3, 3, (x, y) => (x, y));
+
+    check(() => grid.set(3, 3, (3, 3))).throws<AssertionError>();
+  });
+
   test('columns', () {
     final grid = Grid.generate(3, 3, (x, y) => (x, y));
 

@@ -18,7 +18,11 @@ void main() {
     check(Rect.fromLTWH(0, 0, 1, -1)).equals(Rect.fromLTWH(0, 0, 1, 0));
   });
 
-  test('Rect.fromXYWH(1, 2, 3, 4) is (1, 2, 3, 4)', () {
+  test('Rect.fromSize is (0, 0, width, height)', () {
+    check(Rect.fromSize(1, 2)).equals(Rect.fromLTWH(0, 0, 1, 2));
+  });
+
+  test('Rect.fromLTWH(1, 2, 3, 4) is (1, 2, 3, 4)', () {
     check(Rect.fromLTWH(1, 2, 3, 4)).equals(Rect.fromLTWH(1, 2, 3, 4));
     check(Rect.fromLTWH(1, 2, 3, 4))
         .has((r) => r.hashCode, 'hashCode')
@@ -57,9 +61,9 @@ void main() {
     check(Rect.fromLTWH(1, 2, 3, 4).bottomRight).equals(Offset(4, 6));
   });
 
-  test('toString returns "Rect.fromXYWH(1, 2, 3, 4)"', () {
+  test('toString returns "Rect.fromLTWH(1, 2, 3, 4)"', () {
     check(Rect.fromLTWH(1, 2, 3, 4).toString())
-        .equals('Rect.fromXYWH(1, 2, 3, 4)');
+        .equals('Rect.fromLTWH(1, 2, 3, 4)');
   });
 
   test('offsets returns all offsets in the rectangle', () {
@@ -68,20 +72,6 @@ void main() {
       Offset(2, 1),
       Offset(1, 2),
       Offset(2, 2),
-    ]);
-  });
-
-  test('columns returns all columns in the rectangle', () {
-    check(Rect.fromLTWH(1, 1, 2, 2).columns).deepEquals([
-      Rect.fromLTWH(1, 1, 1, 2),
-      Rect.fromLTWH(2, 1, 1, 2),
-    ]);
-  });
-
-  test('rows returns all rows in the rectangle', () {
-    check(Rect.fromLTWH(1, 1, 2, 2).rows).deepEquals([
-      Rect.fromLTWH(1, 1, 2, 1),
-      Rect.fromLTWH(1, 2, 2, 1),
     ]);
   });
 

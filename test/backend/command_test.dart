@@ -431,6 +431,44 @@ void main() {
     });
   });
 
+  group('Print', () {
+    test('== and hashCode', () {
+      final a = Print('a');
+      final b = Print('a');
+      final c = Print('b');
+
+      check(a)
+        ..has((a) => a == b, '== b').isTrue()
+        ..has((a) => a == c, '== c').isFalse()
+        ..has((a) => a.hashCode, 'hashCode').equals(b.hashCode);
+    });
+
+    test('includes text in toString', () {
+      final command = Print('Hello, World!');
+
+      check(command.toString())
+        ..contains('Print')
+        ..contains('Hello, World!');
+    });
+
+    test('converts to sequence', () {
+      final command = Print('Hello, World!');
+
+      check(command.toSequence())
+          .isA<Literal>()
+          .has((a) => a.value, 'value')
+          .equals('Hello, World!');
+    });
+
+    test('converts back to Command', () {
+      final Command a = Print('Hello, World!');
+      final Command b = Print('Hello, World!');
+
+      check(a).equals(Command.tryParse(a.toSequence().toTerse())!);
+      check(b).equals(Command.tryParse(b.toSequence().toTerse())!);
+    });
+  });
+
   test('Command.none returns Sequence.none', () {
     check(Command.none)
         .has((a) => a.toSequence(), 'toSequence')
