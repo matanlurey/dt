@@ -13,6 +13,7 @@ export 'src/rendering/command.dart'
         SetColor16,
         SetCursorVisibility,
         SetForegroundColor256,
+        SynchronizedUpdate,
         resetStyle;
 export 'src/rendering/frame.dart' show Frame;
 export 'src/rendering/line.dart' show Line;

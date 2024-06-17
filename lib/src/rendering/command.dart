@@ -19,11 +19,13 @@ abstract mixin class Command {
         'h' => switch (sequence.parameters) {
             [25] => SetCursorVisibility.visible,
             [1049] => AlternateScreenBuffer.enter,
+            [2026] => SynchronizedUpdate.start,
             _ => null,
           },
         'l' => switch (sequence.parameters) {
             [25] => SetCursorVisibility.hidden,
             [1049] => AlternateScreenBuffer.leave,
+            [2026] => SynchronizedUpdate.end,
             _ => null,
           },
         _ => null,
@@ -232,6 +234,33 @@ enum AlternateScreenBuffer implements Command {
   );
 
   const AlternateScreenBuffer(this._sequence);
+  final EscapeSequence _sequence;
+
+  @override
+  Sequence toSequence() => _sequence;
+}
+
+/// Instructs the terminal to start or end a synchronized update.
+///
+/// A synchronized update is a way to prevent the terminal from rendering
+/// intermediate states of a complex update. For example, if you are updating
+/// multiple lines of text, you can start a synchronized update, update all the
+/// lines, and then end the synchronized update. This will prevent the terminal
+/// from rendering the intermediate states of the update.
+///
+/// **NOTE**: Not all terminals support synchronized updates.
+enum SynchronizedUpdate implements Command {
+  /// Starts a synchronized update.
+  start(
+    EscapeSequence.unchecked('h', prefix: '?', parameters: [2026]),
+  ),
+
+  /// Ends a synchronized update.
+  end(
+    EscapeSequence.unchecked('l', prefix: '?', parameters: [2026]),
+  );
+
+  const SynchronizedUpdate(this._sequence);
   final EscapeSequence _sequence;
 
   @override

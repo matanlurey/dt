@@ -3,7 +3,7 @@ import 'dart:io' as io;
 import 'package:dt/layout.dart';
 import 'package:dt/rendering.dart';
 
-import 'backend.dart';
+import 'surface_backend.dart';
 
 /// An interface to interact and draw [Frame]s on a terminal.
 abstract final class Surface {
@@ -63,9 +63,12 @@ final class _Terminal implements Surface {
 
     // Get a frame.
     final frame = _frame;
-
-    // Render the frame.
-    render(frame);
+    try {
+      _backend.startSynchronizedUpdate();
+      render(frame);
+    } finally {
+      _backend.endSynchronizedUpdate();
+    }
 
     // Draw the buffer to the terminal.
     for (var y = 0; y < frame.size.height; y++) {

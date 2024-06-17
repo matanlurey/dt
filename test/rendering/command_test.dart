@@ -167,6 +167,32 @@ void main() {
     });
   });
 
+  group('SynchronizedUpdate', () {
+    test('start', () {
+      final Command command = SynchronizedUpdate.start;
+      final sequence = command.toSequence();
+
+      check(sequence).isA<EscapeSequence>()
+        ..has((a) => a.finalChars, 'finalByte').equals('h')
+        ..has((a) => a.prefix, 'prefix').equals('?')
+        ..has((a) => a.parameters, 'parameters').deepEquals([2026]);
+
+      check(command).equals(Command.tryParse(sequence)!);
+    });
+
+    test('end', () {
+      final Command command = SynchronizedUpdate.end;
+      final sequence = command.toSequence();
+
+      check(sequence).isA<EscapeSequence>()
+        ..has((a) => a.finalChars, 'finalByte').equals('l')
+        ..has((a) => a.prefix, 'prefix').equals('?')
+        ..has((a) => a.parameters, 'parameters').deepEquals([2026]);
+
+      check(command).equals(Command.tryParse(sequence)!);
+    });
+  });
+
   group('ClearScreen', () {
     test('all', () {
       final Command command = ClearScreen.all;

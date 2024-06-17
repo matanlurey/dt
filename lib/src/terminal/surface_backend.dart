@@ -30,6 +30,12 @@ abstract class SurfaceBackend {
   /// Flushes any buffered content to the terminal screen.
   Future<void> flush();
 
+  /// Starts a synchronized update.
+  void startSynchronizedUpdate();
+
+  /// Ends a synchronized update.
+  void endSynchronizedUpdate();
+
   /// Hides the terminal cursor.
   void hideCursor();
 
@@ -93,6 +99,18 @@ mixin AnsiSurfaceBackend implements SurfaceBackend {
   @nonVirtual
   void moveCursorTo(int x, int y) {
     _writeSequences([MoveCursorTo(y, x).toSequence()]);
+  }
+
+  @override
+  @nonVirtual
+  void startSynchronizedUpdate() {
+    _writeSequences([SynchronizedUpdate.start.toSequence()]);
+  }
+
+  @override
+  @nonVirtual
+  void endSynchronizedUpdate() {
+    _writeSequences([SynchronizedUpdate.end.toSequence()]);
   }
 }
 
