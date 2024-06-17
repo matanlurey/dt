@@ -10,5 +10,4 @@ library;
 export 'src/foundation/grid.dart' show Grid, ListGrid;
 export 'src/foundation/offset.dart' show Offset;
 export 'src/foundation/rect.dart' show Rect;
-export 'src/foundation/sequence.dart' show EscapeSequence, Literal, Sequence;
 export 'src/foundation/writer.dart' show BufferedWriter, StringWriter, Writer;

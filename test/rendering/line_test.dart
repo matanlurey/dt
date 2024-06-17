@@ -22,7 +22,7 @@ void main() {
           'toString()',
         )
         .equals(
-          'Line([Span("Hello", Style.inherit)], style: Style.inherit, alignment: Alignment.inherit)',
+          'Line([Span("Hello", Style.inherit)], style: Style.inherit, alignment: Alignment.left)',
         );
   });
 

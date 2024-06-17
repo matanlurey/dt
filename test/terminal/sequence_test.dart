@@ -1,4 +1,4 @@
-import 'package:dt/foundation.dart';
+import 'package:dt/terminal.dart';
 
 import '../prelude.dart';
 

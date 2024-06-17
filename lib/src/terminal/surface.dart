@@ -3,6 +3,8 @@ import 'dart:io' as io;
 import 'package:dt/layout.dart';
 import 'package:dt/rendering.dart';
 
+import 'command.dart';
+import 'frame.dart';
 import 'surface_backend.dart';
 
 /// An interface to interact and draw [Frame]s on a terminal.

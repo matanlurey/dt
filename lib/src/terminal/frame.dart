@@ -1,6 +1,6 @@
 import 'package:dt/layout.dart';
 
-import 'buffer.dart';
+import '../rendering/buffer.dart';
 
 /// A consistent view into a terminal state for rendering a single frame.
 ///

@@ -8,7 +8,7 @@ import 'style.dart';
 @immutable
 final class Line {
   /// An empty line with no spans, inheriting style and alignment.
-  static const empty = Line._([], Style.inherit, Alignment.inherit);
+  static const empty = Line._([], Style.inherit, Alignment.left);
 
   /// Creates a new line of text with the given [spans].
   ///
@@ -18,7 +18,7 @@ final class Line {
   Line(
     Iterable<Span> spans, {
     Style style = Style.inherit,
-    Alignment alignment = Alignment.inherit,
+    Alignment alignment = Alignment.left,
   }) : this._(List.unmodifiable(spans), style, alignment);
 
   const Line._(this.spans, this.style, this.alignment);

@@ -1,6 +1,6 @@
 import 'package:meta/meta.dart';
 
-import '../foundation/sequence.dart';
+import 'sequence.dart';
 
 /// An interface for a command that performs an action on a terminal.
 ///

@@ -1,7 +1,5 @@
 import 'package:meta/meta.dart';
 
-import 'command.dart';
-
 /// A sealed type representing multiple types of colors.
 @immutable
 sealed class Color {
@@ -12,23 +10,11 @@ sealed class Color {
   static const Color inherit = _InheritedColor();
 
   const Color();
-
-  /// Returns a command that sets the foreground color to this color.
-  Command setForeground();
-
-  /// Returns a command that sets the background color to this color.
-  Command setBackground();
 }
 
 final class _InheritedColor extends Color {
   @literal
   const _InheritedColor();
-
-  @override
-  Command setForeground() => Command.none;
-
-  @override
-  Command setBackground() => Command.none;
 
   @override
   String toString() => 'Color.inherit';
@@ -39,17 +25,11 @@ final class _ResetColor extends Color {
   const _ResetColor();
 
   @override
-  Command setForeground() => SetColor16.resetForeground;
-
-  @override
-  Command setBackground() => SetColor16.resetBackground;
-
-  @override
   String toString() => 'Color.reset';
 }
 
 /// 4-bit ANSI color palette that includes 8 basic colors and 8 bright colors.
-enum AnsiColor implements Color {
+enum Color16 implements Color {
   /// ANSI color `black`.
   ///
   /// Represented by `#000000` in xterm.
@@ -145,32 +125,10 @@ enum AnsiColor implements Color {
   /// Returns the dim version of this color.
   ///
   /// If this color is already dim, it is returned as-is.
-  AnsiColor toDim() => isDim ? this : AnsiColor.values[index - 8];
+  Color16 toDim() => isDim ? this : Color16.values[index - 8];
 
   /// Returns the bright version of this color.
   ///
   /// If this color is already bright, it is returned as-is.
-  AnsiColor toBright() => isBright ? this : AnsiColor.values[index + 8];
-
-  static const _dimForegroundOffset = 30;
-  static const _brightForegroundOffset = 90;
-
-  /// The index of this color in a [SetColor16] command.
-  int get foregroundIndex {
-    return index + (isBright ? _brightForegroundOffset : _dimForegroundOffset);
-  }
-
-  @override
-  Command setForeground() => SetColor16(foregroundIndex);
-
-  static const _dimBackgroundOffset = 40;
-  static const _brightBackgroundOffset = 100;
-
-  /// The index of this color in a [SetColor16] command.
-  int get backgroundIndex {
-    return index + (isBright ? _brightBackgroundOffset : _dimBackgroundOffset);
-  }
-
-  @override
-  Command setBackground() => SetColor16(backgroundIndex);
+  Color16 toBright() => isBright ? this : Color16.values[index + 8];
 }
