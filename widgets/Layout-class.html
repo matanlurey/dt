@@ -4,8 +4,8 @@
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, height=device-height, initial-scale=1, user-scalable=no">
-  <meta name="description" content="API docs for the Widget class from the widgets library, for the Dart programming language.">
-  <title>Widget class - widgets library - Dart API</title>
+  <meta name="description" content="API docs for the Layout class from the widgets library, for the Dart programming language.">
+  <title>Layout class - widgets library - Dart API</title>
 
 
   
@@ -30,9 +30,9 @@
   <ol class="breadcrumbs gt-separated dark hidden-xs">
     <li><a href="../index.html">dt</a></li>
     <li><a href="../widgets/widgets-library.html">widgets.dart</a></li>
-    <li class="self-crumb">Widget class</li>
+    <li class="self-crumb">Layout class</li>
   </ol>
-  <div class="self-name">Widget</div>
+  <div class="self-name">Layout</div>
   <form class="search navbar-right" role="search">
     <input type="text" id="search-box" autocomplete="off" disabled class="form-control typeahead" placeholder="Loading search...">
   </form>
@@ -54,33 +54,37 @@
     id="dartdoc-main-content"
     class="main-content"
     data-above-sidebar="widgets&#47;widgets-library-sidebar.html"
-    data-below-sidebar="widgets&#47;Widget-class-sidebar.html">
+    data-below-sidebar="widgets&#47;Layout-class-sidebar.html">
     <div>
-<h1><span class="kind-class">Widget</span> class 
-    <a href="https://dart.dev/language/class-modifiers#abstract" class="feature feature-abstract" title="This type can not be directly constructed.">abstract</a>
+<h1><span class="kind-class">Layout</span> class 
+    <a href="https://dart.dev/language/class-modifiers#final" class="feature feature-final" title="This class can neither be extended, implemented, nor mixed in.">final</a>
  
 </h1></div>
 
     
 <section class="desc markdown">
-  <p>A widget is a type that can be drawn on a <a href="../rendering/Buffer-extension-type.html">Buffer</a>.</p>
+  <p>A widget that lays out other widgets according to a layout algorithm.</p>
+<p>The layout must divide the area into the exact number of sub-areas as there
+are <a href="../widgets/Layout/children.html">children</a>, and the children are then drawn in those sub-areas in the
+order they are provided.</p>
 </section>
 
 
     <section>
       <dl class="dl-horizontal">
         
+  <dt>Inheritance</dt>
+  <dd>
+    <ul class="gt-separated dark clazz-relationships">
+      <li><a href="https://api.dart.dev/stable/3.4.4/dart-core/Object-class.html">Object</a></li>
+        <li><a href="../widgets/Widget-class.html">Widget</a></li>
+      <li>Layout</li>
+    </ul>
+  </dd>
 
         
         
 
-          <dt>Implementers</dt>
-          <dd><ul class="comma-separated clazz-relationships">
-              <li><a href="../widgets/Footer-class.html">Footer</a></li>
-              <li><a href="../widgets/Layout-class.html">Layout</a></li>
-              <li><a href="../widgets/Padding-class.html">Padding</a></li>
-              <li><a href="../widgets/Text-class.html">Text</a></li>
-          </ul></dd>
 
 
         
@@ -94,21 +98,33 @@
     <h2>Constructors</h2>
 
     <dl class="constructor-summary-list">
-        <dt id="Widget" class="callable">
-          <span class="name"><a href="../widgets/Widget/Widget.html">Widget</a></span><span class="signature">()</span>
+        <dt id="Layout" class="callable">
+          <span class="name"><a href="../widgets/Layout/Layout.html">Layout</a></span><span class="signature">(<span class="parameter" id="-param-layout"><span class="type-annotation"><a href="../layout/LayoutSpec-class.html">LayoutSpec</a></span> <span class="parameter-name">layout</span>, </span><span class="parameter" id="-param-children"><span class="type-annotation"><a href="https://api.dart.dev/stable/3.4.4/dart-core/List-class.html">List</a><span class="signature">&lt;<wbr><span class="type-parameter"><a href="../widgets/Widget-class.html">Widget</a></span>&gt;</span></span> <span class="parameter-name">children</span></span>)</span>
         </dt>
         <dd>
-          
+          Creates a layout widget.
             <div class="constructor-modifier features">const</div>
         </dd>
     </dl>
   </section>
     
   <section
-      class="summary offset-anchor inherited"
+      class="summary offset-anchor"
       id="instance-properties">
     <h2>Properties</h2>
     <dl class="properties">
+        <dt id="children" class="property">
+  <span class="name"><a href="../widgets/Layout/children.html">children</a></span>
+  <span class="signature">&#8594; <a href="https://api.dart.dev/stable/3.4.4/dart-core/List-class.html">List</a><span class="signature">&lt;<wbr><span class="type-parameter"><a href="../widgets/Widget-class.html">Widget</a></span>&gt;</span></span>
+  
+
+</dt>
+<dd>
+  The children to lay out.
+  <div class="features"><span class="feature">final</span></div>
+
+</dd>
+
         <dt id="hashCode" class="property inherited">
   <span class="name"><a href="https://api.dart.dev/stable/3.4.4/dart-core/Object/hashCode.html">hashCode</a></span>
   <span class="signature">&#8594; <a href="https://api.dart.dev/stable/3.4.4/dart-core/int-class.html">int</a></span>
@@ -118,6 +134,18 @@
 <dd class="inherited">
   The hash code for this object.
   <div class="features"><span class="feature">no setter</span><span class="feature">inherited</span></div>
+
+</dd>
+
+        <dt id="layout" class="property">
+  <span class="name"><a href="../widgets/Layout/layout.html">layout</a></span>
+  <span class="signature">&#8594; <a href="../layout/LayoutSpec-class.html">LayoutSpec</a></span>
+  
+
+</dt>
+<dd>
+  The layout algorithm to use.
+  <div class="features"><span class="feature">final</span></div>
 
 </dd>
 
@@ -142,7 +170,7 @@
     <h2>Methods</h2>
     <dl class="callables">
         <dt id="draw" class="callable">
-  <span class="name"><a href="../widgets/Widget/draw.html">draw</a></span><span class="signature">(<wbr><span class="parameter" id="draw-param-buffer"><span class="type-annotation"><a href="../rendering/Buffer-extension-type.html">Buffer</a></span> <span class="parameter-name">buffer</span></span>)
+  <span class="name"><a href="../widgets/Layout/draw.html">draw</a></span><span class="signature">(<wbr><span class="parameter" id="draw-param-buffer"><span class="type-annotation"><a href="../rendering/Buffer-extension-type.html">Buffer</a></span> <span class="parameter-name">buffer</span></span>)
     <span class="returntype parameter">&#8594; void</span>
   </span>
   
@@ -150,7 +178,7 @@
 </dt>
 <dd>
   Draws the widget on the <code>buffer</code>.
-  
+  <div class="features"><span class="feature">override</span></div>
 
 </dd>
 
@@ -221,7 +249,7 @@
 <ol class="breadcrumbs gt-separated dark hidden-l" id="sidebar-nav">
     <li><a href="../index.html">dt</a></li>
     <li><a href="../widgets/widgets-library.html">widgets</a></li>
-    <li class="self-crumb">Widget class</li>
+    <li class="self-crumb">Layout class</li>
 </ol>
 
 

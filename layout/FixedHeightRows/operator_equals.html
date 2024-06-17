@@ -4,8 +4,8 @@
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, height=device-height, initial-scale=1, user-scalable=no">
-  <meta name="description" content="API docs for the toString method from the Style class, for the Dart programming language.">
-  <title>toString method - Style class - rendering library - Dart API</title>
+  <meta name="description" content="API docs for the operator == method from the FixedHeightRows class, for the Dart programming language.">
+  <title>operator == method - FixedHeightRows class - layout library - Dart API</title>
 
 
   
@@ -29,11 +29,11 @@
   <span id="sidenav-left-toggle" class="material-symbols-outlined" role="button" tabindex="0">menu</span>
   <ol class="breadcrumbs gt-separated dark hidden-xs">
     <li><a href="../../index.html">dt</a></li>
-    <li><a href="../../rendering/rendering-library.html">rendering.dart</a></li>
-    <li><a href="../../rendering/Style-class.html">Style</a></li>
-    <li class="self-crumb">toString method</li>
+    <li><a href="../../layout/layout-library.html">layout.dart</a></li>
+    <li><a href="../../layout/FixedHeightRows-class.html">FixedHeightRows</a></li>
+    <li class="self-crumb">operator == method</li>
   </ol>
-  <div class="self-name">toString</div>
+  <div class="self-name">operator ==</div>
   <form class="search navbar-right" role="search">
     <input type="text" id="search-box" autocomplete="off" disabled class="form-control typeahead" placeholder="Loading search...">
   </form>
@@ -54,10 +54,10 @@
 <div
     id="dartdoc-main-content"
     class="main-content"
-    data-above-sidebar="rendering&#47;Style-class-sidebar.html"
+    data-above-sidebar="layout&#47;FixedHeightRows-class-sidebar.html"
     data-below-sidebar="">
     <div>
-<h1><span class="kind-method">toString</span> method 
+<h1><span class="kind-method">operator ==</span> method 
 </h1></div>
 
     <section class="multi-line-signature">
@@ -68,24 +68,42 @@
     </ol>
   </div>
 
-<span class="returntype"><a href="https://api.dart.dev/stable/3.4.4/dart-core/String-class.html">String</a></span>
-<span class="name ">toString</span>(<wbr>)
+<span class="returntype"><a href="https://api.dart.dev/stable/3.4.4/dart-core/bool-class.html">bool</a></span>
+<span class="name ">operator ==</span>(<wbr><ol class="parameter-list"><li><span class="parameter" id="==-param-other"><span class="type-annotation"><a href="https://api.dart.dev/stable/3.4.4/dart-core/Object-class.html">Object</a></span> <span class="parameter-name">other</span></span></li>
+</ol>)
 
       <div class="features"><span class="feature">override</span></div>
 
     </section>
     
 <section class="desc markdown">
-  <p>A string representation of this object.</p>
-<p>Some classes have a default textual representation,
-often paired with a static <code>parse</code> function (like <a href="https://api.dart.dev/stable/3.4.4/dart-core/int/parse.html">int.parse</a>).
-These classes will provide the textual representation as
-their string representation.</p>
-<p>Other classes have no meaningful textual representation
-that a program will care about.
-Such classes will typically override <code>toString</code> to provide
-useful information when inspecting the object,
-mainly for debugging or logging.</p>
+  <p>The equality operator.</p>
+<p>The default behavior for all <a href="https://api.dart.dev/stable/3.4.4/dart-core/Object-class.html">Object</a>s is to return true if and
+only if this object and <code>other</code> are the same object.</p>
+<p>Override this method to specify a different equality relation on
+a class. The overriding method must still be an equivalence relation.
+That is, it must be:</p>
+<ul>
+<li>
+<p>Total: It must return a boolean for all arguments. It should never throw.</p>
+</li>
+<li>
+<p>Reflexive: For all objects <code>o</code>, <code>o == o</code> must be true.</p>
+</li>
+<li>
+<p>Symmetric: For all objects <code>o1</code> and <code>o2</code>, <code>o1 == o2</code> and <code>o2 == o1</code> must
+either both be true, or both be false.</p>
+</li>
+<li>
+<p>Transitive: For all objects <code>o1</code>, <code>o2</code>, and <code>o3</code>, if <code>o1 == o2</code> and
+<code>o2 == o3</code> are true, then <code>o1 == o3</code> must be true.</p>
+</li>
+</ul>
+<p>The method should also be consistent over time,
+so whether two objects are equal should only change
+if at least one of the objects was modified.</p>
+<p>If a subclass overrides the equality operator, it should override
+the <a href="../../layout/FixedHeightRows/hashCode.html">hashCode</a> method as well to maintain consistency.</p>
 </section>
 
 
@@ -93,20 +111,8 @@ mainly for debugging or logging.</p>
 <section class="summary source-code" id="source">
   <h2><span>Implementation</span></h2>
   <pre class="language-dart"><code class="language-dart">@override
-String toString() {
-  if (this == none) {
-    return &#39;Style.none&#39;;
-  }
-  if (this == reset) {
-    return &#39;Style.reset&#39;;
-  }
-  if (foreground == null) {
-    return &#39;Style(background: $background)&#39;;
-  } else if (background == null) {
-    return &#39;Style(foreground: $foreground)&#39;;
-  } else {
-    return &#39;Style(foreground: $foreground, background: $background)&#39;;
-  }
+bool operator ==(Object other) {
+  return other is FixedHeightRows &amp;&amp; other.height == height;
 }</code></pre>
 </section>
 
@@ -123,13 +129,13 @@ String toString() {
 
 <ol class="breadcrumbs gt-separated dark hidden-l" id="sidebar-nav">
     <li><a href="../../index.html">dt</a></li>
-    <li><a href="../../rendering/rendering-library.html">rendering</a></li>
-    <li><a href="../../rendering/Style-class.html">Style</a></li>
-    <li class="self-crumb">toString method</li>
+    <li><a href="../../layout/layout-library.html">layout</a></li>
+    <li><a href="../../layout/FixedHeightRows-class.html">FixedHeightRows</a></li>
+    <li class="self-crumb">operator == method</li>
 </ol>
 
 
-    <h5>Style class</h5>
+    <h5>FixedHeightRows class</h5>
     <div id="dartdoc-sidebar-left-content"></div>
   </div><!--/.sidebar-offcanvas-->
 

@@ -4,8 +4,8 @@
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, height=device-height, initial-scale=1, user-scalable=no">
-  <meta name="description" content="API docs for the Widget class from the widgets library, for the Dart programming language.">
-  <title>Widget class - widgets library - Dart API</title>
+  <meta name="description" content="API docs for the LayoutSpec class from the layout library, for the Dart programming language.">
+  <title>LayoutSpec class - layout library - Dart API</title>
 
 
   
@@ -29,10 +29,10 @@
   <span id="sidenav-left-toggle" class="material-symbols-outlined" role="button" tabindex="0">menu</span>
   <ol class="breadcrumbs gt-separated dark hidden-xs">
     <li><a href="../index.html">dt</a></li>
-    <li><a href="../widgets/widgets-library.html">widgets.dart</a></li>
-    <li class="self-crumb">Widget class</li>
+    <li><a href="../layout/layout-library.html">layout.dart</a></li>
+    <li class="self-crumb">LayoutSpec class</li>
   </ol>
-  <div class="self-name">Widget</div>
+  <div class="self-name">LayoutSpec</div>
   <form class="search navbar-right" role="search">
     <input type="text" id="search-box" autocomplete="off" disabled class="form-control typeahead" placeholder="Loading search...">
   </form>
@@ -53,17 +53,18 @@
 <div
     id="dartdoc-main-content"
     class="main-content"
-    data-above-sidebar="widgets&#47;widgets-library-sidebar.html"
-    data-below-sidebar="widgets&#47;Widget-class-sidebar.html">
+    data-above-sidebar="layout&#47;layout-library-sidebar.html"
+    data-below-sidebar="layout&#47;LayoutSpec-class-sidebar.html">
     <div>
-<h1><span class="kind-class">Widget</span> class 
+<h1><span class="kind-class">LayoutSpec</span> class 
     <a href="https://dart.dev/language/class-modifiers#abstract" class="feature feature-abstract" title="This type can not be directly constructed.">abstract</a>
+    <a href="https://dart.dev/language/class-modifiers#interface" class="feature feature-interface" title="This class can only be implemented (not extended or mixed in).">interface</a>
  
 </h1></div>
 
     
 <section class="desc markdown">
-  <p>A widget is a type that can be drawn on a <a href="../rendering/Buffer-extension-type.html">Buffer</a>.</p>
+  <p>A layout is a way to split an area into multiple sub-areas.</p>
 </section>
 
 
@@ -76,10 +77,8 @@
 
           <dt>Implementers</dt>
           <dd><ul class="comma-separated clazz-relationships">
-              <li><a href="../widgets/Footer-class.html">Footer</a></li>
-              <li><a href="../widgets/Layout-class.html">Layout</a></li>
-              <li><a href="../widgets/Padding-class.html">Padding</a></li>
-              <li><a href="../widgets/Text-class.html">Text</a></li>
+              <li><a href="../layout/FixedHeightRows-class.html">FixedHeightRows</a></li>
+              <li><a href="../layout/FixedWidthColumns-class.html">FixedWidthColumns</a></li>
           </ul></dd>
 
 
@@ -94,12 +93,11 @@
     <h2>Constructors</h2>
 
     <dl class="constructor-summary-list">
-        <dt id="Widget" class="callable">
-          <span class="name"><a href="../widgets/Widget/Widget.html">Widget</a></span><span class="signature">()</span>
+        <dt id="LayoutSpec" class="callable">
+          <span class="name"><a href="../layout/LayoutSpec/LayoutSpec.html">LayoutSpec</a></span><span class="signature">()</span>
         </dt>
         <dd>
           
-            <div class="constructor-modifier features">const</div>
         </dd>
     </dl>
   </section>
@@ -141,19 +139,6 @@
       id="instance-methods">
     <h2>Methods</h2>
     <dl class="callables">
-        <dt id="draw" class="callable">
-  <span class="name"><a href="../widgets/Widget/draw.html">draw</a></span><span class="signature">(<wbr><span class="parameter" id="draw-param-buffer"><span class="type-annotation"><a href="../rendering/Buffer-extension-type.html">Buffer</a></span> <span class="parameter-name">buffer</span></span>)
-    <span class="returntype parameter">&#8594; void</span>
-  </span>
-  
-
-</dt>
-<dd>
-  Draws the widget on the <code>buffer</code>.
-  
-
-</dd>
-
         <dt id="noSuchMethod" class="callable inherited">
   <span class="name"><a href="https://api.dart.dev/stable/3.4.4/dart-core/Object/noSuchMethod.html">noSuchMethod</a></span><span class="signature">(<wbr><span class="parameter" id="noSuchMethod-param-invocation"><span class="type-annotation"><a href="https://api.dart.dev/stable/3.4.4/dart-core/Invocation-class.html">Invocation</a></span> <span class="parameter-name">invocation</span></span>)
     <span class="returntype parameter">&#8594; dynamic</span>
@@ -164,6 +149,19 @@
 <dd class="inherited">
   Invoked when a nonexistent method or property is accessed.
   <div class="features"><span class="feature">inherited</span></div>
+
+</dd>
+
+        <dt id="split" class="callable">
+  <span class="name"><a href="../layout/LayoutSpec/split.html">split</a></span><span class="signature">(<wbr><span class="parameter" id="split-param-area"><span class="type-annotation"><a href="../foundation/Rect-class.html">Rect</a></span> <span class="parameter-name">area</span></span>)
+    <span class="returntype parameter">&#8594; <a href="https://api.dart.dev/stable/3.4.4/dart-core/List-class.html">List</a><span class="signature">&lt;<wbr><span class="type-parameter"><a href="../foundation/Rect-class.html">Rect</a></span>&gt;</span></span>
+  </span>
+  
+
+</dt>
+<dd>
+  Splits the given <code>area</code> into multiple sub-areas.
+  
 
 </dd>
 
@@ -220,12 +218,12 @@
 
 <ol class="breadcrumbs gt-separated dark hidden-l" id="sidebar-nav">
     <li><a href="../index.html">dt</a></li>
-    <li><a href="../widgets/widgets-library.html">widgets</a></li>
-    <li class="self-crumb">Widget class</li>
+    <li><a href="../layout/layout-library.html">layout</a></li>
+    <li class="self-crumb">LayoutSpec class</li>
 </ol>
 
 
-    <h5>widgets library</h5>
+    <h5>layout library</h5>
     <div id="dartdoc-sidebar-left-content"></div>
   </div>
 

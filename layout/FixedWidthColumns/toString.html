@@ -4,8 +4,8 @@
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, height=device-height, initial-scale=1, user-scalable=no">
-  <meta name="description" content="API docs for the toString method from the Style class, for the Dart programming language.">
-  <title>toString method - Style class - rendering library - Dart API</title>
+  <meta name="description" content="API docs for the toString method from the FixedWidthColumns class, for the Dart programming language.">
+  <title>toString method - FixedWidthColumns class - layout library - Dart API</title>
 
 
   
@@ -29,8 +29,8 @@
   <span id="sidenav-left-toggle" class="material-symbols-outlined" role="button" tabindex="0">menu</span>
   <ol class="breadcrumbs gt-separated dark hidden-xs">
     <li><a href="../../index.html">dt</a></li>
-    <li><a href="../../rendering/rendering-library.html">rendering.dart</a></li>
-    <li><a href="../../rendering/Style-class.html">Style</a></li>
+    <li><a href="../../layout/layout-library.html">layout.dart</a></li>
+    <li><a href="../../layout/FixedWidthColumns-class.html">FixedWidthColumns</a></li>
     <li class="self-crumb">toString method</li>
   </ol>
   <div class="self-name">toString</div>
@@ -54,7 +54,7 @@
 <div
     id="dartdoc-main-content"
     class="main-content"
-    data-above-sidebar="rendering&#47;Style-class-sidebar.html"
+    data-above-sidebar="layout&#47;FixedWidthColumns-class-sidebar.html"
     data-below-sidebar="">
     <div>
 <h1><span class="kind-method">toString</span> method 
@@ -93,21 +93,7 @@ mainly for debugging or logging.</p>
 <section class="summary source-code" id="source">
   <h2><span>Implementation</span></h2>
   <pre class="language-dart"><code class="language-dart">@override
-String toString() {
-  if (this == none) {
-    return &#39;Style.none&#39;;
-  }
-  if (this == reset) {
-    return &#39;Style.reset&#39;;
-  }
-  if (foreground == null) {
-    return &#39;Style(background: $background)&#39;;
-  } else if (background == null) {
-    return &#39;Style(foreground: $foreground)&#39;;
-  } else {
-    return &#39;Style(foreground: $foreground, background: $background)&#39;;
-  }
-}</code></pre>
+String toString() =&gt; &#39;FixedWidthColumns(width: $width)&#39;;</code></pre>
 </section>
 
 
@@ -123,13 +109,13 @@ String toString() {
 
 <ol class="breadcrumbs gt-separated dark hidden-l" id="sidebar-nav">
     <li><a href="../../index.html">dt</a></li>
-    <li><a href="../../rendering/rendering-library.html">rendering</a></li>
-    <li><a href="../../rendering/Style-class.html">Style</a></li>
+    <li><a href="../../layout/layout-library.html">layout</a></li>
+    <li><a href="../../layout/FixedWidthColumns-class.html">FixedWidthColumns</a></li>
     <li class="self-crumb">toString method</li>
 </ol>
 
 
-    <h5>Style class</h5>
+    <h5>FixedWidthColumns class</h5>
     <div id="dartdoc-sidebar-left-content"></div>
   </div><!--/.sidebar-offcanvas-->
 

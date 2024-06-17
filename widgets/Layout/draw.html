@@ -4,8 +4,8 @@
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, height=device-height, initial-scale=1, user-scalable=no">
-  <meta name="description" content="API docs for the rows property from the Rect class, for the Dart programming language.">
-  <title>rows property - Rect class - foundation library - Dart API</title>
+  <meta name="description" content="API docs for the draw method from the Layout class, for the Dart programming language.">
+  <title>draw method - Layout class - widgets library - Dart API</title>
 
 
   
@@ -29,11 +29,11 @@
   <span id="sidenav-left-toggle" class="material-symbols-outlined" role="button" tabindex="0">menu</span>
   <ol class="breadcrumbs gt-separated dark hidden-xs">
     <li><a href="../../index.html">dt</a></li>
-    <li><a href="../../foundation/foundation-library.html">foundation.dart</a></li>
-    <li><a href="../../foundation/Rect-class.html">Rect</a></li>
-    <li class="self-crumb">rows property</li>
+    <li><a href="../../widgets/widgets-library.html">widgets.dart</a></li>
+    <li><a href="../../widgets/Layout-class.html">Layout</a></li>
+    <li class="self-crumb">draw method</li>
   </ol>
-  <div class="self-name">rows</div>
+  <div class="self-name">draw</div>
   <form class="search navbar-right" role="search">
     <input type="text" id="search-box" autocomplete="off" disabled class="form-control typeahead" placeholder="Loading search...">
   </form>
@@ -54,44 +54,59 @@
 <div
     id="dartdoc-main-content"
     class="main-content"
-    data-above-sidebar="foundation&#47;Rect-class-sidebar.html"
+    data-above-sidebar="widgets&#47;Layout-class-sidebar.html"
     data-below-sidebar="">
     <div>
-<h1><span class="kind-property">rows</span> property 
+<h1><span class="kind-method">draw</span> method 
 </h1></div>
-
-
-        
-  <section id="getter">
 
     <section class="multi-line-signature">
       
-      <span class="returntype"><a href="https://api.dart.dev/stable/3.4.4/dart-core/Iterable-class.html">Iterable</a><span class="signature">&lt;<wbr><span class="type-parameter"><a href="../../foundation/Rect-class.html">Rect</a></span>&gt;</span></span>
-      <span class="name ">rows</span>
-      
+  <div>
+    <ol class="annotation-list">
+        <li>@<a href="https://api.dart.dev/stable/3.4.4/dart-core/override-constant.html">override</a></li>
+    </ol>
+  </div>
+
+<span class="returntype">void</span>
+<span class="name ">draw</span>(<wbr><ol class="parameter-list"><li><span class="parameter" id="draw-param-buffer"><span class="type-annotation"><a href="../../rendering/Buffer-extension-type.html">Buffer</a></span> <span class="parameter-name">buffer</span></span></li>
+</ol>)
+
+      <div class="features"><span class="feature">override</span></div>
 
     </section>
-
     
 <section class="desc markdown">
-  <p>Iterable of all rows within this rectangle.</p>
-<p>Each row is a rectangle with the same width as this rectangle.</p>
-<p>The rows are ordered from top to bottom.</p>
+  <p>Draws the widget on the <code>buffer</code>.</p>
 </section>
+
 
     
 <section class="summary source-code" id="source">
   <h2><span>Implementation</span></h2>
-  <pre class="language-dart"><code class="language-dart">Iterable&lt;Rect&gt; get rows =&gt; _RectRows(this);</code></pre>
+  <pre class="language-dart"><code class="language-dart">@override
+void draw(Buffer buffer) {
+  final area = buffer.area();
+  final split = area.split(layout);
+  if (split.length != children.length) {
+    throw StateError(
+      &#39;Layout defined ${split.length} sub-areas, but received &#39;
+      &#39;${children.length} children&#39;,
+    );
+  }
+
+  for (var i = 0; i &lt; split.length; i++) {
+    final child = children[i];
+    child.draw(buffer.subGrid(split[i]));
+  }
+}</code></pre>
 </section>
 
-  </section>
 
+  </div> <!-- /.main-content -->
 
-</div> <!-- /.main-content -->
-
-<div id="dartdoc-sidebar-left" class="sidebar sidebar-offcanvas-left">
-  <!-- The search input and breadcrumbs below are only responsively visible at low resolutions. -->
+  <div id="dartdoc-sidebar-left" class="sidebar sidebar-offcanvas-left">
+    <!-- The search input and breadcrumbs below are only responsively visible at low resolutions. -->
 <header id="header-search-sidebar" class="hidden-l">
   <form class="search-sidebar" role="search">
     <input type="text" id="search-sidebar" autocomplete="off" disabled class="form-control typeahead" placeholder="Loading search...">
@@ -100,17 +115,17 @@
 
 <ol class="breadcrumbs gt-separated dark hidden-l" id="sidebar-nav">
     <li><a href="../../index.html">dt</a></li>
-    <li><a href="../../foundation/foundation-library.html">foundation</a></li>
-    <li><a href="../../foundation/Rect-class.html">Rect</a></li>
-    <li class="self-crumb">rows property</li>
+    <li><a href="../../widgets/widgets-library.html">widgets</a></li>
+    <li><a href="../../widgets/Layout-class.html">Layout</a></li>
+    <li class="self-crumb">draw method</li>
 </ol>
 
 
-  <h5>Rect class</h5>
-  <div id="dartdoc-sidebar-left-content"></div>
-</div><!--/.sidebar-offcanvas-->
+    <h5>Layout class</h5>
+    <div id="dartdoc-sidebar-left-content"></div>
+  </div><!--/.sidebar-offcanvas-->
 
-<div id="dartdoc-sidebar-right" class="sidebar sidebar-offcanvas-right">
+  <div id="dartdoc-sidebar-right" class="sidebar sidebar-offcanvas-right">
 </div><!--/.sidebar-offcanvas-->
 
 </main>

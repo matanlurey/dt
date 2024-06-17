@@ -4,8 +4,8 @@
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, height=device-height, initial-scale=1, user-scalable=no">
-  <meta name="description" content="API docs for the toString method from the Style class, for the Dart programming language.">
-  <title>toString method - Style class - rendering library - Dart API</title>
+  <meta name="description" content="API docs for the FixedWidthColumns constructor from Class FixedWidthColumns from the layout library, for the Dart programming language.">
+  <title>FixedWidthColumns constructor - FixedWidthColumns - layout library - Dart API</title>
 
 
   
@@ -29,11 +29,11 @@
   <span id="sidenav-left-toggle" class="material-symbols-outlined" role="button" tabindex="0">menu</span>
   <ol class="breadcrumbs gt-separated dark hidden-xs">
     <li><a href="../../index.html">dt</a></li>
-    <li><a href="../../rendering/rendering-library.html">rendering.dart</a></li>
-    <li><a href="../../rendering/Style-class.html">Style</a></li>
-    <li class="self-crumb">toString method</li>
+    <li><a href="../../layout/layout-library.html">layout.dart</a></li>
+    <li><a href="../../layout/FixedWidthColumns-class.html">FixedWidthColumns</a></li>
+    <li class="self-crumb">FixedWidthColumns const constructor</li>
   </ol>
-  <div class="self-name">toString</div>
+  <div class="self-name">FixedWidthColumns</div>
   <form class="search navbar-right" role="search">
     <input type="text" id="search-box" autocomplete="off" disabled class="form-control typeahead" placeholder="Loading search...">
   </form>
@@ -51,63 +51,33 @@
 </header>
 <main>
 
-<div
-    id="dartdoc-main-content"
-    class="main-content"
-    data-above-sidebar="rendering&#47;Style-class-sidebar.html"
-    data-below-sidebar="">
-    <div>
-<h1><span class="kind-method">toString</span> method 
+  <div
+      id="dartdoc-main-content"
+      class="main-content"
+      data-above-sidebar="layout&#47;FixedWidthColumns-class-sidebar.html"
+      data-below-sidebar="">
+      <div>
+<h1><span class="kind-constructor">FixedWidthColumns</span> constructor 
 </h1></div>
 
     <section class="multi-line-signature">
-      
-  <div>
-    <ol class="annotation-list">
-        <li>@<a href="https://api.dart.dev/stable/3.4.4/dart-core/override-constant.html">override</a></li>
-    </ol>
-  </div>
-
-<span class="returntype"><a href="https://api.dart.dev/stable/3.4.4/dart-core/String-class.html">String</a></span>
-<span class="name ">toString</span>(<wbr>)
-
-      <div class="features"><span class="feature">override</span></div>
-
+      const
+      <span class="name ">FixedWidthColumns</span>(<wbr><ol class="parameter-list"><li><span class="parameter" id="-param-width">{<span class="type-annotation"><a href="https://api.dart.dev/stable/3.4.4/dart-core/int-class.html">int</a></span> <span class="parameter-name">width</span> = <span class="default-value">1</span>}</span></li>
+</ol>)
     </section>
+
     
 <section class="desc markdown">
-  <p>A string representation of this object.</p>
-<p>Some classes have a default textual representation,
-often paired with a static <code>parse</code> function (like <a href="https://api.dart.dev/stable/3.4.4/dart-core/int/parse.html">int.parse</a>).
-These classes will provide the textual representation as
-their string representation.</p>
-<p>Other classes have no meaningful textual representation
-that a program will care about.
-Such classes will typically override <code>toString</code> to provide
-useful information when inspecting the object,
-mainly for debugging or logging.</p>
+  <p>Creates a layout that splits an area into columns.</p>
 </section>
 
 
     
 <section class="summary source-code" id="source">
   <h2><span>Implementation</span></h2>
-  <pre class="language-dart"><code class="language-dart">@override
-String toString() {
-  if (this == none) {
-    return &#39;Style.none&#39;;
-  }
-  if (this == reset) {
-    return &#39;Style.reset&#39;;
-  }
-  if (foreground == null) {
-    return &#39;Style(background: $background)&#39;;
-  } else if (background == null) {
-    return &#39;Style(foreground: $foreground)&#39;;
-  } else {
-    return &#39;Style(foreground: $foreground, background: $background)&#39;;
-  }
-}</code></pre>
+  <pre class="language-dart"><code class="language-dart">const FixedWidthColumns({
+  this.width = 1,
+}) : assert(width &gt; 0, &#39;Width must be greater than 0&#39;);</code></pre>
 </section>
 
 
@@ -123,18 +93,18 @@ String toString() {
 
 <ol class="breadcrumbs gt-separated dark hidden-l" id="sidebar-nav">
     <li><a href="../../index.html">dt</a></li>
-    <li><a href="../../rendering/rendering-library.html">rendering</a></li>
-    <li><a href="../../rendering/Style-class.html">Style</a></li>
-    <li class="self-crumb">toString method</li>
+    <li><a href="../../layout/layout-library.html">layout</a></li>
+    <li><a href="../../layout/FixedWidthColumns-class.html">FixedWidthColumns</a></li>
+    <li class="self-crumb">FixedWidthColumns const constructor</li>
 </ol>
 
 
-    <h5>Style class</h5>
+    <h5>FixedWidthColumns class</h5>
     <div id="dartdoc-sidebar-left-content"></div>
-  </div><!--/.sidebar-offcanvas-->
+  </div><!--/.sidebar-offcanvas-left-->
 
   <div id="dartdoc-sidebar-right" class="sidebar sidebar-offcanvas-right">
-</div><!--/.sidebar-offcanvas-->
+  </div><!--/.sidebar-offcanvas-->
 
 </main>
 
