@@ -8,8 +8,8 @@ extension AnsiEscapedStyle on Style {
   /// Returns a list of ANSI escape sequences that represent this style.
   List<Sequence> toSequences() {
     return [
-      if (foreground != Color.inherit) foreground.setForeground().toSequence(),
-      if (background != Color.inherit) background.setBackground().toSequence(),
+      foreground.setForeground().toSequence(),
+      background.setBackground().toSequence(),
     ];
   }
 }

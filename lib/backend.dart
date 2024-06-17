@@ -26,6 +26,7 @@ export 'src/backend/command.dart'
         Command,
         MoveCursorTo,
         MoveCursorToColumn,
+        Print,
         SetBackgroundColor256,
         SetColor16,
         SetCursorVisibility,

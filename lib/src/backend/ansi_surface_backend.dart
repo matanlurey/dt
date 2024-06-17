@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:dt/foundation.dart';
 import 'package:dt/rendering.dart';
+import 'package:dt/src/backend/ansi_escaped_color.dart';
 import 'package:dt/src/backend/ansi_escaped_style.dart';
 import 'package:meta/meta.dart';
 
@@ -17,6 +18,10 @@ mixin AnsiSurfaceBackend implements SurfaceBackend {
 
   void _writeSequences(Iterable<Sequence> sequences, [String content = '']) {
     final ansi = sequences.map((s) => s.toEscapedString()).join();
+    final total = '$ansi$content';
+    if (total.isEmpty) {
+      return;
+    }
     writer.write(utf8.encode('$ansi$content'));
   }
 
@@ -31,6 +36,46 @@ mixin AnsiSurfaceBackend implements SurfaceBackend {
 
     // Reset the style to the default.
     _writeSequences(Style.reset.toSequences());
+  }
+
+  @override
+  @nonVirtual
+  void drawBatch(
+    Iterable<Cell> cells, {
+    Offset start = Offset.zero,
+    int? width,
+  }) {
+    // Move the cursor to the start position and write a reset sequence.
+    moveCursorTo(start.x + 1, start.y + 1);
+    _writeSequences([resetStyle.toSequence()]);
+
+    // Determine the width of the batch.
+    width ??= size.$1 - 1;
+
+    var fg = Color.reset;
+    var bg = Color.reset;
+    var ending = width;
+    for (final cell in cells) {
+      // If we have reached the end of the line, add a newline.
+      if (ending == -1) {
+        ending = width;
+        _writeSequences(const [], '\n');
+      }
+
+      // If the style has changed, write a new style sequence.
+      if (cell.style.foreground != fg) {
+        fg = cell.style.foreground;
+        _writeSequences([fg.setForeground().toSequence()]);
+      }
+      if (cell.style.background != bg) {
+        bg = cell.style.background;
+        _writeSequences([bg.setBackground().toSequence()]);
+      }
+
+      // Write the content of the cell.
+      _writeSequences(const [], cell.symbol);
+      ending--;
+    }
   }
 
   @override

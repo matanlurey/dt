@@ -26,6 +26,17 @@ abstract interface class Writer {
     Future<void> Function()? onFlush,
   }) = _SinkWriter;
 
+  /// Creates a new writer that writes to the provided string sink.
+  ///
+  /// The [encoding] is used to convert strings to bytes before writing them to
+  /// the underlying writer. The default encoding is UTF-8, but may be changed
+  /// to any other supported encoding.
+  factory Writer.fromStringSink(
+    StringSink sink, {
+    Encoding encoding,
+    Future<void> Function()? onFlush,
+  }) = _StringSinkWriter;
+
   /// Writes the provided [bytes] to the sink, optionally with offsets.
   ///
   /// Returns the number of bytes actually written.
@@ -72,6 +83,47 @@ final class _SinkWriter implements Writer {
     }
 
     _sink.add(sublist);
+    return sublist.length;
+  }
+}
+
+final class _StringSinkWriter implements Writer {
+  const _StringSinkWriter(
+    this._sink, {
+    Encoding encoding = utf8,
+    Future<void> Function()? onFlush,
+  })  : _onFlush = onFlush,
+        _encoding = encoding;
+
+  final Encoding _encoding;
+  final StringSink _sink;
+  final Future<void> Function()? _onFlush;
+
+  @override
+  Future<void> flush() async {
+    await _onFlush?.call();
+  }
+
+  @override
+  int write(List<int> bytes, [int offset = 0, int? length]) {
+    if (offset == 0 && length == null) {
+      _sink.write(_encoding.decode(bytes));
+      return bytes.length;
+    }
+
+    // Otherwise, write the specified range.
+    final List<int> sublist;
+    if (bytes is Uint8List) {
+      sublist = Uint8List.view(
+        bytes.buffer,
+        offset,
+        length,
+      );
+    } else {
+      sublist = bytes.sublist(offset, length == null ? null : offset + length);
+    }
+
+    _sink.write(_encoding.decode(sublist));
     return sublist.length;
   }
 }

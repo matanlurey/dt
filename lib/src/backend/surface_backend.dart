@@ -18,7 +18,36 @@ abstract class SurfaceBackend {
   }
 
   /// Draws a [cell] at the given [x] and [y] position.
+  ///
+  /// This method is provided as a convenience for drawing a single cell, and
+  /// as a default implementation for the [drawBatch] method, but should not be
+  /// used for drawing multiple cells, as it may be less efficient.
   void draw(int x, int y, Cell cell);
+
+  /// Optimally draws a batch of [cells] at the given [start] position.
+  ///
+  /// The [width] parameter is used to determine when to move to the next line,
+  /// and if not provided, it defaults to the terminal width.
+  ///
+  /// This method is more efficient than calling [draw] multiple times, and
+  /// can reduce the number of ANSI escape sequences written to the terminal.
+  void drawBatch(
+    Iterable<Cell> cells, {
+    Offset start = Offset.zero,
+    int? width,
+  }) {
+    var Offset(:x, :y) = start;
+    width ??= size.$1;
+
+    for (final cell in cells) {
+      draw(x, y, cell);
+
+      if (++x >= width) {
+        x = 0;
+        y++;
+      }
+    }
+  }
 
   /// Clears the terminal screen.
   void clear();

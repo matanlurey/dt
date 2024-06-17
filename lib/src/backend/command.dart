@@ -12,6 +12,9 @@ abstract mixin class Command {
   /// Parses an escape sequence into a _command_.
   static Command? tryParse(Sequence sequence) {
     if (sequence is! EscapeSequence) {
+      if (sequence is Literal) {
+        return Print(sequence.value);
+      }
       return null;
     }
     if (sequence.prefix == '?') {
@@ -96,6 +99,27 @@ final class _NullCommand extends Command {
 
   @override
   Sequence toSequence() => Sequence.none;
+}
+
+/// A command that prints text to the terminal.
+///
+/// This command is equivalent to writing the text directly to the terminal.
+final class Print extends Command {
+  /// Creates a print command.
+  const Print(this.text);
+
+  /// The text to print to the terminal.
+  final String text;
+
+  @override
+  Sequence toSequence() {
+    return Literal(text);
+  }
+
+  @override
+  String toString() {
+    return 'Print($text)';
+  }
 }
 
 /// Moves the terminal cursor to the given position (row, column).

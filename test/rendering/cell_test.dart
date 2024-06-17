@@ -17,7 +17,7 @@ void main() {
   test('toString returns "Cell(content, style)"', () {
     check(Cell('H'))
         .has((c) => c.toString(), 'toString')
-        .equals('Cell("H", Style.inherit)');
+        .equals('Cell("H", Style.reset)');
   });
 
   test('toString returns Cell.empty', () {

@@ -14,7 +14,7 @@ final class Cell {
   /// The [symbol] must be exactly 1 character long.
   ///
   /// If no [style] is provided, the cell will inherit the style of its parent.
-  factory Cell([String symbol = ' ', Style style = Style.inherit]) {
+  factory Cell([String symbol = ' ', Style style = Style.reset]) {
     if (symbol.length != 1 && symbol.characters.length != 1) {
       throw ArgumentError.value(
         symbol,
@@ -27,7 +27,7 @@ final class Cell {
 
   const Cell._([
     this.symbol = ' ',
-    this.style = Style.inherit,
+    this.style = Style.reset,
   ]);
 
   /// A 1-width string representing the cell's content.

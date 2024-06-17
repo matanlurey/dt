@@ -6,18 +6,7 @@ sealed class Color {
   /// A command that resets the color to the default.
   static const Color reset = _ResetColor();
 
-  /// A convenience constant for inheriting the color from the parent.
-  static const Color inherit = _InheritedColor();
-
   const Color();
-}
-
-final class _InheritedColor extends Color {
-  @literal
-  const _InheritedColor();
-
-  @override
-  String toString() => 'Color.inherit';
 }
 
 final class _ResetColor extends Color {
@@ -112,9 +101,6 @@ enum Color16 implements Color {
 
   /// Convenience constant for resetting the color to the default.
   static const Color reset = Color.reset;
-
-  /// Convenience constant for inheriting the color from the parent.
-  static const Color inherit = Color.inherit;
 
   /// Whether this color is a dim color.
   bool get isDim => index < 8;

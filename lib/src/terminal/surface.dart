@@ -70,12 +70,7 @@ final class _Surface implements Surface {
       render(frame);
     } finally {
       // Draw the buffer to the terminal.
-      for (var y = 0; y < frame.size.height; y++) {
-        for (var x = 0; x < frame.size.width; x++) {
-          final cell = _buffer.get(x, y);
-          _backend.draw(x, y, cell);
-        }
-      }
+      _backend.drawBatch(_buffer.cells);
 
       // Check if we have a cursor to render.
       switch (frame.cursor) {

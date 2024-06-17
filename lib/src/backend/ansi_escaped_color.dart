@@ -7,8 +7,6 @@ extension AnsiEscapedColor on Color {
   /// Returns a command that represents setting the foreground color to `this`.
   Command setForeground() {
     switch (this) {
-      case Color.inherit:
-        return Command.none;
       case Color.reset:
         return SetColor16.resetForeground;
       case final Color16 c:
@@ -21,8 +19,6 @@ extension AnsiEscapedColor on Color {
   /// Returns a command that represents setting the background color to `this`.
   Command setBackground() {
     switch (this) {
-      case Color.inherit:
-        return Command.none;
       case Color.reset:
         return SetColor16.resetBackground;
       case final Color16 c:

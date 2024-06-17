@@ -15,7 +15,7 @@ final class Span {
   static const empty = Span();
 
   /// Creates a new span with the given [content] and optional [style].
-  const Span([this.content = '', this.style = Style.inherit]);
+  const Span([this.content = '', this.style = Style.reset]);
 
   /// Content of the span.
   ///

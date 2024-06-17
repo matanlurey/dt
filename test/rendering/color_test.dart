@@ -50,10 +50,4 @@ void main() {
         .has((c) => c.toString(), 'toString()')
         .equals('Color.reset');
   });
-
-  test('Color.inherit is inherit', () {
-    check(Color.inherit)
-        .has((c) => c.toString(), 'toString()')
-        .equals('Color.inherit');
-  });
 }

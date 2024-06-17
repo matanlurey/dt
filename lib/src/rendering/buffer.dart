@@ -74,7 +74,7 @@ extension type const Buffer._(Grid<Cell> _grid) implements Grid<Cell> {
     int x,
     int y,
     String string, {
-    Style style = Style.inherit,
+    Style style = Style.reset,
     int? maxWidth,
   }) {
     maxWidth ??= width - x;

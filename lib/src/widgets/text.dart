@@ -13,7 +13,7 @@ abstract final class Text extends Widget {
   /// For more complex text, consider using [Text.fromSpan] or [Text.fromLine].
   factory Text(
     String text, {
-    Style style = Style.inherit,
+    Style style = Style.reset,
   }) {
     return Text.fromSpan(Span(text, style));
   }
