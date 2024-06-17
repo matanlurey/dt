@@ -13,3 +13,6 @@ linter:
 
     # Worth the false positives in a package IMO.
     comment_references: true
+
+    # It's a good hint but not a good lint.
+    one_member_abstracts: false

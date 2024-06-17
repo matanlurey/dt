@@ -30,6 +30,12 @@ abstract class SurfaceBackend {
   /// Flushes any buffered content to the terminal screen.
   Future<void> flush();
 
+  /// Starts a synchronized update.
+  void startSynchronizedUpdate();
+
+  /// Ends a synchronized update.
+  void endSynchronizedUpdate();
+
   /// Hides the terminal cursor.
   void hideCursor();
 
@@ -58,7 +64,7 @@ mixin AnsiSurfaceBackend implements SurfaceBackend {
   @nonVirtual
   void draw(int x, int y, Cell cell) {
     // Move the cursor to the cell position.
-    moveCursorTo(x, y);
+    moveCursorTo(x + 1, y + 1);
 
     // Write the cell's content and style.
     _writeSequences(cell.style.toSequences(), cell.symbol);
@@ -93,6 +99,18 @@ mixin AnsiSurfaceBackend implements SurfaceBackend {
   @nonVirtual
   void moveCursorTo(int x, int y) {
     _writeSequences([MoveCursorTo(y, x).toSequence()]);
+  }
+
+  @override
+  @nonVirtual
+  void startSynchronizedUpdate() {
+    _writeSequences([SynchronizedUpdate.start.toSequence()]);
+  }
+
+  @override
+  @nonVirtual
+  void endSynchronizedUpdate() {
+    _writeSequences([SynchronizedUpdate.end.toSequence()]);
   }
 }
 
@@ -166,7 +184,11 @@ final class _TestBackend
       if (sequence is Literal) {
         // Writes the literal content to the buffer.
         for (final char in sequence.value.characters) {
-          buffer.set(cursorPosition.x, cursorPosition.y, Cell(char, style));
+          buffer.set(
+            cursorPosition.x - 1,
+            cursorPosition.y - 1,
+            Cell(char, style),
+          );
         }
         continue;
       }

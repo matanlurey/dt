@@ -84,12 +84,14 @@ This package is inspired by a number of libraries, including but not limited to:
 - [pathxp](https://pub.dev/packages/pathxp) and
   [pathfinding](https://pub.dev/packages/pathfinding): Dart libraries for
   pathfinding algorithms.
+- [ratatui](https://crates.io/crates/ratatui): A Rust library for building
+  terminal UIs.
 - [taffy](https://crates.io/crates/taffy): UI layout library for Rust.
 - [termenv](https://github.com/muesli/termenv): A Go library for terminal
   feature detection and styling.
 - [termion](https://crates.io/crates/termion): A Rust library for low-level
   bindless terminal manipulation.
-- [termwiz](ttps://github.com/wez/wezterm/tree/main/termwiz): Another Rust
+- [termwiz](https://github.com/wez/wezterm/tree/main/termwiz): Another Rust
   library for building a terminal emulator.
 - [vaxis](https://sr.ht/~rockorager/vaxis/): A Rust library for building
   terminal UIs.

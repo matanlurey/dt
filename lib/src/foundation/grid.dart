@@ -138,7 +138,7 @@ abstract mixin class Grid<T> {
   ///
   /// The [offset] is relative to the top-left corner of the grid.
   Rect area([Offset offset = Offset.zero]) {
-    return Rect.fromXYWH(offset.x, offset.y, width, height);
+    return Rect.fromLTWH(offset.x, offset.y, width, height);
   }
 
   /// Returns a sub-grid view into this grid within the given [bounds].
