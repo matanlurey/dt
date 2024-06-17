@@ -100,7 +100,21 @@ void drawBatch(
 }) {
   &#47;&#47; Move the cursor to the start position and write a reset sequence.
   moveCursorTo(start.x + 1, start.y + 1);
-  _writeSequences([resetStyle.toSequence()]);
+
+  &#47;&#47; TODO: Use dual-buffering instead of this one-off implementation.
+  &#47;&#47;
+  &#47;&#47; With dual-buffering we could remove the &quot;drawBatch&quot; method entirely, and
+  &#47;&#47; stage all changes to the buffer in a separate buffer. Then, when the
+  &#47;&#47; &quot;flush&quot; method is called, we would compare the two buffers and only write
+  &#47;&#47; the necessary changes to the terminal. This would allow us to avoid
+  &#47;&#47; writing the entire buffer to the terminal on every frame, and instead
+  &#47;&#47; only write the changes.
+  final buffer = StringBuffer();
+  void writeSeq(Sequence seq) {
+    buffer.write(seq.toEscapedString());
+  }
+
+  writeSeq(resetStyle.toSequence());
 
   &#47;&#47; Determine the width of the batch.
   width ??= size.$1 - 1;
@@ -114,24 +128,27 @@ void drawBatch(
     &#47;&#47; If the width has been reached, move to the next line.
     if (count &gt; width) {
       count = 1;
-      _writeSequences(const [], &#39;\n&#39;);
+      buffer.writeln();
     } else {
       count++;
     }
 
-&#47;&#47; If the style has changed, write a new style sequence.
+    &#47;&#47; If the style has changed, write a new style sequence.
     if (cell.style.foreground case final Color color when color != fg) {
       fg = color;
-      _writeSequences([fg.setForeground().toSequence()]);
+      buffer.write(fg.setForeground().toSequence().toEscapedString());
     }
     if (cell.style.background case final Color color when color != bg) {
       bg = color;
-      _writeSequences([bg.setBackground().toSequence()]);
+      buffer.write(bg.setBackground().toSequence().toEscapedString());
     }
 
     &#47;&#47; Write the content of the cell.
-    _writeSequences(const [], cell.symbol);
+    buffer.write(cell.symbol);
   }
+
+  &#47;&#47; Write the buffer to the terminal.
+  writer.write(utf8.encode(buffer.toString()));
 }</code></pre>
 </section>
 
