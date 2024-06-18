@@ -3,7 +3,7 @@ import 'dart:io' as io;
 import 'dart:math' as math;
 
 import 'package:dt/backend.dart';
-import 'package:dt/foundation.dart';
+import 'package:dt/layout.dart';
 import 'package:dt/rendering.dart';
 import 'package:dt/terminal.dart';
 import 'package:dt/widgets.dart';
@@ -140,8 +140,18 @@ Future<void> run(
     // Draw the frame.
     await terminal.draw((frame) {
       frame.draw((buffer) {
-        _drawContent(state, buffer);
-        _drawFooter(state, buffer);
+        Layout(
+          Constrained.horizontal([
+            Constraint.flex(1),
+            Constraint.fixed(1),
+            Constraint.fixed(1),
+          ]),
+          [
+            _Content(state),
+            _commandBar,
+            _StatusBar(state),
+          ],
+        ).draw(buffer);
         frame.cursor = state.cursor;
       });
     });
@@ -151,57 +161,60 @@ Future<void> run(
   }
 }
 
-void _drawContent(EditorState state, Buffer buffer) {
-  // Determine how many lines to render.
-  final renderLines = buffer.height - 2;
+final class _Content extends Widget {
+  const _Content(this.state);
 
-  // Render the lines.
-  final renderOffset = math.max(0, state.cursor.y - renderLines ~/ 2);
+  final EditorState state;
 
-  // Render the lines, and the remaining lines as `~`.
-  for (var y = 0; y < renderLines; y++) {
-    final Widget widget;
-    if (y + renderOffset < state.lines.length) {
-      widget = Text.fromLine(Line([state.lines[y + renderOffset]]));
-    } else {
-      widget = Text.fromLine(Line(['~']));
+  @override
+  void draw(Buffer buffer) {
+    // Determine how many lines to render.
+    final renderLines = buffer.height;
+
+    // Render the lines.
+    final renderOffset = math.max(0, state.cursor.y - renderLines ~/ 2);
+
+    // Render the lines, and the remaining lines as `~`.
+    for (var y = 0; y < renderLines; y++) {
+      final Widget widget;
+      if (y + renderOffset < state.lines.length) {
+        widget = Text.fromLine(Line([state.lines[y + renderOffset]]));
+      } else {
+        widget = Text.fromLine(Line(['~']));
+      }
+      widget.draw(buffer.subGrid(Rect.fromLTWH(0, y, buffer.width, 1)));
     }
-    widget.draw(buffer.subGrid(Rect.fromLTWH(0, y, buffer.width, 1)));
   }
 }
 
-void _drawFooter(EditorState state, Buffer buffer) {
-  final status = Text.fromLine(
-    Line(
-      [
-        state.fileName ?? '[No name]',
-        ' - ${state.lines.length} lines',
-      ],
-      style: Style(
-        background: Color16.white,
-        foreground: Color16.black,
-      ),
-    ),
-  );
-  status.draw(
-    buffer.subGrid(Rect.fromLTWH(0, buffer.height - 2, buffer.width, 1)),
-  );
+final class _StatusBar extends Widget {
+  const _StatusBar(this.state);
 
-  // Render command bar.
-  final command = Text.fromLine(
-    Line(
-      [
-        'HELP: ',
-        'Option-Q: Quit | ',
-        'Option-S: Save | ',
-        'Option-F: Find',
-      ],
-    ),
-  );
-  command.draw(
-    buffer.subGrid(Rect.fromLTWH(0, buffer.height - 1, buffer.width, 1)),
-  );
+  final EditorState state;
+
+  @override
+  void draw(Buffer buffer) {
+    final status = Text.fromLine(
+      Line(
+        [
+          state.fileName ?? '[No name]',
+          ' - ${state.lines.length} lines',
+        ],
+        style: Style(
+          background: Color16.white,
+          foreground: Color16.black,
+        ),
+      ),
+    );
+    status.draw(buffer);
+  }
 }
+
+final _commandBar = Text.fromLine(
+  Line([
+    'HELP: Option-Q: Quit | Option-S: Save | Option-F: Find',
+  ]),
+);
 
 const _fps60 = Duration(milliseconds: 1000 ~/ 60);
 Future<void> _wait16ms() => Future.delayed(_fps60);
