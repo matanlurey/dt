@@ -24,6 +24,10 @@ void main() {
     check(Cell.empty).has((c) => c.toString(), 'toString').equals('Cell.empty');
   });
 
+  test('toString returns "Cell(content)"', () {
+    check(Cell('H')).has((c) => c.toString(), 'toString').equals('Cell("H")');
+  });
+
   test('copyWith returns a new cell with the given content and style', () {
     final cell = Cell('H');
     final newCell = cell.copyWith(symbol: 'W');

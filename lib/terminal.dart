@@ -18,4 +18,6 @@ library;
 import 'terminal.dart';
 
 export 'src/terminal/frame.dart' show Frame;
+export 'src/terminal/keyboard.dart'
+    show AsciiControlKey, AsciiPrintableKey, Keyboard;
 export 'src/terminal/surface.dart' show Surface;

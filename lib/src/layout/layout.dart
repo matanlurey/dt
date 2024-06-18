@@ -2,6 +2,7 @@ import 'package:dt/foundation.dart';
 import 'package:meta/meta.dart';
 
 /// A layout is a way to split an area into multiple sub-areas.
+@immutable
 abstract interface class LayoutSpec {
   /// Splits the given [area] into multiple sub-areas.
   List<Rect> split(Rect area);

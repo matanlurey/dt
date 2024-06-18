@@ -32,11 +32,23 @@ void main() {
         .equals('Style.reset');
   });
 
-  test('toString returns "Style(...)"', () {
+  test('toString returns "Style(foreground: ..., background: ...)"', () {
     check(Style(foreground: Color16.black, background: Color16.white))
         .has((s) => s.toString(), 'toString()')
         .equals(
           'Style(foreground: Color16.black, background: Color16.white)',
         );
+  });
+
+  test('toString returns "Style(foreground: ...)"', () {
+    check(Style(foreground: Color16.black))
+        .has((s) => s.toString(), 'toString()')
+        .equals('Style(foreground: Color16.black)');
+  });
+
+  test('toString returns "Style(background: ...)"', () {
+    check(Style(background: Color16.white))
+        .has((s) => s.toString(), 'toString()')
+        .equals('Style(background: Color16.white)');
   });
 }
