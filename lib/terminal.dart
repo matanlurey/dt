@@ -19,5 +19,5 @@ import 'terminal.dart';
 
 export 'src/terminal/frame.dart' show Frame;
 export 'src/terminal/keyboard.dart'
-    show AsciiControlKey, AsciiPrintableKey, Keyboard;
+    show AsciiControlKey, AsciiPrintableKey, Key, Keyboard;
 export 'src/terminal/surface.dart' show Surface;

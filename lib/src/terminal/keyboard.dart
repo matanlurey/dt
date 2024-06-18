@@ -230,102 +230,6 @@ enum AsciiPrintableKey implements Key {
   /// At sign (`'@'`).
   at,
 
-  /// Lowercase letter a (`'a'`).
-  a,
-
-  /// Lowercase letter b (`'b'`).
-  b,
-
-  /// Lowercase letter c (`'c'`).
-  c,
-
-  /// Lowercase letter d (`'d'`).
-  d,
-
-  /// Lowercase letter e (`'e'`).
-  e,
-
-  /// Lowercase letter f (`'f'`).
-  f,
-
-  /// Lowercase letter g (`'g'`).
-  g,
-
-  /// Lowercase letter h (`'h'`).
-  h,
-
-  /// Lowercase letter i (`'i'`).
-  i,
-
-  /// Lowercase letter j (`'j'`).
-  j,
-
-  /// Lowercase letter k (`'k'`).
-  k,
-
-  /// Lowercase letter l (`'l'`).
-  l,
-
-  /// Lowercase letter m (`'m'`).
-  m,
-
-  /// Lowercase letter n (`'n'`).
-  n,
-
-  /// Lowercase letter o (`'o'`).
-  o,
-
-  /// Lowercase letter p (`'p'`).
-  p,
-
-  /// Lowercase letter q (`'q'`).
-  q,
-
-  /// Lowercase letter r (`'r'`).
-  r,
-
-  /// Lowercase letter s (`'s'`).
-  s,
-
-  /// Lowercase letter t (`'t'`).
-  t,
-
-  /// Lowercase letter u (`'u'`).
-  u,
-
-  /// Lowercase letter v (`'v'`).
-  v,
-
-  /// Lowercase letter w (`'w'`).
-  w,
-
-  /// Lowercase letter x (`'x'`).
-  x,
-
-  /// Lowercase letter y (`'y'`).
-  y,
-
-  /// Lowercase letter z (`'z'`).
-  z,
-
-  /// Left square bracket (`'['`).
-  openBracket,
-
-  /// Backslash (`'\\'`).
-  backslash,
-
-  /// Right square bracket (`']'`).
-  closeBracket,
-
-  /// Caret (`'^'`).
-  caret,
-
-  /// Underscore (`'_'`).
-  underscore,
-
-  /// Grave accent (backtick) (`'`'`).
-  backtick,
-
   /// Uppercase letter A (`'A'`).
   A,
 
@@ -403,6 +307,102 @@ enum AsciiPrintableKey implements Key {
 
   /// Uppercase letter Z (`'Z'`).
   Z,
+
+  /// Left square bracket (`'['`).
+  openBracket,
+
+  /// Backslash (`'\\'`).
+  backslash,
+
+  /// Right square bracket (`']'`).
+  closeBracket,
+
+  /// Caret (`'^'`).
+  caret,
+
+  /// Underscore (`'_'`).
+  underscore,
+
+  /// Grave accent (backtick) (`'`'`).
+  backtick,
+
+  /// Lowercase letter a (`'a'`).
+  a,
+
+  /// Lowercase letter b (`'b'`).
+  b,
+
+  /// Lowercase letter c (`'c'`).
+  c,
+
+  /// Lowercase letter d (`'d'`).
+  d,
+
+  /// Lowercase letter e (`'e'`).
+  e,
+
+  /// Lowercase letter f (`'f'`).
+  f,
+
+  /// Lowercase letter g (`'g'`).
+  g,
+
+  /// Lowercase letter h (`'h'`).
+  h,
+
+  /// Lowercase letter i (`'i'`).
+  i,
+
+  /// Lowercase letter j (`'j'`).
+  j,
+
+  /// Lowercase letter k (`'k'`).
+  k,
+
+  /// Lowercase letter l (`'l'`).
+  l,
+
+  /// Lowercase letter m (`'m'`).
+  m,
+
+  /// Lowercase letter n (`'n'`).
+  n,
+
+  /// Lowercase letter o (`'o'`).
+  o,
+
+  /// Lowercase letter p (`'p'`).
+  p,
+
+  /// Lowercase letter q (`'q'`).
+  q,
+
+  /// Lowercase letter r (`'r'`).
+  r,
+
+  /// Lowercase letter s (`'s'`).
+  s,
+
+  /// Lowercase letter t (`'t'`).
+  t,
+
+  /// Lowercase letter u (`'u'`).
+  u,
+
+  /// Lowercase letter v (`'v'`).
+  v,
+
+  /// Lowercase letter w (`'w'`).
+  w,
+
+  /// Lowercase letter x (`'x'`).
+  x,
+
+  /// Lowercase letter y (`'y'`).
+  y,
+
+  /// Lowercase letter z (`'z'`).
+  z,
 
   /// Left curly brace (`'{'`).
   openBrace,
