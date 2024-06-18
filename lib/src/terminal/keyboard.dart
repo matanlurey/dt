@@ -100,9 +100,7 @@ final class _Keyboard extends Keyboard {
 
 /// A type representing a key on the keyboard.
 @immutable
-sealed class Key {
-  const Key();
-}
+sealed class Key {}
 
 /// A control key on the keyboard.
 ///
