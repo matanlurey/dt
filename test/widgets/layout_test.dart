@@ -50,11 +50,12 @@ void main() {
     ]);
   });
 
-  test('Layout throws if children != areas', () {
+  test('Layout throws if children > areas', () {
     check(
       () => Layout(
-        FixedHeightRows(height: 2),
+        FixedHeightRows(height: 8),
         [
+          Text('A'),
           Text('A'),
         ],
       ).draw(Buffer(10, 10)),

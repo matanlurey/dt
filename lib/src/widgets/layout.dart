@@ -22,7 +22,7 @@ final class Layout extends Widget {
   void draw(Buffer buffer) {
     final area = buffer.area();
     final split = area.split(layout);
-    if (split.length != children.length) {
+    if (children.length > split.length) {
       throw StateError(
         'Layout defined ${split.length} sub-areas, but received '
         '${children.length} children',
